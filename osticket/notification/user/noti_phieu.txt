@@ -1,0 +1,2 @@
+<a href="/user/"><div style="float:left;width:15%" class="btn btn-danger btn-circle m-r-10"><i class="fa fa-remove"></i></div><div style="float:right; width:80%"><p>Yêu cầu số 45 bị xóa bởi Admin!</p><small><i class="fa fa-clock-o"></i>12:02 PM 26/6/2018</small></div></a>
+<a href="/user/"><div style="float:left;width:15%" class="btn btn-danger btn-circle m-r-10"><i class="fa fa-remove"></i></div><div style="float:right; width:80%"><p>Yêu cầu số 44 bị xóa bởi Admin!</p><small><i class="fa fa-clock-o"></i>12:02 PM 26/6/2018</small></div></a>

@@ -1,0 +1,114 @@
+{% extends 'agent/base_admin.html' %}
+{% block title %} Mức ưu tiên {% endblock %}
+{% load staticfiles %}
+{% block content %}
+    <div class="page-wrapper">
+            <!-- Bread crumb -->
+            <div class="row page-titles">
+                <div class="col-md-5 align-self-center">
+                    <h3 class="text-primary">Mức ưu tiên</h3> </div>
+                <div class="col-md-7 align-self-center">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="javascript:void(0)">Trang chủ</a></li>
+                        <li class="breadcrumb-item active">Mức ưu tiên</li>
+                    </ol>
+                </div>
+            </div>
+            <!-- Container fluid  -->
+
+            <div class="container-fluid">
+                <!-- Start Page Content -->
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card" id="info-user">
+                            <div class="card-title">
+                                <button class="btn btn-primary" data-toggle="modal" data-target="#filter">
+                                    <i class="fa fa-plus"></i> Thêm mức ưu tiên
+                                </button>
+                            </div>
+                            <div class="card-body">
+                                <table id="tb" class="display nowrap table table-hover table-striped table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>Tên</th>
+                                            <th>Thời gian</th>
+                                            <th>Chỉnh sửa</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for lv in lall %}
+
+                                            <tr>
+                                                <th>{{ lv.name }}</th>
+                                                {% for key,value in level.items %}
+                                                    {% if key == lv.name %}
+                                                        <th>{{ value }}</th>
+                                                    {% endif%}
+                                                {% endfor %}
+                                                <input type="hidden" id="name{{lv.id}}" value="{{lv.name}}">
+                                                <th>
+                                                    <button type="button" class="btn btn-info" data-title="edit" id="{{lv.id}}" data-toggle="modal" data-target="#filter">
+                                                        <i class="fa fa-wrench" data-toggle="tooltip" title="Chỉnh sửa"></i> Chỉnh sửa
+                                                    </button>
+                                                </th>
+                                            </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- End PAge Content -->
+            </div>
+            <!-- End Container fluid  -->
+            <!-- footer -->
+            <!-- End footer -->
+        </div>
+    </div>
+<div id="filter" class="modal" role="dialog">
+  <div class="modal-dialog modal-sm">
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title" id="title"></h4>
+      </div>
+          <div class="modal-body">
+                {% csrf_token %}
+                  <label for="content">Tên</label><br/>
+                <input id="name" class="form-control" type="text" name="name"><br/>
+                <div id="invalid-date"><font color="red"></font></div>
+                <label for="content2">Thời gian</label><br>
+                <label>Ngày</label>
+                <input type="number" name="day" min="0" max="30">
+                <label>Giờ</label>
+                <input type="number" name="hour" min="0" max="23">
+                <br>
+                <label>Phút</label>
+                <input type="number" name="minute" min="0" max="59">
+                <label>Giây</label>
+                <input type="number" name="second" min="0" max="59"><br>
+                <input type="hidden" name="id">
+                <div id="invalid-date2"><font color="red"></font></div>
+          </div>
+          <div class="modal-footer">
+             <button type="button" class="btn btn-primary" id="new">Lưu</button>
+            <button type="button" class="btn btn-default" data-dismiss="modal" id="close">Đóng</button>
+          </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+{% block js %}
+    <script src="{% static 'js/lib/datatables/datatables.min.js' %}"></script>
+    <script src="{% static 'js/lib/datatables/cdn.datatables.net/buttons/1.2.2/js/dataTables.buttons.min.js' %}"></script>
+    <script src="{% static 'js/lib/datatables/cdn.datatables.net/buttons/1.2.2/js/buttons.flash.min.js' %}"></script>
+    <script src="{% static 'js/lib/datatables/cdnjs.cloudflare.com/ajax/libs/jszip/2.5.0/jszip.min.js' %}"></script>
+    <script src="{% static 'js/lib/datatables/cdn.rawgit.com/bpampuch/pdfmake/0.1.18/build/pdfmake.min.js' %}"></script>
+    <script src="{% static 'js/lib/datatables/cdn.rawgit.com/bpampuch/pdfmake/0.1.18/build/vfs_fonts.js' %}"></script>
+    <script src="{% static 'js/lib/datatables/cdn.datatables.net/buttons/1.2.2/js/buttons.html5.min.js' %}"></script>
+    <script src="{% static 'js/lib/datatables/cdn.datatables.net/buttons/1.2.2/js/buttons.print.min.js' %}"></script>
+    <script src="{% static 'js/lib/datatables/datatables-init.js' %}"></script>
+    <script src="{% static 'js/lv_priority.js' %}"></script>
+{% endblock %}
