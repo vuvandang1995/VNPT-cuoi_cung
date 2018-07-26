@@ -8,36 +8,19 @@
 from django.db import models
 from user.models import *
 import time
-
-
-class Users(models.Model):
-    fullname = models.CharField(max_length=255)
-    email = models.CharField(max_length=255)
-    username = models.CharField(max_length=255)
-    password = models.CharField(max_length=255)
-    phone = models.CharField(max_length=255,null=True)
-    receive_email = models.IntegerField(default=1)
-    status = models.IntegerField(default=0)
-    created = models.DateTimeField()
-    noti_noti = models.IntegerField(default=0)
-    noti_chat = models.IntegerField(default=0)
-    token = models.CharField(max_length=255)
-
-    class Meta:
-        managed = True
-        db_table = 'users'
     
 
-class Topics(models.Model):
+class Services(models.Model):
     name = models.CharField(max_length=255)
-    status = models.IntegerField(default=0)
+    status = models.IntegerField(default=1)
     description = models.TextField()
     leader = models.ForeignKey('Agents', models.SET_NULL, null=True, db_column='agentid')
+    downtime = models.IntegerField()
 
 
     class Meta:
         managed = True
-        db_table = 'topics'
+        db_table = 'services'
 
 
 class Agents(models.Model):
@@ -47,39 +30,42 @@ class Agents(models.Model):
     phone = models.CharField(max_length=255,null=True)
     receive_email = models.IntegerField(default=1)
     password = models.CharField(max_length=255)
-    admin = models.IntegerField(default=0)
+    position = models.IntegerField(default=0)
+    created = models.DateTimeField()
     status = models.IntegerField(default=1)
     noti_noti = models.IntegerField(default=0)
     noti_chat = models.IntegerField(default=0)
+    token = models.CharField(max_length=255)
 
     class Meta:
         managed = True
         db_table = 'agents'
 
 
-class TopicAgent(models.Model):
+class ServiceAgent(models.Model):
     agentid = models.ForeignKey('Agents', models.CASCADE, db_column='agentid')
-    topicid = models.ForeignKey('Topics', models.CASCADE, db_column='topicid')
+    serviceid = models.ForeignKey('Services', models.CASCADE, db_column='serviceid')
 
     class Meta:
         managed = True
-        db_table = 'topic_agent'
+        db_table = 'service_agent'
 
 
 class Tickets(models.Model):
+    client = models.CharField(max_length=255)
+    info_client = models.CharField(max_length=255)
     title = models.CharField(max_length=255)
-    chat = models.CharField(max_length=30, null=True)
     content = models.TextField()
-    sender = models.ForeignKey('Users', models.CASCADE, db_column='sender')
-    topicid = models.ForeignKey('Topics', models.CASCADE, db_column='topicid')
+    sender = models.ForeignKey('Agents', models.CASCADE, db_column='agentid')
+    service = models.ForeignKey('Services', models.CASCADE, db_column='serviceid')
     status = models.IntegerField(default=0)
     datestart = models.DateTimeField()
     dateend = models.DateTimeField()
     attach = models.FileField(null=True, blank=True, upload_to='photos')
     note = models.TextField()
-    lv_priority = models.IntegerField(default=1)
+    lv_priority = models.IntegerField(default=0)
     expired = models.IntegerField(default=0)
-    priority = models.ForeignKey('LevelPriority', models.SET_NULL, db_column='priority', null=True)
+    loai_su_co = models.TextField()
 
     class Meta:
         managed = True
@@ -141,25 +127,14 @@ def count_tk(agentname):
 
 
 class TicketLog(models.Model):
-    userid = models.ForeignKey(Users, models.CASCADE, null=True, db_column='userid', related_name='usertl')
     agentid = models.ForeignKey(Agents, models.CASCADE, null=True, db_column='agentid', related_name='agenttl')
     ticketid = models.ForeignKey(Tickets, models.CASCADE, db_column='ticketid', related_name='tickettl')
     action = models.TextField()
-    date = models.DateField()
-    time = models.TimeField()
+    date = models.DateTimeField()
 
     class Meta:
         managed = True
         db_table = 'ticket_log'
-
-
-class LevelPriority(models.Model):
-    name = models.CharField(max_length=255)
-    time = models.IntegerField()
-
-    class Meta:
-        managed = True
-        db_table = 'level_priority'
 
 
 def list_hd(ticketid):
@@ -239,13 +214,3 @@ def authenticate_agent(agentname, agentpass):
             return None
     else:
         return None
-
-
-def countdown(t):
-    while t:
-        mins, secs = divmod(t, 60)
-        timeformat = '{:02d}:{:02d}'.format(mins, secs)
-        print(timeformat, end='\r')
-        time.sleep(1)
-        t -= 1
-    print('Goodbye!\n\n\n\n\n')
