@@ -19,7 +19,7 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Sans:400,700">
     {% block lib %}{% endblock %}
 </head>
-<body class="hold-transition skin-blue sidebar-mini">
+<body class="skin-blue sidebar-mini sidebar-collapse">
 <div class="wrapper">
     <div class="main-header">
     <!-- Logo -->
@@ -106,7 +106,15 @@
           </a>
         </li>
         <li>
-          <a href="{% url 'user:detail_user' %}">
+          <a href="#">
+            <i class="fa fa-check-circle"></i> <span>Yêu cầu đã xử lý</span>
+            <span class="pull-right-container">
+              <small class="label pull-right bg-green"></small>
+            </span>
+          </a>
+        </li>
+        <li>
+          <a href="#">
             <i class="fa fa-edit"></i> <span>Cài đặt</span>
             <span class="pull-right-container">
               <small class="label pull-right bg-green"></small>
@@ -136,7 +144,7 @@
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-default" data-dismiss="modal">Đóng</button>
-          <a href="{% url 'user:logout' %}" class="btn btn-primary">Đăng xuất</a>
+          <a href="#" class="btn btn-primary">Đăng xuất</a>
         </div>
       </div>
       <!-- /.modal-content -->

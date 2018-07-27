@@ -23,11 +23,6 @@ max_char = 12
 allchar = string.ascii_letters + string.digits
 
 MAX_UPLOAD_SIZE = 10485760
-dic = {}
-dic_time = {}
-Level_0 = 30
-Level_1 = 20
-Level_2 = 10
 
 
 class EmailThread(threading.Thread):
@@ -38,6 +33,7 @@ class EmailThread(threading.Thread):
 
     def run(self):
         self.email.send()
+
 
 def login_user(request):
     mess_resetpwd_error = 'Email chưa đăng ký hoặc không hợp lệ'
@@ -169,3 +165,106 @@ def activate(request, uidb64, token):
         return redirect('/')
     else:
         return HttpResponse('Đường dẫn không hợp lệ!')
+
+
+def homeuser(request):
+    if request.session.has_key('user') and (Agents.objects.get(username=request.session['user'])).status == 1:
+        user = Agents.objects.get(username=request.session['user'])
+        # admin = Agents.objects.get(admin=1)
+        form = CreateNewTicketForm()
+
+        service = Services.objects.filter().order_by('-id')
+        ticket = Tickets.objects.filter(sender=user.id).order_by('-id')
+        handler = TicketAgent.objects.all()
+        content = {'ticket': ticket,
+                   'form': form,
+                   'user': user,
+                   'handler': handler,
+                   'service': service,
+                   'username': mark_safe(json.dumps(user.username)),
+                   'fullname': mark_safe(json.dumps(user.fullname)),
+                   # 'admin': mark_safe(json.dumps(admin.username)),
+                   'noti_noti': user.noti_noti,
+                   'noti_chat': user.noti_chat,
+                   }
+        # if request.method == 'POST':
+        #     if 'tkid' in request.POST:
+        #         ticket = Tickets.objects.get(id=request.POST['tkid'])
+        #         ticket.status = 3
+        #         ticket.save()
+        #         TicketLog.objects.create(userid=user,
+        #                                  ticketid=ticket,
+        #                                  action='đóng yêu cầu',
+        #                                  date=timezone.now().date(),
+        #                                  time=timezone.now().time())
+        #         try:
+        #             tkag = TicketAgent.objects.filter(ticketid=request.POST['tkid']).values('agentid')
+        #         except ObjectDoesNotExist:
+        #             pass
+        #         else:
+        #             receiver = Agents.objects.filter(id__in=tkag)
+        #             for rc in receiver:
+        #                 if rc.receive_email == 1:
+        #                     email = EmailMessage('Đóng yêu cầu',
+        #                                          render_to_string('user/close_email.html',
+        #                                                           {'receiver': rc, 'sender': user, 'id': id}),
+        #                                          to=[rc.email], )
+        #                     # email.send()
+        #                     thread = EmailThread(email)
+        #                     thread.start()
+        #     elif 'noti_noti' in request.POST:
+        #         user.noti_noti = 0
+        #         user.save()
+        #     elif 'noti_chat' in request.POST:
+        #         user.noti_chat = 0
+        #         user.save()
+        #     else:
+        #         form = CreateNewTicketForm(request.POST, request.FILES)
+        #         if form.is_valid():
+        #             ticket = Tickets()
+        #             ticket.title = form.cleaned_data['title']
+        #             ticket.content = form.cleaned_data['content']
+        #             ticket.sender = user
+        #             ticket.serviceid = Services.objects.get(id=request.POST['service'])
+        #             muc = int(request.POST['level'])
+        #             priority = LevelPriority.objects.get(id=muc)
+        #             ticket.priority = priority
+        #             time = priority.time
+        #             ticket.datestart = timezone.now()
+        #             ticket.dateend = (timezone.now() + timezone.timedelta(seconds=time))
+        #             # if request.POST['level'] == '0':
+        #             #     ticket.dateend = (timezone.now() + timezone.timedelta(minutes=Level_0))
+        #             # elif request.POST['level'] == '1':
+        #             #     ticket.dateend = (timezone.now() + timezone.timedelta(minutes=Level_1))
+        #             # else:
+        #             #     ticket.dateend = (timezone.now() + timezone.timedelta(minutes=Level_2))
+        #             if request.FILES.get('attach') is not None:
+        #                 if request.FILES['attach']._size < MAX_UPLOAD_SIZE:
+        #                     ticket.attach = request.FILES['attach']
+        #                     handle_uploaded_file(request.FILES['attach'])
+        #                 else:
+        #                     return render(request, 'user/home_user.html', content)
+        #             ticket.save()
+        #             TicketLog.objects.create(userid=user,
+        #                                      ticketid=ticket,
+        #                                      action='tạo mới yêu cầu',
+        #                                      date=timezone.now().date(),
+        #                                      time=timezone.now().time())
+                    # if serviceA.type_send == 1:
+                    #     for rc in receiver:
+                    #         if rc.receive_email == 1:
+                    #             email = EmailMessage('New ticket',
+                    #                                 render_to_string('user/new_ticket.html', {}),
+                    #                                 to=[rc.email],)
+                    #             email.send()
+                    # else:
+                    #     email = EmailMessage('New ticket',
+                    #                         render_to_string('user/new_ticket.html', {}),
+                    #                         to=[admin.email],)
+                    #     email.send()
+                # return redirect("/user")
+
+        return render(request, 'user/home_user.html', content)
+    else:
+        return redirect("/")
+    
