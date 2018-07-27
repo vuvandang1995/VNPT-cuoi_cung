@@ -106,16 +106,16 @@
           </a>
         </li>
         <li>
-          <a href="#">
-            <i class="fa fa-check-circle"></i> <span>Yêu cầu đã xử lý</span>
+          <a href="{% url 'user:closed_ticket' %}">
+            <i class="fa fa-check-square"></i> <span>Yêu cầu đã xử lý</span>
             <span class="pull-right-container">
               <small class="label pull-right bg-green"></small>
             </span>
           </a>
         </li>
         <li>
-          <a href="#">
-            <i class="fa fa-edit"></i> <span>Cài đặt</span>
+          <a href="{% url 'user:detail_user' %}">
+            <i class="fa fa-edit"></i> <span>Thông tin cá nhân</span>
             <span class="pull-right-container">
               <small class="label pull-right bg-green"></small>
             </span>
@@ -144,7 +144,7 @@
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-default" data-dismiss="modal">Đóng</button>
-          <a href="#" class="btn btn-primary">Đăng xuất</a>
+          <a href="{% url 'user:logout' %}" class="btn btn-primary">Đăng xuất</a>
         </div>
       </div>
       <!-- /.modal-content -->
@@ -162,7 +162,7 @@
 <script src="{% static 'user_interface/bower_components/fastclick/lib/fastclick.js' %}"></script>
 <script src="{% static 'user_interface/dist/js/adminlte.min.js' %}"></script>
 <script src="{% static 'user_interface/dist/js/demo.js' %}"></script>
-    <script src="{% static 'js/home_user.js' %}"></script>
+    <script src="{% static 'js/user/home_user.js' %}"></script>
 
 <script>
     var x = document.getElementById("myAudio");

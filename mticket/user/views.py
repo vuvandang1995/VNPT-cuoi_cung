@@ -167,18 +167,27 @@ def activate(request, uidb64, token):
         return HttpResponse('Đường dẫn không hợp lệ!')
 
 
+def logout_user(request):
+    del request.session['user']
+    return redirect("/")
+
+
 def homeuser(request):
     if request.session.has_key('user') and (Agents.objects.get(username=request.session['user'])).status == 1:
         user = Agents.objects.get(username=request.session['user'])
         # admin = Agents.objects.get(admin=1)
         form = CreateNewTicketForm()
-
-        service = Services.objects.filter().order_by('-id')
+        group = GroupServices.objects.all()
+        ls_group = {}
+        for gr in group:
+            ls_group[gr.name] = Services.objects.filter(groupserviceid=gr)
+        service = Services.objects.all()
         ticket = Tickets.objects.filter(sender=user.id).order_by('-id')
         handler = TicketAgent.objects.all()
         content = {'ticket': ticket,
                    'form': form,
                    'user': user,
+                   'group': ls_group,
                    'handler': handler,
                    'service': service,
                    'username': mark_safe(json.dumps(user.username)),
@@ -187,69 +196,63 @@ def homeuser(request):
                    'noti_noti': user.noti_noti,
                    'noti_chat': user.noti_chat,
                    }
-        # if request.method == 'POST':
-        #     if 'tkid' in request.POST:
-        #         ticket = Tickets.objects.get(id=request.POST['tkid'])
-        #         ticket.status = 3
-        #         ticket.save()
-        #         TicketLog.objects.create(userid=user,
-        #                                  ticketid=ticket,
-        #                                  action='đóng yêu cầu',
-        #                                  date=timezone.now().date(),
-        #                                  time=timezone.now().time())
-        #         try:
-        #             tkag = TicketAgent.objects.filter(ticketid=request.POST['tkid']).values('agentid')
-        #         except ObjectDoesNotExist:
-        #             pass
-        #         else:
-        #             receiver = Agents.objects.filter(id__in=tkag)
-        #             for rc in receiver:
-        #                 if rc.receive_email == 1:
-        #                     email = EmailMessage('Đóng yêu cầu',
-        #                                          render_to_string('user/close_email.html',
-        #                                                           {'receiver': rc, 'sender': user, 'id': id}),
-        #                                          to=[rc.email], )
-        #                     # email.send()
-        #                     thread = EmailThread(email)
-        #                     thread.start()
-        #     elif 'noti_noti' in request.POST:
-        #         user.noti_noti = 0
-        #         user.save()
-        #     elif 'noti_chat' in request.POST:
-        #         user.noti_chat = 0
-        #         user.save()
-        #     else:
-        #         form = CreateNewTicketForm(request.POST, request.FILES)
-        #         if form.is_valid():
-        #             ticket = Tickets()
-        #             ticket.title = form.cleaned_data['title']
-        #             ticket.content = form.cleaned_data['content']
-        #             ticket.sender = user
-        #             ticket.serviceid = Services.objects.get(id=request.POST['service'])
-        #             muc = int(request.POST['level'])
-        #             priority = LevelPriority.objects.get(id=muc)
-        #             ticket.priority = priority
-        #             time = priority.time
-        #             ticket.datestart = timezone.now()
-        #             ticket.dateend = (timezone.now() + timezone.timedelta(seconds=time))
-        #             # if request.POST['level'] == '0':
-        #             #     ticket.dateend = (timezone.now() + timezone.timedelta(minutes=Level_0))
-        #             # elif request.POST['level'] == '1':
-        #             #     ticket.dateend = (timezone.now() + timezone.timedelta(minutes=Level_1))
-        #             # else:
-        #             #     ticket.dateend = (timezone.now() + timezone.timedelta(minutes=Level_2))
-        #             if request.FILES.get('attach') is not None:
-        #                 if request.FILES['attach']._size < MAX_UPLOAD_SIZE:
-        #                     ticket.attach = request.FILES['attach']
-        #                     handle_uploaded_file(request.FILES['attach'])
-        #                 else:
-        #                     return render(request, 'user/home_user.html', content)
-        #             ticket.save()
-        #             TicketLog.objects.create(userid=user,
-        #                                      ticketid=ticket,
-        #                                      action='tạo mới yêu cầu',
-        #                                      date=timezone.now().date(),
-        #                                      time=timezone.now().time())
+        if request.method == 'POST':
+            if 'tkid' in request.POST:
+                ticket = Tickets.objects.get(id=request.POST['tkid'])
+                ticket.status = 3
+                ticket.save()
+                TicketLog.objects.create(userid=user,
+                                         ticketid=ticket,
+                                         action='đóng yêu cầu',
+                                         date=timezone.now().date(),
+                                         time=timezone.now().time())
+                try:
+                    tkag = TicketAgent.objects.filter(ticketid=request.POST['tkid']).values('agentid')
+                except ObjectDoesNotExist:
+                    pass
+                else:
+                    receiver = Agents.objects.filter(id__in=tkag)
+                    for rc in receiver:
+                        if rc.receive_email == 1:
+                            email = EmailMessage('Đóng yêu cầu',
+                                                 render_to_string('user/close_email.html',
+                                                                  {'receiver': rc, 'sender': user, 'id': id}),
+                                                 to=[rc.email], )
+                            # email.send()
+                            thread = EmailThread(email)
+                            thread.start()
+            elif 'noti_noti' in request.POST:
+                user.noti_noti = 0
+                user.save()
+            elif 'noti_chat' in request.POST:
+                user.noti_chat = 0
+                user.save()
+            else:
+                form = CreateNewTicketForm(request.POST, request.FILES)
+                if form.is_valid():
+                    ticket = Tickets()
+                    ticket.client = form.cleaned_data['client']
+                    ticket.info_client = form.cleaned_data['info_client']
+                    ticket.loai_su_co = form.cleaned_data['loai_su_co']
+                    ticket.title = form.cleaned_data['title']
+                    service = Services.objects.get(name=request.POST['service'])
+                    ticket.service = service
+                    ticket.lv_priority = int(request.POST['lv_priority'])
+                    ticket.content = form.cleaned_data['content']
+                    ticket.sender = user
+                    ticket.datestart = timezone.now()
+                    ticket.dateend = (timezone.now() + timezone.timedelta(minutes=service.downtime))
+                    if request.FILES.get('attach') is not None:
+                        if request.FILES['attach']._size < MAX_UPLOAD_SIZE:
+                            ticket.attach = request.FILES['attach']
+                            handle_uploaded_file(request.FILES['attach'])
+                        else:
+                            return render(request, 'user/home_user.html', content)
+                    ticket.save()
+                    TicketLog.objects.create(agentid=user,
+                                             ticketid=ticket,
+                                             action='tạo mới yêu cầu',
+                                             date=timezone.now())
                     # if serviceA.type_send == 1:
                     #     for rc in receiver:
                     #         if rc.receive_email == 1:
@@ -262,9 +265,194 @@ def homeuser(request):
                     #                         render_to_string('user/new_ticket.html', {}),
                     #                         to=[admin.email],)
                     #     email.send()
-                # return redirect("/user")
+                return redirect("/user")
 
         return render(request, 'user/home_user.html', content)
     else:
         return redirect("/")
-    
+
+
+def handle_uploaded_file(f):
+    # path = settings.MEDIA_ROOT+"/photos/"+f.name
+    path = "media/photos/" + f.name
+    file = open(path, 'wb+')
+    for chunk in f.chunks():
+        file.write(chunk)
+    file.close()
+
+
+def homeuser_data_tu_xu_ly(request):
+    if request.session.has_key('user') and (Agents.objects.get(username=request.session['user'])).status == 1:
+        user = Agents.objects.get(username=request.session['user'])
+        tks = Tickets.objects.filter(sender=user.id, status=1).order_by('-id')
+        tks_txl = TicketAgent.objects.filter(ticketid__in=tks, agentid=user)
+        data = []
+        for tk in tks_txl:
+            client = r'<a data-toggle="collapse" data-target="#client'+ str(tk.ticketid.id)+'">' + tk.ticketid.client + '</a><br><div id="client' + str(tk.ticketid.id)+'" class="collapse">' + tk.ticketid.info_client+'</div>'
+            content = r'<a data-toggle="collapse" data-target="#content'+ str(tk.ticketid.id)+'">' + str(tk.ticketid.content[:16])+ '...</a><br><div id="content' + str(tk.ticketid.id)+'" class="collapse">' + tk.ticketid.content+'</div>'
+            option = '''<div class="btn-group"><button type="button" class="btn btn-danger close_ticket" data-toggle="tooltip" title="đóng" id="''' + str(tk.ticketid.id) + '''" ><span class="glyphicon glyphicon-off"></span></button>'''
+            option += '''<button type="button" class="btn btn-primary send_ticket" data-toggle="tooltip" title="gửi" id="''' + str(tk.ticketid.id) + '''" ><span class="glyphicon glyphicon-send"></span></button>'''
+            option += '''<a type="button" target=_blank class="btn btn-warning" href="/user/history_'''+str(tk.ticketid.id)+ '''" data-toggle="tooltip" title="dòng thời gian"><i class="fa fa-history"></i></a></div>'''
+            datestart = tk.ticketid.datestart + timezone.timedelta(hours=7)
+            downtime = '''<p class="downtime" id="downtime-''' + str(tk.ticketid.id) + '''"></p>'''
+            status = r'<span class ="label label-warning"> Đang xử lý </span>'
+            data.append([tk.ticketid.id, client, tk.ticketid.service.name, tk.ticketid.loai_su_co, content,
+                         str(datestart)[:-16], downtime, status, option])
+        ticket = {"data": data}
+        tickets = json.loads(json.dumps(ticket))
+        return JsonResponse(tickets, safe=False)
+
+
+def homeuser_data_gui_di(request):
+    if request.session.has_key('user') and (Agents.objects.get(username=request.session['user'])).status == 1:
+        user = Agents.objects.get(username=request.session['user'])
+        tks = Tickets.objects.filter(sender=user.id, status__in=[0, 1, 2]).order_by('-id')
+        ls_ag = Agents.objects.exclude(user=request.session['user'])
+        tks_txl = TicketAgent.objects.filter(ticketid__in=tks, agentid=user)
+        data = []
+        for tk in tks_txl:
+            client = r'<a data-toggle="collapse" data-target="#client'+ str(tk.ticketid.id)+'">' + tk.ticketid.client + '</a><br><div id="client' + str(tk.ticketid.id)+'" class="collapse">' + tk.ticketid.info_client+'</div>'
+            content = r'<a data-toggle="collapse" data-target="#content'+ str(tk.ticketid.id)+'">' + str(tk.ticketid.content[:16])+ '...</a><br><div id="content' + str(tk.ticketid.id)+'" class="collapse">' + tk.ticketid.content+'</div>'
+            option = '''<div class="btn-group"><button type="button" class="btn btn-danger close_ticket" data-toggle="tooltip" title="đóng" id="''' + str(tk.ticketid.id) + '''" ><span class="glyphicon glyphicon-off"></span></button>'''
+            option += '''<button type="button" class="btn btn-primary send_ticket" data-toggle="tooltip" title="gửi" id="''' + str(tk.ticketid.id) + '''" ><span class="glyphicon glyphicon-send"></span></button>'''
+            option += '''<a type="button" target=_blank class="btn btn-warning" href="/user/history_'''+str(tk.ticketid.id)+ '''" data-toggle="tooltip" title="dòng thời gian"><i class="fa fa-history"></i></a></div>'''
+            datestart = tk.ticketid.datestart + timezone.timedelta(hours=7)
+            downtime = '''<p class="downtime" id="downtime-''' + str(tk.ticketid.id) + '''"></p>'''
+            status = r'<span class ="label label-warning"> Đang xử lý </span>'
+            data.append([tk.ticketid.id, client, tk.ticketid.service.name, tk.ticketid.loai_su_co, content,
+                         str(datestart)[:-16], downtime, status, option])
+        ticket = {"data": data}
+        tickets = json.loads(json.dumps(ticket))
+        return JsonResponse(tickets, safe=False)
+
+
+def detail_user(request):
+    if request.session.has_key('user')and (Agents.objects.get(username=request.session['user'])).status == 1:
+        user = Agents.objects.get(username=request.session['user'])
+        if request.method == 'POST':
+            if 'change_user' in request.POST:
+                u = Agents.objects.get(id=request.POST['userid'])
+                fullname = request.POST['change_user']
+                email = request.POST['email']
+                phone = request.POST['phone']
+                receive_mail = request.POST['receive_mail']
+                u.fullname = fullname
+                u.email = email
+                u.phone = phone
+                u.receive_email = receive_mail
+                u.save()
+            elif 'pwd' in request.POST:
+                u = Agents.objects.get(id=request.POST['userid'])
+                u.password = request.POST['pwd']
+                u.save()
+            elif 'noti_noti' in request.POST:
+                user.noti_noti = 0
+                user.save()
+            elif 'noti_chat' in request.POST:
+                user.noti_chat = 0
+                user.save()
+        return render(request, 'user/detail_user.html', {'user': user,
+                                                         'username': mark_safe(json.dumps(user.username)),
+                                                         'fullname': mark_safe(json.dumps(user.fullname)),
+                                                         'noti_noti': user.noti_noti,
+                                                         'noti_chat': user.noti_chat})
+    else:
+        return redirect("/")
+
+
+def closed_ticket(request):
+    if request.session.has_key('user')and (Agents.objects.get(username=request.session['user'])).status == 1:
+        user = Agents.objects.get(username=request.session['user'])
+        return render(request, 'user/closed_ticket.html', {'user': user,
+                                                         'username': mark_safe(json.dumps(user.username)),
+                                                         'fullname': mark_safe(json.dumps(user.fullname)),
+                                                         'noti_noti': user.noti_noti,
+                                                         'noti_chat': user.noti_chat})
+    else:
+        return redirect("/")
+
+
+def closed_ticket_data(request):
+    if request.session.has_key('user') and (Agents.objects.get(username=request.session['user'])).status == 1:
+        user = Agents.objects.get(username=request.session['user'])
+        tks = Tickets.objects.filter(sender=user.id,status=3).order_by('-id')
+        data = []
+        for tk in tks:
+            client = r'<a data-toggle="collapse" data-target="#client'+ str(tk.id)+'">' + tk.client + '</a><br><div id="client' + str(tk.id)+'" class="collapse">' + tk.info_client+'</div>'
+            content = r'<a data-toggle="collapse" data-target="#content'+ str(tk.id)+'">' + str(tk.content[:16])+ '...</a><br><div id="content' + str(tk.id)+'" class="collapse">' + tk.content+'</div>'
+            if tk.expired == 1:
+                overdue = r'<span class ="label label-danger"> Quá hạn </span>'
+            else:
+                overdue = r'<span class ="label label-success"> Đúng hạn </span>'
+            handler = '<p id="hd' + str(tk.id) + '">'
+            for t in TicketAgent.objects.filter(ticketid=tk.id):
+                handler += t.agentid.username + "<br>"
+            handler += '</p>'
+            option = '''<a type="button" target=_blank class="btn btn-warning" href="/user/history_'''+str(tk.id)+ '''" data-toggle="tooltip" title="dòng thời gian"><i class="fa fa-history"></i></a>'''
+            datestart = tk.datestart + timezone.timedelta(hours=7)
+            dateclosed = str(datestart)[:-16]
+            data.append([tk.id, client, tk.service.name, tk.loai_su_co, content, str(datestart)[:-16],
+                         dateclosed, overdue, handler, option])
+        ticket = {"data": data}
+        tickets = json.loads(json.dumps(ticket))
+        return JsonResponse(tickets, safe=False)
+
+
+def history(request, id):
+    if request.session.has_key('user') and (Agents.objects.get(username=request.session['user'])).status == 1:
+        tems = TicketLog.objects.filter(ticketid=id)
+        result = []
+        for tem in tems:
+            if tem.agentid.position == 0:
+                action = "<b>Người dùng "
+            elif tem.agentid.position == 1:
+                action = "<b>Nhân viên "
+            elif tem.agentid.position == 2:
+                action = "<b>Quản trị "
+            else:
+                action = "<b>Quyền quản trị "
+            action += str(tem.agentid.username) + "</b><br/>" + tem.action
+            if tem.action == 'tạo mới yêu cầu':
+                cont = "<span class='glyphicon glyphicon-plus' ></span>"
+            elif tem.action == 'đóng yêu yêu cầu':
+                cont = "<span class='glyphicon glyphicon-off' ></span>"
+            elif tem.action == 'nhận xử lý yêu cầu':
+                cont = "<span class='glyphicon glyphicon-pushpin' ></span>"
+            elif tem.action == 'xử lý xong yêu cầu':
+                cont = "<span class='glyphicon glyphicon-ok' ></span>"
+            elif tem.action == 'xử lý lại yêu cầu':
+                cont = "<span class='glyphicon glyphicon-refresh' ></span>"
+            elif tem.action == 'mở lại yêu cầu':
+                cont = "<span class='glyphicon glyphicon-repeat' ></span>"
+            elif tem.action == 'từ bỏ xử lý yêu cầu':
+                cont = "<span class='glyphicon glyphicon-log-out' ></span>"
+            elif tem.action == 'tham gia xử lý yêu cầu':
+                cont = "<span class='glyphicon glyphicon-user' ></span>"
+            else:
+                cont = "<span class='glyphicon glyphicon-user' ></span>"
+            result.append({"id": tem.id,
+                           "title": action,
+                           "content": cont,
+                           "group": "period",
+                           "start": str(tem.date)+"T"+str(tem.time)[:-7]})
+        maxtime = TicketLog.objects.filter(ticketid=id).latest('id')
+        mintime = TicketLog.objects.filter(ticketid=id).earliest('id')
+        if maxtime.ticketid.status == 0:
+            status = '<font color="red">chờ</font>'
+        elif maxtime.ticketid.status == 1:
+            status = '<font color="orange">đang xử lý</font>'
+        elif maxtime.ticketid.status == 2:
+            status = '<font color="green">hoàn thành</font>'
+        else:
+            status = '<font color="gray">đóng</font>'
+        tim = str(timezone.datetime.combine(maxtime.date, maxtime.time) - timezone.datetime.combine(
+            mintime.date, mintime.time))[:-7]
+        result.append({"id": 0,
+                       "content": "Yêu cầu số " + str(id) + ": " + status + " (thời gian tồn tại " + tim + ")",
+                       "type": "point",
+                       "group": "overview",
+                       "start": str(mintime.date) + "T" + str(mintime.time)[:-7]})
+        tk = json.loads(json.dumps(result))
+        return render(request, 'user/history.html', {'tk': tk, 'id': str(id)})
+    else:
+        return redirect("/")

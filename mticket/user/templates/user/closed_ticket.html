@@ -1,0 +1,50 @@
+{% extends 'user/base.html' %}
+    {% load staticfiles %}
+{% block title %}Yêu cầu đã đóng{% endblock %}
+    {% block content %}
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper">
+    <section class="content-header">
+      <h1>
+        Yêu cầu đã đóng
+      </h1>
+      <ol class="breadcrumb">
+        <li><a ><i class="fa fa-home"></i> Trang chủ</a></li>
+        <li class="active">Yêu cầu đã đóng</li>
+      </ol>
+    </section>
+
+  <section class="content">
+      <div class="row">
+        <div class="col-xs-12">
+          <div class="box">
+            <!-- /.box-header -->
+            <div class="box-body">
+                <table style="width:100%;" class="table table-striped table-bordered" id="list_closed_ticket">
+                    <thead>
+                        <th>ID</th>
+                        <th>Tên khách hàng</th>
+                        <th>Dịch vụ</th>
+                        <th>Loại sự cố</th>
+                        <th>Nội dung sự cố</th>
+                        <th>Ngày tạo</th>
+                        <th>Ngày đóng</th>
+                        <th>Đúng hạn</th>
+                        <th>Người xử lý</th>
+                        <th>Tùy chọn</th>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+{% endblock %}
+{% block js %}
+    <script src="{% static 'js/user/closed_ticket.js' %}"></script>
+{% endblock %}
+

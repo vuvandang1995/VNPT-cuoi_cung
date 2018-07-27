@@ -183,13 +183,33 @@ class AgentLoginForm(forms.Form):
 
 # form tạo tịcket
 class CreateNewTicketForm(forms.Form):
+    client = forms.CharField(widget=forms.TextInput(
+        attrs={
+            'class': 'form-control',
+            'placeholder': 'Nhập tiêu tên khách hàng',
+        }
+    ))
+
+    info_client = forms.CharField(widget=forms.TextInput(
+        attrs={
+            'class': 'form-control',
+            'placeholder': 'Nhập tiêu thông tin khách hàng',
+        }
+    ))
+
+    loai_su_co = forms.CharField(widget=forms.TextInput(
+        attrs={
+            'class': 'form-control',
+            'placeholder': 'Nhập loại sự cố',
+        }
+    ))
+
     title = forms.CharField(widget=forms.TextInput(
         attrs={
             'class': 'form-control',
             'placeholder': 'Nhập tiêu đề',
         }
     ))
-    # topic = forms.ChoiceField(choices=[(x.id,x.name) for x in Topics.objects.all()])
 
     content = forms.CharField(widget=forms.Textarea(attrs={
         'class': 'form-control',
