@@ -19,11 +19,19 @@ class Services(models.Model):
     description = models.TextField()
     leader = models.ForeignKey('Agents', models.SET_NULL, null=True, db_column='agentid')
     downtime = models.IntegerField()
+    groupserviceid = models.ForeignKey('GroupServices', models.SET_NULL, null=True, db_column='groupserviceid')
 
 
     class Meta:
         managed = True
         db_table = 'services'
+
+class GroupServices(models.Model):
+    name = models.CharField(max_length=255)
+
+    class Meta:
+        managed = True
+        db_table = 'groupservices'
 
 
 class Agents(models.Model):
@@ -39,6 +47,7 @@ class Agents(models.Model):
     noti_noti = models.IntegerField(default=0)
     noti_chat = models.IntegerField(default=0)
     token = models.CharField(max_length=255)
+    groupserviceid = models.ForeignKey('GroupServices', models.SET_NULL, null=True, db_column='groupserviceid')
 
     class Meta:
         managed = True

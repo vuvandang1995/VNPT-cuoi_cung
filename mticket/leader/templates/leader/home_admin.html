@@ -1,0 +1,188 @@
+{% extends 'agent/base_admin.html' %}
+{% block title %} Dashboard {% endblock %}
+{% load staticfiles %}
+{% block content %}
+    <div class="page-wrapper">
+            <!-- Bread crumb -->
+            <div class="row page-titles">
+                <div class="col-md-5 align-self-center">
+                    <h3 class="text-primary">Quản lý yêu cầu</h3> </div>
+                <div class="col-md-7 align-self-center">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="javascript:void(0)">Trang chủ</a></li>
+                        <li class="breadcrumb-item active">Quản lý yêu cầu</li>
+                    </ol>
+                </div>
+            </div>
+            <!-- End Bread crumb -->
+            <div class="container-fluid">
+                <!-- Start Page Content -->
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="card p-30">
+                            <div class="media">
+                                <div class="media-left meida media-middle">
+                                    <span><i class="fa fa-envelope f-s-35 color-primary"></i></span>
+                                    <p></p>
+                                    <p class="m-b-0">Yêu cầu chờ xử lý</p>
+                                </div>
+                                <div class="media-body media-text-right" id="pending">
+                                    <h2>{{ tk_open }}</h2>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card p-30">
+                            <div class="media">
+                                <div class="media-left meida media-middle">
+                                    <span><i class="fa fa-envelope-open f-s-40 color-success"></i></span>
+                                    <p></p>
+                                    <p class="m-b-0">Yêu cầu đang xử lý</p>
+
+                                </div>
+                                <div class="media-body media-text-right" id="processing">
+                                    <h2>{{ tk_processing }}</h2>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card p-30">
+                            <div class="media">
+                                <div class="media-left meida media-middle">
+                                    <span><i class="fa fa-check-square-o f-s-40 color-warning"></i></span>
+                                    <p></p>
+                                    <p class="m-b-0">Yêu cầu hoàn thành</p>
+
+                                </div>
+                                <div class="media-body media-text-right" id="done">
+                                    <h2>{{ tk_done}}</h2>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card p-30">
+                            <div class="media">
+                                <div class="media-left meida media-middle">
+                                    <span><i class="fa fa-user f-s-40 color-danger"></i></span>
+                                    <p></p>
+                                    <p class="m-b-0">Số lượng nhân viên</p>
+
+                                </div>
+                                <div class="media-body media-text-right">
+                                    <h2>{{ agent_total }}</h2>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            <!-- Container fluid  -->
+                {% csrf_token %}
+            <div class="container-fluid" id="tbody">
+                <!-- Start Page Content -->
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-title">
+                                Tickets
+                            </div>
+                            <div class="card-body" id="tabdiv">
+                                <table style="width:100%;"  class="display nowrap table table-hover table-striped table-bordered" id="list_ticket_leader">
+                                    <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Tiêu đề</th>
+                                            <th>Chủ đề</th>
+                                            <th>Người gửi</th>
+                                            <th>Ưu tiên</th>
+                                            <th>Thời gian xử lý</th>
+                                            <th>Trạng thái</th>
+                                            <th>Người xử lý</th>
+                                        </tr>
+                                    </thead>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- End PAge Content -->
+            </div>
+                {% for tk in ticket %}
+                    <div class="modal" id="{{tk.id}}content" role="dialog">
+                        <div class="modal-dialog modal-lg">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <!--<button type="button" class="close" data-dismiss="modal">&times;</button>-->
+                                    <h4 class="modal-title">Yêu cầu số {{tk.id}}</h4>
+                                </div>
+                                <div class="modal-body form-group ct" id="ct{{tk.id}}">
+                                    <b>Người gửi:</b>
+                                    <p>{{tk.sender.fullname}}</p>
+                                    <b>Tiêu đề:</b>
+                                    <p>{{tk.title}}</p>
+                                    <b>Chủ đề:</b>
+                                    <p>{{tk.topicid.name}}</p>
+                                    <b>Nội dung:</b>
+                                    <p>{{tk.content}}</p>
+                                    <b>Ngày gửi:</b>
+                                    <p>{{ tk.datestart}}</p>
+                                    <b>Ngày hêt hạn:</b>
+                                    <p id="dateend{{tk.id}}">{{tk.dateend}}</p>
+                                    {% if tk.attach != '' %}
+                                    <b>Đính kèm:</b><br>
+                                    <img src="/media/{{tk.attach}}" alt="none" style="max-width:80%;max-height:600px;display: block;margin-left: auto;margin-right: auto;">
+                                    {% endif %}
+                                    <b>Ghi chú:</b><br>
+                                    <p>{{tk.note}}</p>
+                                </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                    </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor%}
+            <!--<div id="forward_modal" class="modal">-->
+                <!--<div class="modal-dialog">-->
+                    <!--<div class="modal-content">-->
+                        <!--<div class="modal-header">-->
+                            <!--<h3 class="modal-title">Agent List</h3>-->
+                        <!--</div>-->
+                        <!--<div class="modal-body form-group">-->
+                            <!--{% for tp in topic %}-->
+                                <!--<div class="tpic" style="display:none;">-->
+                                    <!--<input type="hidden" value="{{tp.name}}">-->
+                                    <!--{% for key,value in list_ag.items %}-->
+                                        <!--{% if key == tp.name %}-->
+                                            <!--{% for va in value %}-->
+                                                <!--<div id="{{ va.username }}">-->
+                                                    <!--<input class="inputText" type="checkbox" name="{{ va.username }}" > {{ va.username }} - {{va.fullname}} <br>-->
+                                                <!--</div>-->
+                                            <!--{% endfor %}-->
+                                        <!--{% endif %}-->
+                                    <!--{% endfor %}-->
+                                <!--</div>-->
+                            <!--{% endfor %}-->
+                            <!--<input type="hidden" name="ticketid" value="">-->
+                        <!--</div>-->
+
+                        <!--<div class="modal-footer">-->
+                            <!--<button type="button" class="btn btn-success forward_ticket">Forward</button>-->
+                            <!--<button type="button" class="btn btn-default closefd" data-dismiss="modal" id = "forward_ticket_close">Close</button>-->
+                            <!--<center class="loading" hidden><i class="fa fa-circle-o-notch fa-spin" style="font-size:24px"></i></center>-->
+                        <!--</div>-->
+                    <!--</div>-->
+                <!--</div>-->
+            <!--</div>-->
+            <!-- End Container fluid  -->
+            <!-- footer -->
+            <!-- End footer -->
+        </div>
+    </div>
+{% endblock %}
+{% block js %}
+    <script src="{% static 'js/lib/datatables/datatables.min.js' %}"></script>
+    <script src="{% static 'js/home_admin.js' %}"></script>
+{% endblock %}

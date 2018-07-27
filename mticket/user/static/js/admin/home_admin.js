@@ -12,7 +12,7 @@ $(document).ready(function(){
         ],
         "ajax": {
             "type": "GET",
-            "url": location.href +"data",
+            "url": location.href +"admin/data",
             "contentType": "application/json; charset=utf-8",
             "data": function(result){
                 return JSON.stringify(result);
