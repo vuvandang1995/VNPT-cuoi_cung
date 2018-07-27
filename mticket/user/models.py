@@ -108,8 +108,8 @@ class AddAgents(models.Model):
 
 def get_user(usname):
     try:
-        return Users.objects.get(username=usname)
-    except Users.DoesNotExist:
+        return Agents.objects.get(username=usname)
+    except Agents.DoesNotExist:
         return None
 
 
