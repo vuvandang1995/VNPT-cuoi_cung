@@ -29,6 +29,16 @@ Level_0 = 30
 Level_1 = 20
 Level_2 = 10
 
+
+class EmailThread(threading.Thread):
+    def __init__(self, email):
+        threading.Thread.__init__(self)
+        self._stop_event = threading.Event()
+        self.email = email
+
+    def run(self):
+        self.email.send()
+
 def login_user(request):
     mess_resetpwd_error = 'Email chưa đăng ký hoặc không hợp lệ'
     mess_resetpwd_ok = 'Hãy kiểm tra email của bạn để cập nhật lại mật khẩu'
