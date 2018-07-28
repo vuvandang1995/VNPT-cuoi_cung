@@ -186,14 +186,14 @@ class CreateNewTicketForm(forms.Form):
     client = forms.CharField(widget=forms.TextInput(
         attrs={
             'class': 'form-control',
-            'placeholder': 'Nhập tiêu tên khách hàng',
+            'placeholder': 'Nhập tên tên khách hàng',
         }
     ))
 
     info_client = forms.CharField(widget=forms.TextInput(
         attrs={
             'class': 'form-control',
-            'placeholder': 'Nhập tiêu thông tin khách hàng',
+            'placeholder': 'Nhập thông tin khách hàng',
         }
     ))
 
@@ -204,10 +204,10 @@ class CreateNewTicketForm(forms.Form):
         }
     ))
 
-    title = forms.CharField(widget=forms.TextInput(
+    thong_so_kt = forms.CharField(widget=forms.TextInput(
         attrs={
             'class': 'form-control',
-            'placeholder': 'Nhập tiêu đề',
+            'placeholder': 'Nhập thông số',
         }
     ))
 
@@ -225,8 +225,3 @@ class CreateNewTicketForm(forms.Form):
     )
 
 
-class CommentForm(forms.Form):
-    content = forms.CharField(widget=forms.Textarea(attrs={
-        'placeholder': 'comment here',
-        'name': 'content',
-    }))

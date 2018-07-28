@@ -201,7 +201,7 @@ def homeuser(request):
                 ticket = Tickets.objects.get(id=request.POST['tkid'])
                 ticket.status = 3
                 ticket.save()
-                TicketLog.objects.create(userid=user,
+                TicketLog.objects.create(agentid=user,
                                          ticketid=ticket,
                                          action='đóng yêu cầu',
                                          date=timezone.now().date(),
@@ -218,9 +218,19 @@ def homeuser(request):
                                                  render_to_string('user/close_email.html',
                                                                   {'receiver': rc, 'sender': user, 'id': id}),
                                                  to=[rc.email], )
-                            # email.send()
                             thread = EmailThread(email)
                             thread.start()
+            elif 'tkid_send' in request.POST:
+                ticket = Tickets.objects.get(id=request.POST['tkid_send'])
+                ticket.status = 0
+                ticket.save()
+                TicketLog.objects.create(agentid=user,
+                                         ticketid=ticket,
+                                         action='gửi yêu cầu',
+                                         date=timezone.now().date(),
+                                         time=timezone.now().time())
+                tkag = TicketAgent.objects.get(ticketid=ticket, agentid=user)
+                tkag.delete()
             elif 'noti_noti' in request.POST:
                 user.noti_noti = 0
                 user.save()
@@ -234,9 +244,9 @@ def homeuser(request):
                     ticket.client = form.cleaned_data['client']
                     ticket.info_client = form.cleaned_data['info_client']
                     ticket.loai_su_co = form.cleaned_data['loai_su_co']
-                    ticket.title = form.cleaned_data['title']
+                    ticket.thong_so_kt = form.cleaned_data['thong_so_kt']
                     service = Services.objects.get(name=request.POST['service'])
-                    ticket.service = service
+                    ticket.serviceid = service
                     ticket.lv_priority = int(request.POST['lv_priority'])
                     ticket.content = form.cleaned_data['content']
                     ticket.sender = user
@@ -248,25 +258,20 @@ def homeuser(request):
                             handle_uploaded_file(request.FILES['attach'])
                         else:
                             return render(request, 'user/home_user.html', content)
-                    ticket.save()
+                    if request.POST['kind'] == 'tu_xu_ly':
+                        ticket.status = 1
+                        ticket.save()
+                        TicketAgent.objects.create(agentid=user, ticketid=ticket)
+                        action = 'tạo mới và tự xử lý yêu cầu'
+                    else:
+                        ticket.save()
+                        action = 'tạo mới yêu cầu'
                     TicketLog.objects.create(agentid=user,
                                              ticketid=ticket,
-                                             action='tạo mới yêu cầu',
-                                             date=timezone.now())
-                    # if serviceA.type_send == 1:
-                    #     for rc in receiver:
-                    #         if rc.receive_email == 1:
-                    #             email = EmailMessage('New ticket',
-                    #                                 render_to_string('user/new_ticket.html', {}),
-                    #                                 to=[rc.email],)
-                    #             email.send()
-                    # else:
-                    #     email = EmailMessage('New ticket',
-                    #                         render_to_string('user/new_ticket.html', {}),
-                    #                         to=[admin.email],)
-                    #     email.send()
+                                             action=action,
+                                             date=timezone.now().date(),
+                                             time=timezone.now().time())
                 return redirect("/user")
-
         return render(request, 'user/home_user.html', content)
     else:
         return redirect("/")
@@ -290,14 +295,19 @@ def homeuser_data_tu_xu_ly(request):
         for tk in tks_txl:
             client = r'<a data-toggle="collapse" data-target="#client'+ str(tk.ticketid.id)+'">' + tk.ticketid.client + '</a><br><div id="client' + str(tk.ticketid.id)+'" class="collapse">' + tk.ticketid.info_client+'</div>'
             content = r'<a data-toggle="collapse" data-target="#content'+ str(tk.ticketid.id)+'">' + str(tk.ticketid.content[:16])+ '...</a><br><div id="content' + str(tk.ticketid.id)+'" class="collapse">' + tk.ticketid.content+'</div>'
-            option = '''<div class="btn-group"><button type="button" class="btn btn-danger close_ticket" data-toggle="tooltip" title="đóng" id="''' + str(tk.ticketid.id) + '''" ><span class="glyphicon glyphicon-off"></span></button>'''
+            if tk.ticketid.attach != '':
+                attach = r'<a class="fa fa-image" data-title="' + str(tk.ticketid.attach) + '" data-toggle="modal" data-target="#image" id="' + str(tk.ticketid.id)+'"></a>'
+            else:
+                attach = ''
+            option = '''<div class="btn-group"><button type="button" class="btn btn-danger close_ticket_txl" data-toggle="tooltip" title="đóng" id="''' + str(tk.ticketid.id) + '''" ><span class="glyphicon glyphicon-off"></span></button>'''
             option += '''<button type="button" class="btn btn-primary send_ticket" data-toggle="tooltip" title="gửi" id="''' + str(tk.ticketid.id) + '''" ><span class="glyphicon glyphicon-send"></span></button>'''
             option += '''<a type="button" target=_blank class="btn btn-warning" href="/user/history_'''+str(tk.ticketid.id)+ '''" data-toggle="tooltip" title="dòng thời gian"><i class="fa fa-history"></i></a></div>'''
             datestart = tk.ticketid.datestart + timezone.timedelta(hours=7)
+            dateend = r'<p id="dateend' + str(tk.ticketid.id) + '">'+ str(tk.ticketid.dateend + timezone.timedelta(hours=7))[:-16] +'</p>'
             downtime = '''<p class="downtime" id="downtime-''' + str(tk.ticketid.id) + '''"></p>'''
             status = r'<span class ="label label-warning"> Đang xử lý </span>'
-            data.append([tk.ticketid.id, client, tk.ticketid.service.name, tk.ticketid.loai_su_co, content,
-                         str(datestart)[:-16], downtime, status, option])
+            data.append([tk.ticketid.id, client, tk.ticketid.serviceid.name, tk.ticketid.loai_su_co, content,
+                         tk.ticketid.thong_so_kt, attach, str(datestart)[:-16], dateend, downtime, status, option])
         ticket = {"data": data}
         tickets = json.loads(json.dumps(ticket))
         return JsonResponse(tickets, safe=False)
@@ -306,21 +316,46 @@ def homeuser_data_tu_xu_ly(request):
 def homeuser_data_gui_di(request):
     if request.session.has_key('user') and (Agents.objects.get(username=request.session['user'])).status == 1:
         user = Agents.objects.get(username=request.session['user'])
-        tks = Tickets.objects.filter(sender=user.id, status__in=[0, 1, 2]).order_by('-id')
-        ls_ag = Agents.objects.exclude(user=request.session['user'])
-        tks_txl = TicketAgent.objects.filter(ticketid__in=tks, agentid=user)
+        tk_txl_id = TicketAgent.objects.filter(agentid=user).values('ticketid')
+        tk_txl = Tickets.objects.exclude(id__in=tk_txl_id).values('id')
+        tks = Tickets.objects.filter(id__in=tk_txl ,sender=user.id, status__in=[0, 1, 2]).order_by('-id')
         data = []
-        for tk in tks_txl:
-            client = r'<a data-toggle="collapse" data-target="#client'+ str(tk.ticketid.id)+'">' + tk.ticketid.client + '</a><br><div id="client' + str(tk.ticketid.id)+'" class="collapse">' + tk.ticketid.info_client+'</div>'
-            content = r'<a data-toggle="collapse" data-target="#content'+ str(tk.ticketid.id)+'">' + str(tk.ticketid.content[:16])+ '...</a><br><div id="content' + str(tk.ticketid.id)+'" class="collapse">' + tk.ticketid.content+'</div>'
-            option = '''<div class="btn-group"><button type="button" class="btn btn-danger close_ticket" data-toggle="tooltip" title="đóng" id="''' + str(tk.ticketid.id) + '''" ><span class="glyphicon glyphicon-off"></span></button>'''
-            option += '''<button type="button" class="btn btn-primary send_ticket" data-toggle="tooltip" title="gửi" id="''' + str(tk.ticketid.id) + '''" ><span class="glyphicon glyphicon-send"></span></button>'''
-            option += '''<a type="button" target=_blank class="btn btn-warning" href="/user/history_'''+str(tk.ticketid.id)+ '''" data-toggle="tooltip" title="dòng thời gian"><i class="fa fa-history"></i></a></div>'''
-            datestart = tk.ticketid.datestart + timezone.timedelta(hours=7)
-            downtime = '''<p class="downtime" id="downtime-''' + str(tk.ticketid.id) + '''"></p>'''
-            status = r'<span class ="label label-warning"> Đang xử lý </span>'
-            data.append([tk.ticketid.id, client, tk.ticketid.service.name, tk.ticketid.loai_su_co, content,
-                         str(datestart)[:-16], downtime, status, option])
+        for tk in tks:
+            client = r'<a data-toggle="collapse" data-target="#client'+ str(tk.id)+'">' + tk.client + '</a><br><div id="client' + str(tk.id)+'" class="collapse">' + tk.info_client+'</div>'
+            content = r'<a data-toggle="collapse" data-target="#content'+ str(tk.id)+'">' + str(tk.content[:16])+ '...</a><br><div id="content' + str(tk.id)+'" class="collapse">' + tk.content+'</div>'
+            if tk.attach != '':
+                attach = r'<a class="fa fa-image" data-title="' + str(tk.attach) + '" data-toggle="modal" data-target="#image" id="' + str(tk.id)+'"></a>'
+            else:
+                attach = ''
+            datestart = tk.datestart + timezone.timedelta(hours=7)
+            dateend = r'<p id="dateend' + str(tk.id) + '">'+ str(tk.dateend + timezone.timedelta(hours=7))[:-16] +'</p>'
+            downtime = '''<p class="downtime" id="downtime-''' + str(tk.id) + '''"></p>'''
+            if tk.status == 0:
+                status = r'<span class ="label label-danger"> Chờ</span>'
+                handler = '<p id="hd' + str(tk.id) + '">Không có ai</p>'
+            else:
+                if tk.status == 1:
+                    status = r'<span class ="label label-warning"> Đang xử lý </span>'
+                elif tk.status == 2:
+                    status = r'<span class ="label label-success"> Hoàn thành </span>'
+                else:
+                    status = r'<span class ="label label-default"> Đóng </span>'
+                handler = '<p id="hd' + str(tk.id) + '">'
+                for t in TicketAgent.objects.filter(ticketid=tk.id):
+                    handler += t.agentid.fullname + "<br>"
+                handler += '</p>'
+            option = ''
+            if tk.status < 3:
+                option += '''<button type="button" class="btn btn-danger close_ticket_gui_di" data-toggle="tooltip" title="đóng" id="'''+str(tk.id)+'''" ><span class="glyphicon glyphicon-off"></span></button>'''
+            else:
+                option += '''<button disabled type="button" class="btn btn-danger close_ticket_gui_di" data-toggle="tooltip" title="đóng" id="'''+str(tk.id)+'''"><span class="glyphicon glyphicon-off"></span></button>'''
+            if 1 == tk.status or tk.status == 2:
+                option += '''<a href='javascript:register_popup("chat'''+str(tk.id)+'''", '''+str(tk.id)+''');' type="button" class="btn btn-primary" data-toggle="tooltip" title="trò chuyện" id="chat_with_agent"><span class="glyphicon glyphicon-comment" ></span><input type="hidden" value="'''+str(tk.id)+'''"/></a>'''
+            else:
+                option += '''<a  type="button" disabled class="btn btn-primary not-active" data-toggle="tooltip" title="trò chuyện"><span class="glyphicon glyphicon-comment" ></span></a>'''
+            option += '''<a type="button" target=_blank class="btn btn-warning" href="/user/history_'''+str(tk.id)+ '''" data-toggle="tooltip" title="dòng thời gian"><i class="fa fa-history"></i></a>'''
+            data.append([tk.id, client, tk.serviceid.name, tk.loai_su_co, content, tk.thong_so_kt,
+                         attach, str(datestart)[:-16], dateend, downtime, status, handler, option])
         ticket = {"data": data}
         tickets = json.loads(json.dumps(ticket))
         return JsonResponse(tickets, safe=False)
@@ -391,7 +426,7 @@ def closed_ticket_data(request):
             option = '''<a type="button" target=_blank class="btn btn-warning" href="/user/history_'''+str(tk.id)+ '''" data-toggle="tooltip" title="dòng thời gian"><i class="fa fa-history"></i></a>'''
             datestart = tk.datestart + timezone.timedelta(hours=7)
             dateclosed = str(datestart)[:-16]
-            data.append([tk.id, client, tk.service.name, tk.loai_su_co, content, str(datestart)[:-16],
+            data.append([tk.id, client, tk.serviceid.name, tk.loai_su_co, content, str(datestart)[:-16],
                          dateclosed, overdue, handler, option])
         ticket = {"data": data}
         tickets = json.loads(json.dumps(ticket))
@@ -411,9 +446,13 @@ def history(request, id):
                 action = "<b>Quản trị "
             else:
                 action = "<b>Quyền quản trị "
-            action += str(tem.agentid.username) + "</b><br/>" + tem.action
+            action += str(tem.agentid.fullname) + "</b><br/>" + tem.action
             if tem.action == 'tạo mới yêu cầu':
                 cont = "<span class='glyphicon glyphicon-plus' ></span>"
+            elif tem.action == 'tạo mới và tự xử lý yêu cầu':
+                cont = "<span class='glyphicon glyphicon-tag' ></span>"
+            elif tem.action == 'gửi yêu cầu':
+                cont = "<span class='glyphicon glyphicon-send' ></span>"
             elif tem.action == 'đóng yêu yêu cầu':
                 cont = "<span class='glyphicon glyphicon-off' ></span>"
             elif tem.action == 'nhận xử lý yêu cầu':

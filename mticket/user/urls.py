@@ -10,6 +10,7 @@ urlpatterns = [
         views.activate, name='activate'),
     path('user/', views.homeuser, name='homeuser'),
     path('user/tu_xu_ly', views.homeuser_data_tu_xu_ly, name='homeuser_data_tu_xu_ly'),
+    path('user/gui_di', views.homeuser_data_gui_di, name='homeuser_data_gui_di'),
     path('logout/', views.logout_user, name='logout'),
     path('profile', views.detail_user, name='detail_user'),
     path('closed_ticket', views.closed_ticket, name='closed_ticket'),
