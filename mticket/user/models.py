@@ -26,13 +26,6 @@ class Services(models.Model):
         managed = True
         db_table = 'services'
 
-class GroupServices(models.Model):
-    name = models.CharField(max_length=255)
-
-    class Meta:
-        managed = True
-        db_table = 'groupservices'
-
 
 class GroupServices(models.Model):
     name = models.CharField(max_length=255)
@@ -55,7 +48,6 @@ class Agents(models.Model):
     noti_noti = models.IntegerField(default=0)
     noti_chat = models.IntegerField(default=0)
     token = models.CharField(max_length=255)
-    groupserviceid = models.ForeignKey('GroupServices', models.SET_NULL, null=True, db_column='groupserviceid')
 
     class Meta:
         managed = True
