@@ -1,5 +1,12 @@
- //this function can remove a array element.
- Array.remove = function(array, from, to) {
+function validateSize(){
+    $('#invalid-msg').html("");
+    if(($("#attach"))[0].files[0].size > 10485760){
+        $('#invalid-msg').html("maximum size is 10MB");
+        return false;
+    }
+    return true;
+} //this function can remove a array element.
+Array.remove = function(array, from, to) {
     var rest = array.slice((to || from) + 1 || array.length);
     array.length = from < 0 ? array.length + from : from;
     return array.push.apply(array, rest);

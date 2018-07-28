@@ -19,7 +19,7 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Sans:400,700">
     {% block lib %}{% endblock %}
 </head>
-<body class="hold-transition skin-blue sidebar-mini">
+<body class="skin-blue sidebar-mini sidebar-collapse">
 <div class="wrapper">
     <div class="main-header">
     <!-- Logo -->
@@ -106,8 +106,16 @@
           </a>
         </li>
         <li>
+          <a href="{% url 'user:closed_ticket' %}">
+            <i class="fa fa-check-square"></i> <span>Yêu cầu đã xử lý</span>
+            <span class="pull-right-container">
+              <small class="label pull-right bg-green"></small>
+            </span>
+          </a>
+        </li>
+        <li>
           <a href="{% url 'user:detail_user' %}">
-            <i class="fa fa-edit"></i> <span>Cài đặt</span>
+            <i class="fa fa-edit"></i> <span>Thông tin cá nhân</span>
             <span class="pull-right-container">
               <small class="label pull-right bg-green"></small>
             </span>
@@ -154,7 +162,7 @@
 <script src="{% static 'user_interface/bower_components/fastclick/lib/fastclick.js' %}"></script>
 <script src="{% static 'user_interface/dist/js/adminlte.min.js' %}"></script>
 <script src="{% static 'user_interface/dist/js/demo.js' %}"></script>
-    <script src="{% static 'js/home_user.js' %}"></script>
+    <script src="{% static 'js/user/home_user.js' %}"></script>
 
 <script>
     var x = document.getElementById("myAudio");

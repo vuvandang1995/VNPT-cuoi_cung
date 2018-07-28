@@ -1,5 +1,4 @@
 from django.db import models
-
 # Create your models here.
 # This is an auto-generated Django model module.
 # You'll have to do the following manually to clean this up:
@@ -11,7 +10,7 @@ from django.db import models
 from django.db import models
 from user.models import *
 import time
-    
+
 
 class Services(models.Model):
     name = models.CharField(max_length=255)
@@ -20,6 +19,7 @@ class Services(models.Model):
     leader = models.ForeignKey('Agents', models.SET_NULL, null=True, db_column='agentid')
     downtime = models.IntegerField()
     groupserviceid = models.ForeignKey('GroupServices', models.SET_NULL, null=True, db_column='groupserviceid')
+
 
 
     class Meta:
@@ -34,11 +34,19 @@ class GroupServices(models.Model):
         db_table = 'groupservices'
 
 
+class GroupServices(models.Model):
+    name = models.CharField(max_length=255)
+
+    class Meta:
+        managed = True
+        db_table = 'groupservices'
+
+
 class Agents(models.Model):
     fullname = models.CharField(max_length=255)
     email = models.CharField(max_length=255)
     username = models.CharField(max_length=255)
-    phone = models.CharField(max_length=255,null=True)
+    phone = models.CharField(max_length=255, null=True)
     receive_email = models.IntegerField(default=1)
     password = models.CharField(max_length=255)
     position = models.IntegerField(default=0)

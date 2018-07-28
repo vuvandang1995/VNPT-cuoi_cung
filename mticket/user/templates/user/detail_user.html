@@ -39,7 +39,7 @@
                       <td id="phone_user">{{user.phone}}</td>
                     </tr>
                     <tr>
-                        <td>Nhận email</td>
+                        <td>Nhận email thông từ hệ thống</td>
                       {% if user.receive_email == 1 %}
                             <td id="rc_email">Có</td>
                         {% else %}
@@ -56,7 +56,7 @@
                     </tr>
                     <tr>
                         <td>Ngày tạo</td>
-                      <td>{{ user.created }}</td>
+                      <td>{{ user.created|date:'d/m/Y' }}</td>
                     </tr>
                   </tbody>
                 </table>
@@ -92,7 +92,7 @@
                     <label for="phone"><b>Điện thoại</b></label>
                     <input class="inputText form-control" type="text" placeholder="Enter your phone number" name="phone">
                     <br/>
-                    <input class="inputText" style="transform: scale(2)" type="checkbox" name="receive_mail" > <b> Nhận email ?</b>
+                    <input class="inputText" style="transform: scale(1.5)" type="checkbox" name="receive_mail" > <b> Nhận email thông báo từ hệ thống</b>
                 </div>
 
                 <div id="pwd">
@@ -118,6 +118,6 @@
 </div>
 {% endblock %}
 {% block js %}
-    <script src="{% static 'js/detail_user.js' %}"></script>
+    <script src="{% static 'js/user/detail_user.js' %}"></script>
 {% endblock %}
 

@@ -16,24 +16,55 @@
 
     <!-- Main content -->
     <section class="content">
+        {% csrf_token %}
       <div class="row">
         <div class="col-xs-12">
-          <div class="box">
+            <div class="box">
             <div class="box-header">
-              <button class="btn btn-lg btn-primary" data-toggle="modal" data-target="#id02">
-                <span class="glyphicon glyphicon-plus"></span> Tạo yêu cầu
-            </button>
+                <h3 style="float:left ">Yêu cầu tự xử lý</h3>
+                <button style="float:right" class="btn btn-lg btn-primary" data-toggle="modal" data-target="#id02">
+                    <span class="glyphicon glyphicon-plus"></span> Tạo yêu cầu tự xử lý
+                </button>
             </div>
             <!-- /.box-header -->
             <div class="box-body">
-              <table style="width:100%;" id="list_tk_user" class="table table-bordered table-striped">
+              <table style="width:100%;" id="list_tk_tu_xu_ly" class="table table-bordered table-striped">
                 <thead>
                     <tr>
                         <th>ID</th>
-                        <th>Chủ đề</th>
-                        <th>Tiêu đề</th>
+                        <th>Tên khách hàng</th>
+                        <th>Dịch vụ</th>
+                        <th>Loại sự cố</th>
+                        <th>Nội dung sự cố</th>
                         <th>Ngày tạo</th>
-                        <th>Mức ưu tiên</th>
+                        <th>Thời gian xử lý</th>
+                        <th>Trạng thái</th>
+                        <th>Tùy chọn</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                  </tbody>
+              </table>
+            </div>
+          </div>
+            <div class="box">
+            <div class="box-header">
+                <h3 style="float:left;" >Yêu cầu gửi đi</h3>
+                <button style="float:right" class="btn btn-lg btn-primary" data-toggle="modal" data-target="#id02">
+                    <span class="glyphicon glyphicon-send"></span> Tạo yêu cầu gửi đi
+                </button>
+            </div>
+            <!-- /.box-header -->
+            <div class="box-body">
+              <table style="width:100%;" id="list_tk_gui_di" class="table table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Tên khách hàng</th>
+                        <th>Thông tin khách hàng</th>
+                        <th>Loại sự cố</th>
+                        <th>Nội dung sự cố</th>
+                        <th>Ngày tạo</th>
                         <th>Thời gian xử lý</th>
                         <th>Trạng thái</th>
                         <th>Người xử lý</th>
@@ -41,51 +72,49 @@
                     </tr>
                   </thead>
                   <tbody>
-                    {% csrf_token %}
-                    {% for tk in ticket %}
-
-                    <div class="modal fade" id="{{tk.id}}content" role="dialog">
-                        <div class="modal-dialog modal-lg">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                                    <h4 class="modal-title">Yêu cầu số {{tk.id}}</h4>
-                                </div>
-                                <div class="modal-body form-group" id="ct{{tk.id}}">
-                                    <label>Tiêu đề:</label>
-                                    <p>{{tk.title}}</p>
-                                    <label>Chủ đề:</label>
-                                    <p>{{tk.topicid.name}} - {{tk.topicid.description}}</p>
-                                    <label>Mức ưu tiên:</label>
-                                    <p>{{ tk.priority.name }}</p>
-                                    <label>Nội dung:</label>
-                                    <p>{{tk.content}}</p>
-                                    <label>Ngày tạo:</label>
-                                    <p>{{ tk.datestart}}</p>
-                                    <label>Ngày hết hạn:</label>
-                                    <p id="dateend{{tk.id}}">{{tk.dateend}}</p>
-                                    {% if tk.attach != '' %}
-                                    <b>Đính kèm:</b><br>
-                                    <img src="/media/{{tk.attach}}" alt="none" style="max-width:80%;max-height:600px;display: block;margin-left: auto;margin-right: auto;">
-                                    {% endif %}
-                                    <b>Ghi chú:</b><br>
-                                    <p id="note{{tk.id}}">{{tk.note}}</p>
-                                </div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-default" data-dismiss="modal">Đóng</button>
-                                    </div>
-                            </div>
-                        </div>
-                    </div>
-                    {% endfor %}
                   </tbody>
               </table>
             </div>
           </div>
         </div>
       </div>
-    </section>
-  </div>
+    <div class="modal fade" id="id03" role="dialog" >
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content ">
+                <form method="POST" enctype="multipart/form-data" onsubmit="return validateSize()">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Yêu cầu mới</h4>
+                    </div>
+                     <div class="modal-body form-group">
+                         <label>Tên khách hàng</label>
+                         <input class="form-control" name="client" required>
+                         <label>Thông tin khách hàng</label>
+                         <textarea class="form-control" name="info_client" required></textarea>
+                         <label>Loại sự cố</label>
+                         <input class="form-control" name="loai_su_co" required>
+                         <label>Dịch vụ</label>
+                         <select name="service" class="form-control" id="service_select">
+                             <option></option>
+                         </select>
+                         <label>Nội dung sự cố</label>
+                         <textarea class="form-control" name="content" required></textarea>
+                         <label>Mức ưu tiên</label>
+                         <select name="lv_priority" class="form-control" id="lv_select">
+                             <option value="0">Thấp</option>
+                             <option value="1">Trung bình</option>
+                             <option value="2">Cao</option>
+                         </select>
+                         <label>Đính kèm</label>
+                         <input type="file" class="form-control" accept="image/*" name="attach" id="attach">
+                     </div>
+                    <div class="modal-footer">
+                         <button type="submit" class="btn btn-primary" value="OK" id="i_submit" onsubmit="return validateSize()">Gửi</button>
+                         <button type="button" class="btn btn-default" data-dismiss="modal">Đóng</button>
+                    </div>
+              </form>
+            </div>
+        </div>
+    </div>
     <div class="modal fade" id="id02" role="dialog" >
         <div class="modal-dialog modal-lg">
             <div class="modal-content ">
@@ -98,24 +127,35 @@
                          {% for key, value in form.error.items %}
                          {{value}}
                          {% endfor%}
+                         <label>Tên khách hàng</label>
+                         {{form.client}}
+                         <br>
+                         <label>Thông tin khách hàng</label>
+                         {{form.info_client}}
+                         <br>
+                         <label>Loại sự cố</label>
+                         {{form.loai_su_co}}
+                         <br>
                          <label for="title"><b>Tiêu đề</b></label>
                          {{form.title}}
-                         <br /><label for="topic"><b>Chủ đề</b></label><br />
-                         <select name="topic" class="form-control" id="mySelect">
-                             {% for tp in topic %}
-                                <option value="{{tp.id}}" name="{{tp.name}}">{{tp.name}} - {{tp.description}}</option>
+                         <br>
+                         <label for="topic"><b>Dịch vụ</b></label>
+                         <select name="service" class="form-control" id="mySelect">
+                             {% for sv in service %}
+                                <option value="{{sv.name}}" name="{{service}}">{{sv.name}} - {{sv.description}}</option>
                              {% endfor %}
                          </select>
-                         <br /><label for="level"><b>Mức ưu tiên</b></label><br />
-                         <select name="level" class="form-control" id="lv_select">
-                             {% for lv in level %}
-                                <option value="{{lv.id}}" name="{{lv.name}}">{{lv.name}}</option>
-                             {% endfor %}
+                         <br>
+                         <label for="level"><b>Mức ưu tiên</b></label>
+                         <select name="lv_priority" class="form-control" id="lv_select">
+                             <option value="0">Thấp</option>
+                             <option value="1">Trung bình</option>
+                             <option value="2">Cao</option>
                          </select>
-                         <br />
-                         <label for="content"><b>Nội dung</b></label><br /><br />
+                         <br>
+                         <label for="content"><b>Nội dung</b></label>
                          {{form.content}}
-                         <br />
+                         <br>
                          <label for="attach"><b>Đính kèm</b></label><br />
                          <input type="file" class="form-control" accept="image/*" name="attach" id="attach">
                          <div><font id="invalid-msg" color="red" size="5"></font></div>
@@ -129,30 +169,27 @@
             </div>
         </div>
     </div>
+    </section>
+  </div>
 {% endblock %}
 {% block js%}
 <script>
         $(document).ready(function(){
-            var table = $('#list_tk_user').DataTable({
-                "columnDefs": [
-                    { "width": "5%", "targets": 0 },
-                    { "width": "13%", "targets": 1 },
-                    { "width": "20%", "targets": 2 },
-                    { "width": "9%", "targets": 3 },
-                    { "width": "8%", "targets": 4 },
-                    { "width": "12%", "targets": 5 },
-                    { "width": "8%", "targets": 6 },
-                    { "width": "10%", "targets": 7 },
-                    { "width": "15%", "targets": 8 },
-                ],
+            var table = $('#list_tk_tu_xu_ly').DataTable({
                 "ajax": {
                     "type": "GET",
-                    "url": location.href +"data/",
+                    "url": location.href +"tu_xu_ly",
                     "contentType": "application/json; charset=utf-8",
                     "data": function(result){
                         return JSON.stringify(result);
                     }
                 },
+                'dom': 'Rlfrtip',
+                "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
+                "order": [[ 0, "desc" ]],
+                "displayLength": 25,
+            });
+            var table = $('#list_tk_gui_di').DataTable({
                 'dom': 'Rlfrtip',
                 "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
                 "order": [[ 0, "desc" ]],
@@ -210,7 +247,7 @@
                     var chat = herf.substring(herf.indexOf("(")+1, herf.indexOf(")"));
                     // Gán dữ liệu
                     sessionStorage.setItem(tkid, chat);
-                     
+
                     // Lấy dữ liệu
                 } else {
                     document.write('Trình duyệt của bạn không hỗ trợ local storage');
