@@ -11,4 +11,6 @@ urlpatterns = [
     path('group_service', views.group_service, name='group_service'),
     path('manage_agent', views.manage_agent, name="manage_agent"),
     path('manage_agent/data', views.manage_agent_data, name="manage_agent_data"),
+    path('services', views.manage_serivce, name='manage_serivce'),
+    path('admin/leader', views.fullname_agent_data, name='fullname_agent_data'),
 ]

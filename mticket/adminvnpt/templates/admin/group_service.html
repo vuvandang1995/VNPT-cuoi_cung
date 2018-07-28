@@ -62,16 +62,6 @@
                                                         <label for="content"><b>Tên:</b></label>
                                                         <p>{{gs.name}}</p>
                                                         
-                                                        <label for="content"><b>Danh sách nhân viên chịu trách nhiệm:</b></label>
-                                                        <p>
-                                                        {% for key,value in list_ag.items %}
-                                                            {% if key == gs.id %}
-                                                                {% for va in value %}
-                                                                    {{va}},
-                                                                {% endfor %}
-                                                            {% endif %}
-                                                        {% endfor %}
-                                                        </p>
                                                         <label for="listtopic"><b>Danh sách dịch vụ thuộc nhóm:</b></label>
                                                         <p>
                                                         {% for key,value in list_tp.items %}
