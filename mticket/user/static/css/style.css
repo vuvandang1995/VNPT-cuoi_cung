@@ -686,6 +686,10 @@ ul {
 li {
   list-style: none;
 }
+
+#list_agent li input[type="checkbox"]{
+  margin: 15px 10px 3px 4px;
+}
 p {
   font-family: 'Poppins', sans-serif;
   /* color: #99abb4; */

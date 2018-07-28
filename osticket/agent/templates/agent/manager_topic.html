@@ -95,6 +95,13 @@
                             <input class="form-control" type="text" placeholder="Mô tả" name="description" required>
                             <font id="deserr" color="red"></font><br>
 
+                            <select name="gpsv" class="form-control" id="mySelect">
+                                {% for dm in department %}
+                                    <option value="{{dm.id}}" name="{{dm.name}}">{{dm.name}}</option>
+                                {% endfor %}
+                            </select>
+                            </br>
+
                             <label for="agent"><b>Chọn quản trị viên Topic</b></label></br>
                             <input style="border-radius: 0px;width: 300px" type="text" id="search" name="search" class="input-large" placeholder="Nhập tên quản trị viên">
                             <input type="hidden" name="username_leader" value="">
@@ -113,23 +120,7 @@
                     </div>
                 </div>
             </div>
-            <script>
-
-
-
-                function myFunction() {
-                    var x = $('#mySelect option:selected').html();
-                    $('#topicModal input:checkbox').prop('checked', false);
-                    $('.dpm').each(function() {
-                        var dm = $(this).children('input').val();
-                        if (dm == x){
-                            $(this).show();
-                        }else{
-                            $(this).hide();
-                        }
-                    });
-                }
-            </script>
+            
             <!-- End Container fluid  -->
             <!-- footer -->
             <!-- End footer -->

@@ -35,26 +35,43 @@ $(document).ready(function(){
 
     $("#addTopic").click(function() {
         var token = $("input[name=csrfmiddlewaretoken]").val();
-        var topicname = $("input[name=topicname]").val();
+        var svname = $("input[name=svname]").val();
         var description = $("input[name=description]").val();
-        var topicid = $("input[name=topicid]").val();
+        var svid = $("input[name=svid]").val();
         var leader = $("input[name=username_leader]").val();
+        var gpsv = document.getElementById("mySelect").value;
+        var ngay = $("input[name=ngay]").val();
+        var gio = $("input[name=gio]").val();
+        var phut = $("input[name=phut]").val();
+        if (ngay == ''){
+            ngay = '0';
+        }
+        if (gio == ''){
+            gio = '0';
+        }
+        if (phut == ''){
+            phut = '0';
+        }
+        var downtime = parseInt(phut) + parseInt(gio) * 60 + parseInt(ngay) * 24 * 60;
         $("#nameerr").html("");
         $("#deserr").html("");
         $("#leadererr").html("");
+        $("#gpsverr").html("");
+        $("#downtimeerr").html("");
         ag_leader = [];
-        if (topicname==''){
+        if (svname==''){
             $("#nameerr").html("Vui lòng không để trống");
-        }
-        else if(description==''){
+        }else if(description==''){
             $("#deserr").html("Vui lòng không để trống");
         }else if (leader==''){
             $("#leadererr").html("Vui lòng chọn");
+        }else if (downtime == 0){
+            $("#downtimeerr").html("Vui lòng chọn");
         }else{
             $.ajax({
                 type:'POST',
                 url:location.href,
-                data: {'add_topic': topicname, 'description': description, 'csrfmiddlewaretoken':token, 'topicid': topicid, 'leader': leader},
+                data: {'add_topic': svname, 'description': description, 'csrfmiddlewaretoken':token, 'svid': svid, 'leader': leader, 'gpsv': gpsv, 'downtime': downtime},
                 success: function(){
                     // window.location.reload();
                     $("#list_topic").load(location.href + " #list_topic");
@@ -77,26 +94,47 @@ $(document).ready(function(){
         var button = $(event.relatedTarget);
         var title = button.data('title');
         if (title === 'edit'){
-            $('#title').html("Edit Topic")
-            var topicname = button.data('name');
-            var topicid = button.attr('id');
-            $("input[name=topicname]").val(topicname);
+            $('#title').html("Chỉnh sửa dịch vụ")
+            var svname = button.data('name');
+            var svid = button.attr('id');
+            $("input[name=svname]").val(svname);
 
-            var description = $("#description_topic"+topicid).html();
+            var description = $("#description_topic"+svid).html();
             $("input[name=description]").val(description);
 
-            var leader = $("#leader_topic"+topicid).html();
+            var leader = $("#leader_topic"+svid).html();
             $("input[name=search]").val(leader);
 
-            $("input[name=topicid]").val(topicid);
+            $("#search_agent").val("");
+
+            $("input[name=svid]").val(svid);
+            $("#nameerr").html("");
+            $("#deserr").html("");
+            $("#leadererr").html("");
+            $("#gpsverr").html("");
+            $("#downtimeerr").html("");
+            
         }else{
-            $('#title').html("Add New Topic")
-            $("input[name=topicid]").val(0);
-            $("input[name=topicname]").val("");
+            $('#title').html("Thông tin dịch vụ mới")
+            $("input[name=svid]").val(0);
+            $("input[name=svname]").val("");
             $("input[name=description]").val("");
             $("input[name=search]").val("");
+            $("input[name=search_agent]").val("");
             $("input[name=username_leader]").val("");
+            $('body #list_agent').empty();
+            $("input[name=ngay]").val("");
+            $("input[name=gio]").val("");
+            $("input[name=phut]").val("");
+            $("#nameerr").html("");
+            $("#deserr").html("");
+            $("#leadererr").html("");
+            $("#gpsverr").html("");
+            $("#downtimeerr").html("");
         }
     });
-    
+
+    $('body #list_agent').on('change', '.check_agent', function() {
+        $(this).parent().remove();
+    });
 });

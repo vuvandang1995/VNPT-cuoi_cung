@@ -1,16 +1,16 @@
-{% extends 'agent/base_admin.html' %}
-{% block title %} Manage topics {% endblock %}
+{% extends 'admin/base_admin.html' %}
+{% block title %} Quản lý dịch vụ {% endblock %}
 {% load staticfiles %}
 {% block content %}
     <div class="page-wrapper">
         <!-- Bread crumb -->
         <div class="row page-titles">
             <div class="col-md-5 align-self-center">
-                <h3 class="text-primary">Quản lý chủ đề</h3> </div>
+                <h3 class="text-primary">Quản lý dịch vụ</h3> </div>
             <div class="col-md-7 align-self-center">
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item"><a href="javascript:void(0)">Trang chủ</a></li>
-                    <li class="breadcrumb-item active">Quản lý chủ đề</li>
+                    <li class="breadcrumb-item active">Quản lý dịch vụ</li>
                 </ol>
             </div>
         </div>
@@ -23,50 +23,49 @@
                         <div class="card">
                             <div class="card-title">
                                 <button type="button" class="btn btn-primary" data-toggle="modal" data-title="add" data-target="#topicModal" >
-                                    <i class="fa fa-plus"></i> Tạo mới chủ đề
+                                    <i class="fa fa-plus"></i> Thêm dịch vụ mới
                                 </button>
                             </div>
                             <div class="card-body">
                                 <table  class="table display table-bordered table-striped">
                                     <thead>
                                     <tr>
-                                        <th width="5%">ID</th>
                                         <th width="15%">Tên</th>
+                                        <th width="10%">Nhóm dịch vụ</th>
                                         <th width="10%">Trạng thái</th>
-                                        <th width="25%">Mô tả</th>
-                                        <th width="15%">Quản trị</th>
-                                        <th width="20%">Tùy chọn</th>
+                                        <th width="20%">Mô tả</th>
+                                        <th width="15%">Quản trị viên</th>
+                                        <th width="10%">Thời gian tối đa xử lý</th>
+                                        <th>Tùy chọn</th>
                                     </tr>
                                     </thead>
                                     <tbody>
                                         {% csrf_token %}
-                                    {% for tp in topic %}
+                                    {% for sv in service %}
                                     <tr>
 
-                                        <td>{{tp.id}}</td>
-
-                                        <td>{{tp.name}}</td>
-
-                                        {% if tp.status == 0 %}
+                                        <td>{{sv.name}}</td>
+                                        <td>{{sv.groupserviceid.name}}</td>
+                                        {% if sv.status == 1 %}
                                         <td><span class="label label-success">Mở</span></td>
                                         {% else %}
                                         <td><span class="label label-danger">Đóng</span></td>
                                         {% endif %}
 
-                                        <td id="description_topic{{tp.id}}">{{ tp.description}}</td>
-                                        <td id="leader_topic{{tp.id}}">{{ tp.leader.fullname}}</td>
-
+                                        <td id="description_topic{{sv.id}}">{{ sv.description}}</td>
+                                        <td id="leader_topic{{sv.id}}">{{ sv.leader.fullname}}</td>
+                                        <td>{{sv.downtime}}</td>
 
                                         <td>
-                                            <button type="button" class="btn btn-primary close_" id="{{tp.id}}" data-toggle="tooltip" title="mở / đóng">
+                                            <button type="button" class="btn btn-primary close_" id="{{sv.id}}" data-toggle="tooltip" title="mở / đóng">
                                                 <i class="fa fa-power-off"></i>
                                             </button>
 
-                                            <button type="button" class="btn btn-danger" id="{{tp.id}}" data-toggle="tooltip" title="xóa">
+                                            <button type="button" class="btn btn-danger" id="{{sv.id}}" data-toggle="tooltip" title="xóa">
                                                 <i class="fa fa-trash"></i>
                                             </button>
 
-                                            <button type="button" class="btn btn-info" data-name="{{tp.name}}" data-title="edit" id="{{tp.id}}" data-toggle="modal" data-target="#topicModal">
+                                            <button type="button" class="btn btn-info" data-name="{{sv.name}}" data-title="edit" id="{{sv.id}}" data-toggle="modal" data-target="#topicModal">
                                                 <i class="fa fa-wrench" data-toggle="tooltip" title="Thay đổi"></i>
                                             </button>
                                         </td>
@@ -84,23 +83,46 @@
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h3 class="modal-title">Tạo mới chủ đề</h3>
+                            <h3 class="modal-title" id="title"></h3>
                         </div>
 
                         <div class="modal-body form-group">
-                            <label for="topicname"><b>Tên chủ đề</b></label>
-                            <input class="form-control" type="text" placeholder="Nhập chủ đề" name="topicname" required>
+                            <label for="svname"><b>Tên dịch vụ</b></label>
+                            <input class="form-control" type="text" placeholder="Nhập chủ đề" name="svname" required>
                             <font id="nameerr" color="red"></font><br>
                             <label for="description"><b>Mô tả</b></label>
                             <input class="form-control" type="text" placeholder="Mô tả" name="description" required>
                             <font id="deserr" color="red"></font><br>
 
-                            <label for="agent"><b>Chọn quản trị viên Topic</b></label></br>
+                            <select name="gpsv" class="form-control" id="mySelect">
+                                {% for gs in gpsv %}
+                                    <option value="{{gs.id}}" name="{{gs.name}}">{{gs.name}}</option>
+                                {% endfor %}
+                            </select>
+                            </br>
+                            <font id="gpsverr" color="red"></font><br>
+
+                            <label for="agent"><b>Chọn quản trị viên dịch vụ</b></label></br>
                             <input style="border-radius: 0px;width: 300px" type="text" id="search" name="search" class="input-large" placeholder="Nhập tên quản trị viên">
                             <input type="hidden" name="username_leader" value="">
-
-                            <input type="hidden" name="topicid" value="">
                             <font id="leadererr" color="red"></font><br>
+
+                            <label for="agent"><b>Chọn các nhân viên xử lý dịch vụ</b></label></br>
+                            <input style="border-radius: 0px;width: 300px" type="text" id="search_agent" name="search" class="input-large" placeholder="Nhập tên nhân viên">
+
+                            <div>
+                                <ol id="list_agent">
+                                </ol> 
+                            </div>
+
+                            <label for="downtime"><b>Thời gian xử lý tối đa</b></label></br>
+                            <input type="number" name="ngay" min="0" max="100"> Ngày 
+                            <input type="number" name="gio" min="0" max="100"> Giờ 
+                            <input type="number" name="phut" min="0" max="100"> Phút 
+                            <br><font id="downtimeerr" color="red"></font><br>
+
+                            <input type="hidden" name="svid" value="">
+                            
 
                         <div class="msg"></div>
                         </div>
@@ -113,29 +135,9 @@
                     </div>
                 </div>
             </div>
-            <script>
-
-
-
-                function myFunction() {
-                    var x = $('#mySelect option:selected').html();
-                    $('#topicModal input:checkbox').prop('checked', false);
-                    $('.dpm').each(function() {
-                        var dm = $(this).children('input').val();
-                        if (dm == x){
-                            $(this).show();
-                        }else{
-                            $(this).hide();
-                        }
-                    });
-                }
-            </script>
-            <!-- End Container fluid  -->
-            <!-- footer -->
-            <!-- End footer -->
         </div>
     </div>
 {% endblock %}
 {% block js %}
-    <script src="{% static 'js/manager_topic.js' %}"></script>
+    <script src="{% static 'js/admin/manage_service.js' %}"></script>
 {% endblock %}

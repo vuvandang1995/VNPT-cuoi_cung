@@ -82,9 +82,8 @@
                         <li><a href="{% url 'admin:home_admin' %}"><i class="fa fa-ticket"></i> Quản lý yêu cầu </a></li>
                         <li><a href="{% url 'admin:group_service' %}"><i class="fa fa fa-user-secret"></i> Quản lý nhóm dịch vụ </a></li>
                         <li><a href="{% url 'admin:manage_agent' %}"><i class="fa fa-list-alt"></i> Quản lý nhân viên </a></li>
-                        <li><a href="#"><i class="fa fa-list-alt"></i> Quản lý dịch vụ </a></li>
+                        <li><a href="{% url 'admin:manage_serivce' %}"><i class="fa fa-list-alt"></i> Quản lý dịch vụ </a></li>
                         <li><a href="#"><i class="fa fa-server"></i> Thống kê </a></li>
-                        <li><a href="#"><i class="fa fa-history"></i> Nhật ký </a></li>
                     </ul>
                 </nav>
                 <!-- End Sidebar navigation -->
@@ -134,9 +133,11 @@
         '/ws/agent/'+agentName+'+group_agent_Socket/');
 
     var options = {
-        url: "/agent/admin/leader",
+        url: "admin/leader",
 
-        getValue: "fullname",
+        getValue: function(element){
+            return element.fullname+" - "+element.username;
+         },
         template: {
             type: "description",
             fields: {
@@ -156,7 +157,40 @@
         },
         theme: "square"
     };
+
+    var options_agent = {
+        url: "admin/leader",
+
+        getValue: function(element){
+            return element.fullname+" - "+element.username;
+         },
+        template: {
+            type: "description",
+            fields: {
+                description: "username"
+            }
+        },
+        
+        list: {
+            match: {
+                enabled: true
+            },
+            onChooseEvent: function() {
+                var fullname = $("#search_agent").getSelectedItemData().fullname;
+                var username = $("#search_agent").getSelectedItemData().username;
+                var element = '<li><input style="transform: scale(1.3)" type="checkbox" class="check_agent" name="'+username+'" value="'+username+'" checked >'+fullname+'</li>';
+                var list_old = $("#list_agent").text();
+                if (list_old.includes(fullname) == false){
+                    $('#list_agent').append(element);
+                }
+                $("#search_agent").val("");
+            }
+        },
+        theme: "square"
+    };
     $("#search").easyAutocomplete(options);
+    $("#search_agent").easyAutocomplete(options_agent);
+
 
     function formatAMPM(date) {
         var hours = date.getHours();

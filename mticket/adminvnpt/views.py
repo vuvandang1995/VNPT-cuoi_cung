@@ -165,14 +165,11 @@ def group_service(request):
     if request.session.has_key('admin'):
         admin = Agents.objects.get(username=request.session['admin'])
         groupservice = GroupServices.objects.all()
-        list_ag = {}
         list_tp = {}
         for gs in groupservice:
-            ags = Agents.objects.filter(groupserviceid=gs)
             tps = Services.objects.filter(groupserviceid=gs)
-            list_ag[gs.id] = [ag.fullname for ag in ags]
             list_tp[gs.id] = [tp.name for tp in tps]
-        content = {'list_ag': list_ag,
+        content = {
                    'list_tp': list_tp,
                    'admin': admin,
                    'today': timezone.now().date(),
@@ -234,3 +231,71 @@ def manage_agent_data(request):
         ticket = {"data": data}
         tickets = json.loads(json.dumps(ticket))
         return JsonResponse(tickets, safe=False)
+
+
+def manage_serivce(request):
+    if request.session.has_key('admin'):
+        admin = Agents.objects.get(username=request.session['admin'])
+        agent = Agents.objects.exclude(username=request.session['admin'])
+        gpsv = GroupServices.objects.all()
+        content = {'service': Services.objects.all(),
+                   'admin': admin,
+                   'today': timezone.now().date(),
+                   'agent_name': mark_safe(json.dumps(admin.username)),
+                   'fullname': mark_safe(json.dumps(admin.fullname)), 
+                   'agent':agent,
+                   'gpsv': gpsv}
+        if request.method == 'POST':
+            if 'close' in request.POST:
+                svid = request.POST['close']
+                sv = Services.objects.get(id=svid)
+                if sv.status == 0:
+                    sv.status = 1
+                else:
+                    sv.status = 0
+                sv.save()
+            elif 'delete' in request.POST:
+                svid = request.POST['delete']
+                sv = Services.objects.get(id=svid)
+                sv.delete()
+            elif 'add_topic' in request.POST:
+                if request.POST['svid'] == '0':
+                    svname = request.POST['add_topic']
+                    description = request.POST['description']
+                    leader = Agents.objects.get(username=request.POST['leader'])
+                    downtime = request.POST['downtime']
+                    sv = Services.objects.create(name=svname, description=description, leader=leader, downtime=downtime, groupserviceid=GroupServices.objects.get(id=request.POST['gpsv']))
+                    # TopicAgent.objects.create(agentid=leader, svid=sv)
+                    if leader.position != 2:
+                        leader.position = 2
+                        leader.save()
+                else:
+                    sv = Services.objects.get(id=request.POST['svid'])
+                    sv.name = request.POST['add_topic']
+                    sv.description = request.POST['description']
+                    leader_old = Agents.objects.get(id=sv.leader.id)
+                    leader_new = Agents.objects.get(username=request.POST['leader'])
+                    sv.leader = leader_new
+                    if leader_new.admin != 2:
+                        leader_new.admin = 2
+                        leader_new.save()
+                    sv.save()
+
+                    count_sv = Services.objects.filter(leader=leader_old).count()
+                    if count_sv < 1:
+                        leader_old.admin = 1
+                        leader_old.save()
+        return render(request, 'admin/manage_service.html', content)
+    else:
+        return redirect('/')
+
+
+def fullname_agent_data(request):
+    if request.session.has_key('admin'):
+        agent_leader = Agents.objects.exclude(position=3)
+        list_agent_leader = []
+        for ag in agent_leader:
+            list_agent_leader.append({"username": ag.username, "fullname": ag.fullname})
+        return JsonResponse(list_agent_leader, safe=False)
+    else:
+        return redirect('/')
