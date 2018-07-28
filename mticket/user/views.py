@@ -45,9 +45,9 @@ def login_user(request):
         return redirect("/user")
     elif request.session.has_key('agent')and(Agents.objects.get(username=request.session['agent'])).status == 1:
         return redirect('/agent')
-    elif request.session.has_key('admin')and(Agents.objects.get(username=request.session['agent'])).status == 3:
+    elif request.session.has_key('admin')and(Agents.objects.get(username=request.session['admin'])).status == 3:
         return redirect('/admin')
-    elif request.session.has_key('leader')and(Agents.objects.get(username=request.session['agent'])).status == 2:
+    elif request.session.has_key('leader')and(Agents.objects.get(username=request.session['leader'])).status == 2:
         return redirect('/leader')
     else:
         if request.method == 'POST':
