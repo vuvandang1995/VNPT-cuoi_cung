@@ -150,7 +150,7 @@ def home_admin_data(request):
             id = r'''<button type="button" class="btn" data-toggle="modal" data-target="#'''+str(tk.id)+'''content">'''+str(tk.id)+'''</button>'''
             sender = '<p id="sender' + str(tk.id) + '">' + tk.sender.username + '</p>'
             service = '<p id="tp' + str(tk.id) + '">' + tk.serviceid.name + '</p>'
-            data.append([id, tk.title, service, sender, tk.priority.name, downtime, status, handler])
+            data.append([id, tk.thong_so_kt, service, sender, tk.lv_priority, downtime, status, handler])
         ticket = {"data": data}
         tickets = json.loads(json.dumps(ticket))
         return JsonResponse(tickets, safe=False)
@@ -169,14 +169,16 @@ def group_service(request):
         list_tp = {}
         for gs in groupservice:
             ags = Agents.objects.filter(groupserviceid=gs)
-            tps = Topics.objects.filter(groupserviceid=gs)
+            tps = Services.objects.filter(groupserviceid=gs)
             list_ag[gs.id] = [ag.fullname for ag in ags]
             list_tp[gs.id] = [tp.name for tp in tps]
         content = {'list_ag': list_ag,
                    'list_tp': list_tp,
                    'admin': admin,
                    'today': timezone.now().date(),
-                   'groupservice': groupservice}
+                   'groupservice': groupservice,
+                   'fullname': mark_safe(json.dumps(admin.fullname)),
+                   'agent_name': mark_safe(json.dumps(admin.username)),}
         if request.method == 'POST':
             if 'addname' in request.POST:
                 if request.POST['gsid'] == '':
@@ -187,8 +189,48 @@ def group_service(request):
                     gs.save()
             elif 'delete' in request.POST:
                 GroupServices.objects.filter(id=request.POST['delete']).delete()
-            return redirect("/admin/groupservice")
+            return redirect("/admin/group_service")
         else:
             return render(request, 'admin/group_service.html', content)
     else:
         return redirect('/')
+
+
+def manage_agent(request):
+    if request.session.has_key('admin')and(Agents.objects.get(username=request.session['admin'])).status == 1:
+        agent = Agents.objects.get(username=request.session['admin'])
+        svag = ServiceAgent.objects.filter(agentid=agent)
+        list_tp = ""
+        for tp1 in svag:
+            list_tp += str(tp1.serviceid.name) + "!"
+        users = Agents.objects.all()
+        if request.method == 'POST':
+                user = Agents.objects.get(id=request.POST['tkid'])
+                user.status = request.POST['stt']
+                user.save()
+        
+        return render(request,"admin/manage_agent.html",{
+                    'user':users, 
+                    'agent_name': mark_safe(json.dumps(agent.username)), 
+                    'fullname': mark_safe(json.dumps(agent.fullname)),
+                    'list_tp': mark_safe(json.dumps(list_tp))})
+    else:
+        return redirect("/")
+
+
+def manage_agent_data(request):
+    if request.session.has_key('admin')and(Agents.objects.get(username=request.session['admin'])).status == 1:
+        users = Agents.objects.all()
+        data = []
+        for us in users:
+            if us.status == 0:
+                st = r'''<p id="stt''' + str(us.id) +'''"><span class="label label-danger">Khóa</span></p>'''
+                option = r'''<p id="button''' + str(us.id) +'''"><button id="''' + str(us.id) + '''" class="unblock btn btn-success" type="button" data-toggle="tooltip" title="mở khóa" ><span class="glyphicon glyphicon glyphicon-ok" ></span> Mở khóa</button></p>'''
+            else:
+                st = r'''<p id="stt''' + str(us.id) +'''"><span class="label label-success">Kích hoạt</span></p>'''
+                option = r'''<p id="button''' + str(us.id) +'''"><button id="''' + str(us.id) + '''" class="block btn btn-danger" type="button" data-toggle="tooltip" title="Khóa" ><span class="glyphicon glyphicon-lock" ></span> Khóa</button></p>'''
+            created = us.created + timezone.timedelta(hours=7)
+            data.append([us.id, us.fullname, us.email, us.username, st, str(created)[:-16], option])
+        ticket = {"data": data}
+        tickets = json.loads(json.dumps(ticket))
+        return JsonResponse(tickets, safe=False)

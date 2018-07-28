@@ -66,10 +66,10 @@ class ServiceAgent(models.Model):
 class Tickets(models.Model):
     client = models.CharField(max_length=255)
     info_client = models.CharField(max_length=255)
-    title = models.CharField(max_length=255)
+    thong_so_kt = models.CharField(max_length=255)
     content = models.TextField()
     sender = models.ForeignKey('Agents', models.CASCADE, db_column='agentid')
-    service = models.ForeignKey('Services', models.CASCADE, db_column='serviceid')
+    serviceid = models.ForeignKey('Services', models.CASCADE, db_column='serviceid')
     status = models.IntegerField(default=0)
     datestart = models.DateTimeField()
     dateend = models.DateTimeField()
@@ -142,7 +142,8 @@ class TicketLog(models.Model):
     agentid = models.ForeignKey(Agents, models.CASCADE, null=True, db_column='agentid', related_name='agenttl')
     ticketid = models.ForeignKey(Tickets, models.CASCADE, db_column='ticketid', related_name='tickettl')
     action = models.TextField()
-    date = models.DateTimeField()
+    date = models.DateField(null=True)
+    time = models.TimeField(null=True)
 
     class Meta:
         managed = True

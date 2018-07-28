@@ -1,29 +1,29 @@
 {% extends 'admin/base_admin.html' %}
-{% block title %} Manage topics {% endblock %}
+{% block title %} Quản lý nhóm dịch vụ {% endblock %}
 {% load staticfiles %}
 {% block content %}
     <div class="page-wrapper">
         <!-- Bread crumb -->
         <div class="row page-titles">
             <div class="col-md-5 align-self-center">
-                <h3 class="text-primary">Manage departments</h3> </div>
+                <h3 class="text-primary">Quản lý nhóm dịch vụ</h3> </div>
             <div class="col-md-7 align-self-center">
                 <ol class="breadcrumb">
-                    <li class="breadcrumb-item"><a href="javascript:void(0)">Home</a></li>
-                    <li class="breadcrumb-item active">Manage departments</li>
+                    <li class="breadcrumb-item"><a href="javascript:void(0)">Trang chủ</a></li>
+                    <li class="breadcrumb-item active">Quản lý nhóm dịch vụ</li>
                 </ol>
             </div>
         </div>
         <!-- End Bread crumb -->
                 {% csrf_token %}
-            <div class="container-fluid" id="list_dm">
+            <div class="container-fluid" id="list_gs">
                 <!-- Start Page Content -->
                 <div class="row">
                     <div class="col-12">
                         <div class="card">
                             <div class="card-title">
                                 <button type="button" class="btn btn-primary" data-toggle="modal" data-title="add" data-target="#departmentModal" >
-                                    <i class="fa fa-plus"></i> Create new department
+                                    <i class="fa fa-plus"></i> Tạo nhóm dịch vụ
                                 </button>
                             </div>
                             <div class="card-body">
@@ -31,68 +31,65 @@
                                     <thead>
                                     <tr>
                                         <th width="5%">ID</th>
-                                        <th width="25%">Name</th>
-                                        <th width="55%">Description</thw>
-                                        <th width="15%">Option</th>
+                                        <th width="25%">Tên</th>
+                                        <th width="15%">Tùy chọn</th>
                                     </tr>
                                     </thead>
                                     <tbody>
                                         {% csrf_token %}
-                                    {% for dm in department %}
-                                    <tr>
-                                        <td scope="row">
-                                            <button type="button" class="btn" data-toggle="modal" id="dm{{dm.id}}" data-target="#{{dm.id}}content">{{dm.id}}</button>
-                                        </td>
-                                        <td id="name{{dm.id}}">{{dm.name}}</td>
-                                        <td id="des{{dm.id}}">{{ dm.description}}</td>
-                                        <td>
-                                            <button type="button" class="btn btn-danger" id="{{dm.id}}" data-toggle="tooltip" title="delete">
-                                                <i class="fa fa-trash"></i>
-                                            </button>
-                                            <button type="button" class="btn btn-info" data-name="{{dm.name}}" data-title="edit" id="{{dm.id}}" data-toggle="modal" data-target="#departmentModal">
-                                                <i class="fa fa-wrench" data-toggle="tooltip" title="change"></i>
-                                            </button>
-                                        </td>
-                                    </tr>
-                                    <div class="modal" id="{{dm.id}}content" role="dialog">
-                                        <div class="modal-dialog modal-lg">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <h4 class="modal-title">Department details</h4>
-                                                </div>
-                                                <div class="modal-body form-group">
-                                                    <label for="content"><b>Name:</b></label>
-                                                    <p>{{dm.name}}</p>
-                                                    <label for="content"><b>Description:</b></label>
-                                                    <p>{{dm.description}}</p>
-                                                    <label for="content"><b>List agents:</b></label>
-                                                    <p>
-                                                    {% for key,value in list_ag.items %}
-                                                        {% if key == dm.id %}
-                                                            {% for va in value %}
-                                                                {{va}},
-                                                            {% endfor %}
-                                                        {% endif %}
-                                                    {% endfor %}
-                                                    </p>
-                                                    <label for="datestart"><b>List topic:</b></label>
-                                                    <p>
-                                                    {% for key,value in list_tp.items %}
-                                                        {% if key == dm.id %}
-                                                            {% for va in value %}
-                                                                {{va}},
-                                                            {% endfor %}
-                                                        {% endif %}
-                                                    {% endfor %}
-                                                    </p>
-                                                </div>
-                                                    <div class="modal-footer">
-                                                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                        {% for gs in groupservice %}
+                                        <tr>
+                                            <td scope="row">
+                                                <button type="button" class="btn" data-toggle="modal" id="gs{{gs.id}}" data-target="#{{gs.id}}content">{{gs.id}}</button>
+                                            </td>
+                                            <td id="name{{gs.id}}">{{gs.name}}</td>
+                                            <td>
+                                                <button type="button" class="btn btn-danger" id="{{gs.id}}" data-toggle="tooltip" title="delete">
+                                                    <i class="fa fa-trash"></i>
+                                                </button>
+                                                <button type="button" class="btn btn-info" data-name="{{gs.name}}" data-title="edit" id="{{gs.id}}" data-toggle="modal" data-target="#departmentModal">
+                                                    <i class="fa fa-wrench" data-toggle="tooltip" title="change"></i>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                        <div class="modal" id="{{gs.id}}content" role="dialog">
+                                            <div class="modal-dialog modal-lg">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h4 class="modal-title">Thông tin nhóm dịch vụ</h4>
                                                     </div>
+                                                    <div class="modal-body form-group">
+                                                        <label for="content"><b>Tên:</b></label>
+                                                        <p>{{gs.name}}</p>
+                                                        
+                                                        <label for="content"><b>Danh sách nhân viên chịu trách nhiệm:</b></label>
+                                                        <p>
+                                                        {% for key,value in list_ag.items %}
+                                                            {% if key == gs.id %}
+                                                                {% for va in value %}
+                                                                    {{va}},
+                                                                {% endfor %}
+                                                            {% endif %}
+                                                        {% endfor %}
+                                                        </p>
+                                                        <label for="listtopic"><b>Danh sách dịch vụ thuộc nhóm:</b></label>
+                                                        <p>
+                                                        {% for key,value in list_tp.items %}
+                                                            {% if key == gs.id %}
+                                                                {% for va in value %}
+                                                                    {{va}},
+                                                                {% endfor %}
+                                                            {% endif %}
+                                                        {% endfor %}
+                                                        </p>
+                                                    </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-default" data-dismiss="modal">Đóng</button>
+                                                        </div>
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-                                    {% endfor%}
+                                        {% endfor%}
                                     </tbody>
                                 </table>
                             </div>
@@ -105,20 +102,19 @@
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h3 class="modal-title">Add New Department</h3>
+                            <h3 class="modal-title">Thêm nhóm dịch vụ mới</h3>
                         </div>
                         <div class="modal-body form-group">
-                            <label for="topicname"><b>Department name</b></label>
-                            <input class="form-control" type="text" placeholder="Enter department name" name="name" required>
+                            <label for="topicname"><b>Tên nhóm</b></label>
+                            <input class="form-control" type="text" placeholder="Nội dung" name="name" required>
                             <font id="add_name_error" color="red"></font><br>
-                            <label for="description"><b>Description</b></label>
-                            <input class="form-control" type="text" placeholder="Enter description" name="des" required>
+                            
                             <font id="add_des_error" color="red"></font><br>
-                            <input type="hidden" name="dmid">
+                            <input type="hidden" name="gsid">
                         </div>
                         <div class="modal-footer">
-                            <button type="button" id="addDepartment" class="btn btn-primary">Save</button>
-                            <button type="button" class="btn btn-default" data-dismiss="modal" id = "add_department_close">Close</button>
+                            <button type="button" id="addDepartment" class="btn btn-primary">Tạo</button>
+                            <button type="button" class="btn btn-default" data-dismiss="modal" id = "add_department_close">Đóng</button>
                         </div>
                     </div>
                 </div>
@@ -130,5 +126,5 @@
     </div>
 {% endblock %}
 {% block js %}
-    <script src="{% static 'js/manager_department.js' %}"></script>
+    <script src="{% static 'js/admin/manager_groupservice.js' %}"></script>
 {% endblock %}
