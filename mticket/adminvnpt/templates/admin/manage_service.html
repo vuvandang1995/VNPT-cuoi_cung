@@ -30,11 +30,12 @@
                                 <table  class="table display table-bordered table-striped">
                                     <thead>
                                     <tr>
-                                        <th width="15%">Tên</th>
+                                        <th width="12%">Tên</th>
                                         <th width="10%">Nhóm dịch vụ</th>
-                                        <th width="10%">Trạng thái</th>
+                                        <th width="7%">Trạng thái</th>
                                         <th width="20%">Mô tả</th>
-                                        <th width="15%">Quản trị viên</th>
+                                        <th width="12%">Quản trị viên</th>
+                                        <th width="15%">Nhân viên xử lý</th>
                                         <th width="10%">Thời gian tối đa xử lý</th>
                                         <th>Tùy chọn</th>
                                     </tr>
@@ -46,6 +47,7 @@
 
                                         <td>{{sv.name}}</td>
                                         <td>{{sv.groupserviceid.name}}</td>
+                                        <input type="hidden" name="gpsv{{sv.id}}" value="{{sv.groupserviceid.id}}">
                                         {% if sv.status == 1 %}
                                         <td><span class="label label-success">Mở</span></td>
                                         {% else %}
@@ -53,8 +55,26 @@
                                         {% endif %}
 
                                         <td id="description_topic{{sv.id}}">{{ sv.description}}</td>
-                                        <td id="leader_topic{{sv.id}}">{{ sv.leader.fullname}}</td>
-                                        <td>{{sv.downtime}}</td>
+                                        <td id="leader_topic{{sv.id}}">
+                                            <p>{{ sv.leader.fullname}}</p>
+                                            <input type="hidden" name="{{sv.leader.username}}" value="{{sv.leader.username}}">
+                                        </td>
+                                        <td>
+                                            {% for key,value in list_ag.items %}
+                                                {% if key == sv.name %}
+                                                <i data-toggle="collapse" data-toggle="collapse" data-target="#demo" class="fa fa-toggle-down"></i>
+                                                <div id="demo" class="collapse">
+                                                    {% for va in value %}
+                                                        <div class="listagent{{sv.id}}">
+                                                            {{va.fullname}} <br>
+                                                            <input type="hidden" name="{{va.username}}" value="{{va.username}}">
+                                                        </div>
+                                                    {% endfor %}
+                                                </div>
+                                                {% endif %}
+                                            {% endfor %}
+                                        </td>
+                                        <td id="downtime{{sv.id}}">{{sv.downtime}}</td>
 
                                         <td>
                                             <button type="button" class="btn btn-primary close_" id="{{sv.id}}" data-toggle="tooltip" title="mở / đóng">
@@ -93,13 +113,12 @@
                             <label for="description"><b>Mô tả</b></label>
                             <input class="form-control" type="text" placeholder="Mô tả" name="description" required>
                             <font id="deserr" color="red"></font><br>
-
+                            <label for="gpsv"><b>Chọn nhóm dịch vụ</b></label>
                             <select name="gpsv" class="form-control" id="mySelect">
                                 {% for gs in gpsv %}
                                     <option value="{{gs.id}}" name="{{gs.name}}">{{gs.name}}</option>
                                 {% endfor %}
                             </select>
-                            </br>
                             <font id="gpsverr" color="red"></font><br>
 
                             <label for="agent"><b>Chọn quản trị viên dịch vụ</b></label></br>
@@ -109,6 +128,7 @@
 
                             <label for="agent"><b>Chọn các nhân viên xử lý dịch vụ</b></label></br>
                             <input style="border-radius: 0px;width: 300px" type="text" id="search_agent" name="search" class="input-large" placeholder="Nhập tên nhân viên">
+                            <font id="agenterr" color="red"></font><br>
 
                             <div>
                                 <ol id="list_agent">
@@ -122,9 +142,6 @@
                             <br><font id="downtimeerr" color="red"></font><br>
 
                             <input type="hidden" name="svid" value="">
-                            
-
-                        <div class="msg"></div>
                         </div>
 
                         <div class="modal-footer">

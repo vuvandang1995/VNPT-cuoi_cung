@@ -28,7 +28,7 @@ $(document).ready(function(){
              $.ajax({
                  type:'POST',
                  url:location.href,
-                 data: {'tkid':id, 'csrfmiddlewaretoken':token, 'stt': 1},
+                 data: {'agid':id, 'csrfmiddlewaretoken':token, 'stt': 1},
                  success: function(){
                     $('#list_user').DataTable().ajax.reload()
                  }
@@ -42,11 +42,28 @@ $(document).ready(function(){
              $.ajax({
                  type:'POST',
                  url:location.href,
-                 data: {'tkid':id, 'csrfmiddlewaretoken':token, 'stt': 0},
+                 data: {'agid':id, 'csrfmiddlewaretoken':token, 'stt': 0},
                  success: function(){
                     $('#list_user').DataTable().ajax.reload()
                  }
              });
+        }
+    });
+
+    $('body #info_user').on('change', '.position', function() {
+        var position = parseInt($(this).val());
+        var id = $(this).attr('name');
+        var token = $("input[name=csrfmiddlewaretoken]").val();
+        if(confirm("Are you sure ?")){
+            $.ajax({
+                type:'POST',
+                url:location.href,
+                data: {'csrfmiddlewaretoken':token, 'position': position, 'agid':id},
+                success: function(){
+                }
+            });
+        }else{
+            $('#list_user').DataTable().ajax.reload()
         }
     });
 });

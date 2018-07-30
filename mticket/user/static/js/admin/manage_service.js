@@ -2,12 +2,13 @@ $(document).ready(function(){
     $("#list_topic").on('click', '.close_', function(){
         var id = $(this).attr('id');
         var token = $("input[name=csrfmiddlewaretoken]").val();
+        var leader = $("#leader_topic"+id).children('input').val();
         var r = confirm('Are you sure?');
         if (r == true){
             $.ajax({
                 type:'POST',
                 url:location.href,
-                data: {'close':id, 'csrfmiddlewaretoken':token},
+                data: {'close':id, 'csrfmiddlewaretoken':token, 'leader': leader},
                 success: function(){
                     // window.location.reload();
                     $("#list_topic").load(location.href + " #list_topic");
@@ -19,12 +20,13 @@ $(document).ready(function(){
     $("#list_topic").on('click', '.btn-danger', function(){
         var id = $(this).attr('id');
         var token = $("input[name=csrfmiddlewaretoken]").val();
+        var leader = $("#leader_topic"+id).children('input').val();
         var r = confirm('Are you sure?');
         if (r == true){
             $.ajax({
                 type:'POST',
                 url:location.href,
-                data: {'delete':id, 'csrfmiddlewaretoken':token},
+                data: {'delete':id, 'csrfmiddlewaretoken':token, 'leader': leader},
                 success: function(){
                     // window.location.reload();
                     $("#list_topic").load(location.href + " #list_topic");
@@ -53,10 +55,19 @@ $(document).ready(function(){
             phut = '0';
         }
         var downtime = parseInt(phut) + parseInt(gio) * 60 + parseInt(ngay) * 24 * 60;
+
+        var list_agent = [];
+        var date = formatAMPM(new Date());
+        $('#topicModal input:checkbox').each(function() {
+            if ($(this).is(":checked")){
+                list_agent.push(this.name);
+            }
+        });
         $("#nameerr").html("");
         $("#deserr").html("");
         $("#leadererr").html("");
         $("#gpsverr").html("");
+        $("#agenterr").html("");
         $("#downtimeerr").html("");
         ag_leader = [];
         if (svname==''){
@@ -71,7 +82,7 @@ $(document).ready(function(){
             $.ajax({
                 type:'POST',
                 url:location.href,
-                data: {'add_topic': svname, 'description': description, 'csrfmiddlewaretoken':token, 'svid': svid, 'leader': leader, 'gpsv': gpsv, 'downtime': downtime},
+                data: {'list_agent[]': JSON.stringify(list_agent), 'add_service': svname, 'description': description, 'csrfmiddlewaretoken':token, 'svid': svid, 'leader': leader, 'gpsv': gpsv, 'downtime': downtime},
                 success: function(){
                     // window.location.reload();
                     $("#list_topic").load(location.href + " #list_topic");
@@ -102,11 +113,32 @@ $(document).ready(function(){
             var description = $("#description_topic"+svid).html();
             $("input[name=description]").val(description);
 
-            var leader = $("#leader_topic"+svid).html();
+            var leader = $("#leader_topic"+svid).children('p').text();
             $("input[name=search]").val(leader);
 
-            $("#search_agent").val("");
+            var leader_username = $("#leader_topic"+svid).children('input').val();
+            $("input[name=username_leader]").val(leader_username);
 
+            var gpsv = $("input[name=gpsv"+svid+"]").val();
+            $("#mySelect").val(gpsv);
+
+            var downtime = $('body #downtime'+svid).html();
+            var ngay = parseInt(downtime/1440);
+            var gio = parseInt((downtime - ngay*1440)/60);
+            var phut = parseInt(downtime - ngay*1440 - gio*60);
+            $("input[name=ngay]").val(ngay);
+            $("input[name=gio]").val(gio);
+            $("input[name=phut]").val(phut);
+
+            $('body #list_agent').empty();
+            $('body .listagent'+svid).each(function(){
+                var username = $(this).children('input').val();
+                var fullname = $(this).text();
+                var element = '<li><input style="transform: scale(1.3)" type="checkbox" class="check_agent" name="'+username+'" value="'+username+'" checked >'+fullname+'</li>';
+                $('#list_agent').append(element);
+            });
+
+            $("#search_agent").val("");
             $("input[name=svid]").val(svid);
             $("#nameerr").html("");
             $("#deserr").html("");

@@ -50,7 +50,6 @@
                     <!-- toggle and nav items -->
                     <ul class="navbar-nav mr-auto mt-md-0">
                         <!-- This is  -->
-                        <li class="nav-item"> <a class="nav-link nav-toggler hidden-md-up text-muted  " href="javascript:void(0)"><i class="mdi mdi-menu"></i></a> </li>
                         <li class="nav-item m-l-10"> <a class="nav-link sidebartoggler hidden-sm-down text-muted  " href="javascript:void(0)"><i class="ti-menu"></i></a> </li>
                         <!-- Messages -->
                         <!-- End Messages -->
@@ -133,7 +132,7 @@
         '/ws/agent/'+agentName+'+group_agent_Socket/');
 
     var options = {
-        url: "admin/leader",
+        url: "choose_leader/data",
 
         getValue: function(element){
             return element.fullname+" - "+element.username;
@@ -153,6 +152,12 @@
                 var selectedItemValue = $("#search").getSelectedItemData().username;
                 $("input[name=username_leader]").val("");
                 $("input[name=username_leader]").val(selectedItemValue);
+            },
+            onChooseEvent: function() {
+                var total_tk = $("#search").getSelectedItemData().total_tk;
+                if (total_tk != '0'){
+                    alert('Cảnh báo: Nhân viên này đang xử lý '+total_tk+' yêu cầu! Hãy giải quyết trước khi chọn họ làm Quản trị viên!')
+                }
             }
         },
         theme: "square"
