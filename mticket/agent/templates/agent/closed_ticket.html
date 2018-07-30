@@ -30,12 +30,14 @@
                         <table id="example23" class="display nowrap table table-hover table-striped table-bordered" cellspacing="0" width="100%">
                             <thead>
                                 <tr>
-                                    <th width="5%">ID</th>
-                                    <th width="20%">Tiêu đề</th>
-                                    <th width="15%">Chủ đề</th>
-                                    <th width="15%">Người gửi</th>
-                                    <th width="20%">Ngày gửi</th>
-                                    <th width="25%">Ngày hết hạn</th>
+                                    <th>ID</th>
+                                    <th>Người gửi</th>
+                                    <th>Dịch vụ</th>
+                                    <th>Loại sự cố</th>
+                                    <th>Nội dung sự cố</th>
+                                    <th>Ngày tạo</th>
+                                    <th>Ngày đóng</th>
+                                    <th>Đúng hạn</th>
                                 </tr>
                             </thead>
 
@@ -45,11 +47,23 @@
                                     <td scope="row">
                                         <button type="button" class="btn" data-toggle="modal" data-target="#{{tk.id}}content">{{tk.ticketid.id}}</button>
                                     </td>
-                                    <td>{{tk.ticketid.title}}</td>
-                                    <td>{{tk.ticketid.topicid.name}}</td>
-                                    <td>{{tk.ticketid.sender.username}}</td>
+                                    <td>{{tk.ticketid.sender.fullname}}</td>
+                                    <td>{{tk.ticketid.serviceid.name}}</td>
+                                    <td>{{tk.ticketid.loai_su_co}}</td>
+                                    <td>
+                                        <a data-toggle="collapse" data-target="#content{{tk.ticketid.id}}">nội dung ...</a><br>
+                                        <div id="content{{tk.ticketid.id}}" class="collapse">{{tk.ticketid.content}}</div>
+                                    </td>
                                     <td>{{tk.ticketid.datestart}}</td>
                                     <td>{{tk.ticketid.dateend}}</td>
+                                    <td>
+                                        {% if tk.ticketid.expired == 0 %}
+                                        <span class ="label label-danger"> Quá hạn </span>
+                                        {% else %}
+                                        <span class ="label label-success"> Đúng hạn </span>
+                                        {% endif %}
+                                    </td>
+
                                 </tr>
                                 <div class="modal" id="{{tk.id}}content" role="dialog">
                                     <div class="modal-dialog modal-lg">
@@ -61,22 +75,28 @@
                                             <div class="modal-body form-group ct" id="ct{{tk.id}}">
                                                 <b>Người gửi:</b>
                                                 <p>{{tk.ticketid.sender.fullname}}</p>
-                                                <b>Tiêu đề:</b>
-                                                <p>{{tk.ticketid.title}}</p>
-                                                <b>Chủ đề:</b>
-                                                <p>{{tk.ticketid.topicid.name}}</p>
+                                                <b>Dịch vụ:</b>
+                                                <p>{{tk.ticketid.serviceid.name}}</p>
+                                                <b>Loại sự cố:</b>
+                                                <p>{{tk.ticketid.loai_su_co}}</p>
                                                 <b>Nội dung:</b>
                                                 <p>{{tk.ticketid.content}}</p>
-                                                <b>Ngày gửi:</b>
-                                                <p>{{ tk.ticketid.datestart}}</p>
-                                                <b>Ngày hết hạn:</b>
-                                                <p>{{tk.ticketid.dateend}}</p>
+                                                <b>Thông số kỹ thuật:</b>
+                                                <p>{{tk.ticketid.thong_so_kt}}</p>
                                                 {% if tk.ticketid.attach != '' %}
                                                 <b>Đính kèm:</b><br>
                                                 <img src="/media/{{tk.attach}}" alt="none" style="max-width:80%;max-height:600px;display: block;margin-left: auto;margin-right: auto;">
                                                 {% endif %}
                                                 <b>Ghi chú:</b><br>
-                                                <p>{{tk.note}}</p>
+                                                <p>{{tk.ticketid.note}}</p>
+                                                <b>Khách hàng:</b>
+                                                <p>{{tk.ticketid.client}}</p>
+                                                <b>Thông tin khách hàng:</b>
+                                                <p>{{tk.ticketid.info_client}}</p>
+                                                <b>Ngày gửi:</b>
+                                                <p>{{ tk.ticketid.datestart}}</p>
+                                                <b>Ngày hết hạn:</b>
+                                                <p>{{tk.ticketid.dateend}}</p>
                                             </div>
                                             <div class="modal-footer">
                                                 <button type="button" class="btn btn-default" data-dismiss="modal">Đóng</button>

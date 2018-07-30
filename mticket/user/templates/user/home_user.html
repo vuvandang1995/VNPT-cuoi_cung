@@ -116,7 +116,7 @@
                                     <optgroup label="{{key}}">
                                         {% for sv in service %}
                                         {% if key == sv.groupserviceid.name %}
-                                            <option alue="{{sv.name}}" name="{{service}}">{{sv.name}} - {{sv.description}}</option>
+                                            <option value="{{sv.name}}" name="{{service}}">{{sv.name}} - {{sv.description}}</option>
                                         {% endif %}
                                         {% endfor %}
                                     </optgroup>
