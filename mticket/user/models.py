@@ -137,6 +137,14 @@ def count_tk(agentname):
     except Agents.DoesNotExist:
         return None
 
+def count_tk_to_choose_leader(agentname):
+    try:
+        ag = Agents.objects.get(username=agentname)
+        total = TicketAgent.objects.filter(agentid=ag).count()
+        return total
+    except Agents.DoesNotExist:
+        return None
+
 
 class TicketLog(models.Model):
     agentid = models.ForeignKey(Agents, models.CASCADE, null=True, db_column='agentid', related_name='agenttl')

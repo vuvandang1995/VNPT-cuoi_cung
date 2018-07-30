@@ -41,7 +41,7 @@
             <nav class="navbar top-navbar navbar-expand-md navbar-light">
                 <!-- Logo -->
                 <div class="navbar-header" >
-                    <a class="navbar-brand" href="{% url 'agent:home_leader' %}">
+                    <a class="navbar-brand" href="{% url 'leader:home_leader' %}">
                         <span><img src="{% static 'images/meditech.png' %}" alt="homepage" style="width:260px;height:40px;"></span>
                     </a>
                 </div>
@@ -87,8 +87,8 @@
                             <a class="nav-link dropdown-toggle text-muted"   data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><img src="{% static 'images/avatar.png' %}" alt="user" class="profile-pic" /></a>
                             <div class="dropdown-menu dropdown-menu-right animated zoomIn">
                                 <ul class="dropdown-user">
-                                    <li><a href="{% url 'agent:leader_profile' %}"><i class="ti-user"></i> Thông tin</a></li>
-                                    <li><a href="{% url 'agent:logout_leader' %}"><i class="fa fa-power-off"></i> Đăng xuất</a></li>
+                                    <li><a href=""><i class="ti-user"></i> Thông tin</a></li>
+                                    <li><a href="{% url 'leader:logout_leader' %}"><i class="fa fa-power-off"></i> Đăng xuất</a></li>
                                 </ul>
                             </div>
                         </li>
@@ -105,9 +105,8 @@
                 <nav class="sidebar-nav">
                     <ul id="sidebarnav">
                     	<li class="nav-label">Quản trị viên</li>
-                        <li><a href="{% url 'agent:home_leader' %}"><i class="fa fa-ticket"></i> Quản lý yêu cầu </a></li>
-                        <li><a href="{% url 'agent:leader_manage_agent' %}"><i class="fa fa fa-user-secret"></i> Quản lý nhân viên </a></li>
-                        <li><a href="{% url 'agent:leader_to_agent' %}"><i class="fa fa-exchange"></i> Chế độ nhân viên xử lý </a></li>
+                        <li><a href="{% url 'leader:home_leader' %}"><i class="fa fa-ticket"></i> Quản lý yêu cầu </a></li>
+                        <li><a href=""><i class="fa fa fa-user-secret"></i> Quản lý nhân viên </a></li>
                     </ul>
                 </nav>
                 <!-- End Sidebar navigation -->

@@ -1,7 +1,6 @@
 from django.contrib.sites.shortcuts import get_current_site
 from django.core.exceptions import MultipleObjectsReturned, ObjectDoesNotExist
 from django.db.models import Q
-from django.http import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.template.loader import render_to_string
 from django.utils import timezone
@@ -202,7 +201,12 @@ def manage_agent(request):
             list_tp += str(tp1.serviceid.name) + "!"
         users = Agents.objects.all()
         if request.method == 'POST':
-                user = Agents.objects.get(id=request.POST['tkid'])
+            if 'position' in request.POST:
+                user = Agents.objects.get(id=request.POST['agid'])
+                user.position = request.POST['position']
+                user.save()
+            else:
+                user = Agents.objects.get(id=request.POST['agid'])
                 user.status = request.POST['stt']
                 user.save()
         
@@ -226,8 +230,57 @@ def manage_agent_data(request):
             else:
                 st = r'''<p id="stt''' + str(us.id) +'''"><span class="label label-success">Kích hoạt</span></p>'''
                 option = r'''<p id="button''' + str(us.id) +'''"><button id="''' + str(us.id) + '''" class="block btn btn-danger" type="button" data-toggle="tooltip" title="Khóa" ><span class="glyphicon glyphicon-lock" ></span> Khóa</button></p>'''
-            created = us.created + timezone.timedelta(hours=7)
-            data.append([us.id, us.fullname, us.email, us.username, st, str(created)[:-16], option])
+            if us.position == 0:
+                position = '''
+                        <select name="''' + str(us.id) +'''" class="form-control position" >
+                            <option value="0" name="Call Center">Call Center</option>
+                            <option value="1" name="Nhân viên xử lý">Nhân viên xử lý</option>
+                            <option value="2" name="Quản trị viên">Quản trị viên</option>
+                            <option value="3" name="Admin">Admin</option>
+                            <option value="4" name="Phó Quản trị viên">Phó Quản trị viên</option>
+                        </select>
+                        '''
+            elif us.position == 1:
+                position = '''
+                        <select name="''' + str(us.id) +'''" class="form-control position" >
+                            <option value="1" name="Nhân viên xử lý">Nhân viên xử lý</option>
+                            <option value="0" name="Call Center">Call Center</option>
+                            <option value="2" name="Quản trị viên">Quản trị viên</option>
+                            <option value="3" name="Admin">Admin</option>
+                            <option value="4" name="Phó Quản trị viên">Phó Quản trị viên</option>
+                        </select>
+                        '''
+            elif us.position == 2:
+                position = '''
+                        <select name="''' + str(us.id) +'''" class="form-control position" >
+                            <option value="2" name="Quản trị viên">Quản trị viên</option>
+                            <option value="0" name="Call Center">Call Center</option>
+                            <option value="1" name="Nhân viên xử lý">Nhân viên xử lý</option>
+                            <option value="3" name="Admin">Admin</option>
+                            <option value="4" name="Phó Quản trị viên">Phó Quản trị viên</option>
+                        </select>
+                        '''
+            elif us.position == 3:
+                position = '''
+                        <select name="''' + str(us.id) +'''" class="form-control position" >
+                            <option value="3" name="Admin">Admin</option>
+                            <option value="0" name="Call Center">Call Center</option>
+                            <option value="1" name="Nhân viên xử lý">Nhân viên xử lý</option>
+                            <option value="2" name="Quản trị viên">Quản trị viên</option>
+                            <option value="4" name="Phó Quản trị viên">Phó Quản trị viên</option>
+                        </select>
+                        '''
+            elif us.position == 4:
+                position = '''
+                        <select name="''' + str(us.id) +'''" class="form-control position" >
+                            <option value="4" name="Phó Quản trị viên">Phó Quản trị viên</option>
+                            <option value="0" name="Call Center">Call Center</option>
+                            <option value="1" name="Nhân viên xử lý">Nhân viên xử lý</option>
+                            <option value="2" name="Quản trị viên">Quản trị viên</option>
+                            <option value="3" name="Admin">Admin</option>
+                        </select>
+                        '''
+            data.append([us.id, us.fullname, us.email, us.username, st, position, option])
         ticket = {"data": data}
         tickets = json.loads(json.dumps(ticket))
         return JsonResponse(tickets, safe=False)
@@ -238,53 +291,96 @@ def manage_serivce(request):
         admin = Agents.objects.get(username=request.session['admin'])
         agent = Agents.objects.exclude(username=request.session['admin'])
         gpsv = GroupServices.objects.all()
+        sv = Services.objects.all()
+        list_ag = {}
+        for s in sv:
+            svag = ServiceAgent.objects.filter(serviceid=s, agentid__in=agent)
+            list_ag[s.name] = [a.agentid for a in svag]
         content = {'service': Services.objects.all(),
+                   'list_ag': list_ag,
                    'admin': admin,
                    'today': timezone.now().date(),
                    'agent_name': mark_safe(json.dumps(admin.username)),
                    'fullname': mark_safe(json.dumps(admin.fullname)), 
                    'agent':agent,
-                   'gpsv': gpsv}
+                   'gpsv': gpsv,
+                   'service': sv}
         if request.method == 'POST':
             if 'close' in request.POST:
                 svid = request.POST['close']
                 sv = Services.objects.get(id=svid)
+                leader = Agents.objects.get(username=request.POST['leader'])
                 if sv.status == 0:
                     sv.status = 1
                 else:
                     sv.status = 0
+                if leader.position == 2:
+                    leader.position = 1
+                elif leader.position == 1:
+                    leader.position = 2
+                leader.save()
                 sv.save()
             elif 'delete' in request.POST:
                 svid = request.POST['delete']
                 sv = Services.objects.get(id=svid)
                 sv.delete()
-            elif 'add_topic' in request.POST:
+                leader = Agents.objects.get(username=request.POST['leader'])
+                leader.position = 1
+                leader.save()
+            elif 'add_service' in request.POST:
+                list_agent = request.POST['list_agent[]']
+                list_agent = json.loads(list_agent)
                 if request.POST['svid'] == '0':
-                    svname = request.POST['add_topic']
+                    svname = request.POST['add_service']
                     description = request.POST['description']
                     leader = Agents.objects.get(username=request.POST['leader'])
                     downtime = request.POST['downtime']
                     sv = Services.objects.create(name=svname, description=description, leader=leader, downtime=downtime, groupserviceid=GroupServices.objects.get(id=request.POST['gpsv']))
-                    # TopicAgent.objects.create(agentid=leader, svid=sv)
                     if leader.position != 2:
                         leader.position = 2
                         leader.save()
+
+                    if not list_agent:
+                        pass
+                    else:
+                        for agentname in list_agent:
+                            agent = Agents.objects.get(username=agentname)
+                            svag = ServiceAgent.objects.create(agentid=agent, serviceid=sv)
+                            agent.position = 1
+                            agent.save()
                 else:
                     sv = Services.objects.get(id=request.POST['svid'])
-                    sv.name = request.POST['add_topic']
+                    sv.name = request.POST['add_service']
                     sv.description = request.POST['description']
                     leader_old = Agents.objects.get(id=sv.leader.id)
                     leader_new = Agents.objects.get(username=request.POST['leader'])
                     sv.leader = leader_new
-                    if leader_new.admin != 2:
-                        leader_new.admin = 2
+                    sv.downtime = request.POST['downtime']
+                    if leader_new.position != 2:
+                        leader_new.position = 2
                         leader_new.save()
                     sv.save()
 
                     count_sv = Services.objects.filter(leader=leader_old).count()
                     if count_sv < 1:
-                        leader_old.admin = 1
+                        leader_old.position = 1
                         leader_old.save()
+
+                    if not list_agent:
+                        try:
+                            svag1 = ServiceAgent.objects.filter(serviceid=sv)
+                            svag1.delete()
+                        except:
+                            pass
+                    else:
+                        try:
+                            svag1 = ServiceAgent.objects.filter(serviceid=sv)
+                            svag1.delete()
+                        except:
+                            pass
+                        for agentname in list_agent:
+                            agent = Agents.objects.get(username=agentname)
+                            svag = ServiceAgent.objects.create(agentid=agent, serviceid=sv)
         return render(request, 'admin/manage_service.html', content)
     else:
         return redirect('/')
@@ -292,10 +388,23 @@ def manage_serivce(request):
 
 def fullname_agent_data(request):
     if request.session.has_key('admin'):
-        agent_leader = Agents.objects.exclude(position=3)
+        agent_leader = Agents.objects.exclude(position__in=[2,3] )
         list_agent_leader = []
         for ag in agent_leader:
-            list_agent_leader.append({"username": ag.username, "fullname": ag.fullname})
+            if ag.status == 1:
+                list_agent_leader.append({"username": ag.username, "fullname": ag.fullname})
+        return JsonResponse(list_agent_leader, safe=False)
+    else:
+        return redirect('/')
+
+
+def fullname_agent_choose_leader_data(request):
+    if request.session.has_key('admin'):
+        agent_leader = Agents.objects.exclude(position=3 )
+        list_agent_leader = []
+        for ag in agent_leader:
+            if ag.status == 1:
+                list_agent_leader.append({"username": ag.username, "fullname": ag.fullname, 'total_tk': count_tk_to_choose_leader(ag.username)})
         return JsonResponse(list_agent_leader, safe=False)
     else:
         return redirect('/')
