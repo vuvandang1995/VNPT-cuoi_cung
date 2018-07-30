@@ -29,11 +29,17 @@
                                 <thead>
                                     <tr>
                                         <th>ID</th>
-                                        <th>Tiêu đề</th>
-                                        <th>Chủ đề</th>
-                                        <th>Người xử lý</th>
-                                        <th>Trạng thái</th>
+                                        <th>Người gửi</th>
+                                        <th>Dịch vụ</th>
+                                        <th>Loại sự cố</th>
+                                        <th>Nội dung</th>
+                                        <th>Thông số</th>
+                                        <th>Đính kèm</th>
+                                        <th>Ngày tạo</th>
+                                        <th>Hạn xử lý</th>
                                         <th>Thời gian xử lý</th>
+                                        <th>Trạng thái</th>
+                                        <th>Người xử lý</th>
                                         <th>Tùy chọn</th>
                                     </tr>
                                 </thead>
@@ -56,22 +62,28 @@
                 <div class="modal-body form-group" id="ct{{tk.id}}">
                     <b>Người gửi:</b>
                     <p>{{tk.sender.fullname}}</p>
-                    <b>Tiêu đề:</b>
-                    <p>{{tk.title}}</p>
-                    <b>Chủ đề:</b>
-                    <p>{{tk.topicid.name}}</p>
+                    <b>Dịch vụ:</b>
+                    <p>{{tk.serviceid.name}}</p>
+                    <b>Loại sự cố:</b>
+                    <p>{{tk.loai_su_co}}</p>
                     <b>Nội dung:</b>
                     <p>{{tk.content}}</p>
-                    <b>Ngày gửi:</b>
-                    <p>{{ tk.datestart}}</p>
-                    <b>Ngày hết hạn:</b>
-                    <p id="dateend{{tk.id}}">{{tk.dateend}}</p>
+                    <b>Thông số kỹ thuật:</b>
+                    <p>{{tk.thong_so_kt}}</p>
                     {% if tk.attach != '' %}
                     <b>Đính kèm:</b><br>
                     <img src="/media/{{tk.attach}}" alt="none" style="max-width:80%;max-height:600px;display: block;margin-left: auto;margin-right: auto;">
                     {% endif %}
                     <b>Ghi chú:</b><br>
                     <p id="note{{tk.id}}">{{tk.note}}</p>
+                    <b>Khách hàng:</b>
+                    <p>{{tk.client}}</p>
+                    <b>Thông tin khách hàng:</b>
+                    <p>{{tk.info_client}}</p>
+                    <b>Ngày gửi:</b>
+                    <p>{{ tk.datestart}}</p>
+                    <b>Ngày hết hạn:</b>
+                    <p id="dateend{{tk.id}}">{{tk.dateend}}</p>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Đóng</button>
@@ -98,7 +110,7 @@
                     <!--<input class="inputText" type="checkbox" name="{{ agent.username }}" > {{ agent.username }} <br>-->
                 <!--</div>-->
                 <!--{% endfor%}-->
-                {% for tp in topic %}
+                {% for tp in service %}
                     <div class="tpic" style="display:none;">
                         <input type="hidden" value="{{tp.name}}">
                         {% for key,value in list_ag.items %}
@@ -133,6 +145,8 @@
                     <label for="content"><b>Nội dung</b></label>
                     <textarea rows="10" cols="50" id="comment"></textarea>
                     <input type="hidden" name="ticketid" value="">
+                </div>
+                <div class="modal-footer">
                     <button type="submit" class="btn btn-info" value="OK" id="send_note"><span class="glyphicon glyphicon-share"></span>Gửi</button>
                     <button type="button" class="btn btn-default" data-dismiss="modal" id="close_note">Đóng</button>
                 </div>
@@ -158,6 +172,6 @@
 <!--Custom JavaScript -->
 <script src="{% static 'js/scripts.js' %}"></script>
 <script src="{% static 'js/lib/datatables/datatables.min.js' %}"></script>
-<script src="{% static 'js/processing.js' %}"></script>
+<script src="{% static 'js/agent/processing.js' %}"></script>
 
 {% endblock%}

@@ -43,6 +43,7 @@ $(document).ready(function(){
 //                    { "width": "11%", "targets": 11 },
                     { "width": "12%", "targets": 12 },
                 ],
+
         "ajax": {
             "type": "GET",
             "url": location.href +"gui_di",

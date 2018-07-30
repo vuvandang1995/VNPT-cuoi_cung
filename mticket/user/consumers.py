@@ -143,7 +143,7 @@ class UserConsumer(WebsocketConsumer):
         
         # Send message to room group
         time = text_data_json['time']
-        u = Users.objects.get(username=self.room_group_name.split('_')[1])
+        u = Agents.objects.get(username=self.room_group_name.split('_')[1])
         
         print(message)
 
