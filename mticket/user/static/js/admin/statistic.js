@@ -1,5 +1,13 @@
 $(document).ready(function(){
-    $('#tb').dataTable( {
+    $('#tb_agent').dataTable( {
+        "ajax": {
+            "type": "GET",
+            "url": location.href +"_data_agent",
+            "contentType": "application/json; charset=utf-8",
+            "data": function(result){
+                return JSON.stringify(result);
+            }
+        },
         dom: 'Bfrtip',
         buttons: ['excel', 'pdf', 'print'],
     } );

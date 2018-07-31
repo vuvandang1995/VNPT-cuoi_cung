@@ -27,16 +27,6 @@
                                         <i class="fa fa-wrench"></i>
                                     </button>
                                 </h1>
-                                <div hidden style="float:right;">
-                                    {% if all == 1 %}
-                                        <h2>Thống kê năm {{year}}</h2>
-                                    {% else %}
-                                        <h2>Thống kê {{month}}/{{year}}</h2>
-                                    {% endif %}
-                                    <p></p>
-                                    <h4> Xử lý đúng hạn: {{sumd}} yêu cầu</h4><br>
-                                    <h4> Xử lý quá hạn: {{sums}} yêu cầu</h4>
-                                </div>
                             </div>
                         </div>
                     </div>
@@ -84,8 +74,8 @@
                                         <tr>
                                             <th>Nhân viên</th>
                                             <th>Xử lý sự cố đúng hạn</th>
-                                            <th>Xử lý sự cố chậm</th>
                                             <th>Xử lý sự cố quá hạn</th>
+                                            <th>Xử lý sự cố chậm</th>
                                         </tr>
                                     </thead>
                                     <tbody>

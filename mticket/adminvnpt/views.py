@@ -445,16 +445,12 @@ def statistic(request):
         agents = Agents.objects.exclude(position__in=[2, 3])
         year = timezone.now().year
         month = timezone.now().month
-        tk_dung_han = Tickets.objects.filter(expired=0, status=3, date_close__year=2018,
-                                             date_close__month=10)
-        tk_sai_han = Tickets.objects.filter(expired=1, status=3, date_close__year=2018)
-        print(tk_dung_han,tk_sai_han)
-
-
+        tk_dung_han = Tickets.objects.filter(expired=0, status=3, date_close__year=year, date_close__month=month)
+        tk_sai_han = Tickets.objects.filter(expired=1, status=3, date_close__year=year, date_close__month=month)
         tklog_dung_han = TicketLog.objects.filter(action='đóng yêu cầu', date__month=month, date__year=year,
-                                          ticketid__in=tk_dung_han)
+                                                  ticketid__in=tk_dung_han)
         tklog_sai_han = TicketLog.objects.filter(action='đóng yêu cầu', date__month=month, date__year=year,
-                                          ticketid__in=tk_sai_han)
+                                                 ticketid__in=tk_sai_han)
         list_ag = {}
         sum_dung_han = 0
         sum_sai_han = 0
@@ -481,7 +477,6 @@ def statistic(request):
             sum_dung_han += d
             sum_sai_han += s
             sum_cham_han += c
-        print(d,s,c)
         content = {'agent': Agents.objects.all(),
                    'admin': admin,
                    'list_ag': list_ag,
@@ -496,4 +491,44 @@ def statistic(request):
         return render(request, 'admin/statistic.html', content)
     else:
         return redirect('/')
+
+
+def statistic_data_agent(request):
+    if request.session.has_key('admin'):
+        agents = Agents.objects.filter(position__in=[1, 4])
+        year = timezone.now().year
+        month = timezone.now().month
+        tk_dung_han = Tickets.objects.filter(expired=0, status=3, date_close__year=year, date_close__month=month)
+        tk_sai_han = Tickets.objects.filter(expired=1, status=3, date_close__year=year, date_close__month=month)
+        tklog_dung_han = TicketLog.objects.filter(action='đóng yêu cầu', date__month=month, date__year=year,
+                                                  ticketid__in=tk_dung_han)
+        tklog_sai_han = TicketLog.objects.filter(action='đóng yêu cầu', date__month=month, date__year=year,
+                                                 ticketid__in=tk_sai_han)
+        list_ag = []
+        tkid_dung = [tk.ticketid for tk in tklog_dung_han]
+        tkid_qua = []
+        tkid_cham = []
+        tgian_cham = {}
+        open_tk = ['nhận xử lý yêu cầu', 'xử lý lại yêu cầu', 'mở lại yêu cầu',
+                   "nhận xử lý yêu cầu được giao từ quản trị viên"]
+        for tk in tklog_sai_han:
+            tkid = tk.ticketid
+            tik = TicketLog.objects.filter(action__in=open_tk, ticketid=tkid).order_by("-id")
+            date_open = timezone.datetime.combine(tik[0].date, tik[0].time).replace(tzinfo=utc)
+            date_end = tk.ticketid.dateend
+            print(tkid)
+            print(date_open)
+            if date_open <= date_end:
+                tkid_cham.append(tk.ticketid)
+            else:
+                tkid_qua.append(tk.ticketid)
+        for ag in agents:
+            dung = TicketAgent.objects.filter(agentid=ag, ticketid__in=tkid_dung).count()
+            qua = TicketAgent.objects.filter(agentid=ag, ticketid__in=tkid_qua).count()
+            cham = TicketAgent.objects.filter(agentid=ag, ticketid__in=tkid_cham).count()
+            list_ag.append([ag.fullname, dung, qua, cham])
+        data = {"data": list_ag}
+        datas = json.loads(json.dumps(data))
+        return JsonResponse(datas, safe=False)
+
 
