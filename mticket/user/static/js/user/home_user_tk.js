@@ -86,7 +86,7 @@ $(document).ready(function(){
         '/ws/agent/agent+group_agent_Socket/');
         var message = '';
         var topic = document.getElementById("mySelect").value;
-        var topic_name = $("#mySelect option[value='"+topic+"']").attr("name");
+        var topic_name = $("#mySelect option[value='"+topic+"']").val();
         message = 'Bạn có một yêu cầu mới!'+topic_name;
 
         var date = formatAMPM(new Date());
