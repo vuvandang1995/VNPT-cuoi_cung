@@ -145,11 +145,17 @@ def home_admin_data(request):
                 for t in TicketAgent.objects.filter(ticketid=tk.id):
                     handler += t.agentid.username + "<br>"
                 handler += '</p>'
+            if tk.lv_priority == 0:
+                level = r'<span class ="label label-success"> Thấp </span>'
+            elif tk.lv_priority == 1:
+                level = r'<span class ="label label-warning"> Trung bình </span>'
+            else:
+                level = r'<span class ="label label-danger"> Cao </span>'
             downtime = '''<span class="downtime label label-danger" id="downtime-'''+str(tk.id)+'''"></span>'''
             id = r'''<button type="button" class="btn" data-toggle="modal" data-target="#'''+str(tk.id)+'''content">'''+str(tk.id)+'''</button>'''
             sender = '<p id="sender' + str(tk.id) + '">' + tk.sender.username + '</p>'
             service = '<p id="tp' + str(tk.id) + '">' + tk.serviceid.name + '</p>'
-            data.append([id, tk.thong_so_kt, service, sender, tk.lv_priority, downtime, status, handler])
+            data.append([id, tk.thong_so_kt, service, sender, level, downtime, status, handler])
         ticket = {"data": data}
         tickets = json.loads(json.dumps(ticket))
         return JsonResponse(tickets, safe=False)
@@ -388,7 +394,7 @@ def manage_serivce(request):
 
 def fullname_agent_data(request):
     if request.session.has_key('admin'):
-        agent_leader = Agents.objects.exclude(position__in=[2,3] )
+        agent_leader = Agents.objects.exclude(position__in=[2,3])
         list_agent_leader = []
         for ag in agent_leader:
             if ag.status == 1:

@@ -159,12 +159,12 @@ def home_leader_data(request, servicename):
             idtk = r'''<button type="button" class="btn" data-toggle="modal" data-target="#''' + str(
                 tk.id) + '''content">''' + str(tk.id) + '''</button>'''
             service = '<p id="tp' + str(tk.id) + '">' + tk.serviceid.name + '</p>' + '<input type="hidden" name="topicc'+str(tk.id)+'" value="'+str(tk.serviceid.id)+'">'
-            # if tk.lv_priority == 0:
-            #     level = r'<span class ="label label-success"> Thấp </span>'
-            # elif tk.lv_priority == 1:
-            #     level = r'<span class ="label label-warning"> Trung bình </span>'
-            # else:
-            #     level = r'<span class ="label label-danger"> Cao </span>'
+            if tk.lv_priority == 0:
+                level = r'<span class ="label label-success"> Thấp </span>'
+            elif tk.lv_priority == 1:
+                level = r'<span class ="label label-warning"> Trung bình </span>'
+            else:
+                level = r'<span class ="label label-danger"> Cao </span>'
             sender = '<p id="sender' + str(tk.id) + '">' + tk.sender.username + '</p>'
             option = r'''<button type="button" class="btn btn-primary" id="''' + str(tk.id) + '''" data-toggle="tooltip" title="Mở / Đóng yêu cầu"><i class="fa fa-power-off"></i></button>
                         <button type="button" class="btn btn-danger" id="''' + str(tk.id) + '''" data-toggle="tooltip" title="Xóa yêu cầu"><i class="fa fa-trash-o"></i></button>
@@ -174,7 +174,7 @@ def home_leader_data(request, servicename):
             # if tk.expired == 1:
             #     status += r'<br><span class ="label label-danger"> Quá hạn </span>'
             dateend = tk.dateend + timezone.timedelta(hours=7)
-            data.append([idtk, tk.loai_su_co, service, status, tk.lv_priority, downtime, sender, handler, str(dateend)[:-16], option])
+            data.append([idtk, tk.loai_su_co, service, status, level, downtime, sender, handler, str(dateend)[:-16], option])
         ticket = {"data": data}
         tickets = json.loads(json.dumps(ticket))
         return JsonResponse(tickets, safe=False)
@@ -210,14 +210,14 @@ def leader_manage_agent(request):
                    'agent_name': mark_safe(json.dumps(leader.username)),
                    'fullname': mark_safe(json.dumps(leader.fullname)),
                    }
-        return render(request, 'agent/leader_manage_agent.html', content)
+        return render(request, 'leader/leader_manage_agent.html', content)
     else:
         return redirect("/")
 
 
 def leader_agent_data(request):
     if request.session.has_key('leader'):
-        agent = Agents.objects.filter(admin=0)
+        agent = Agents.objects.exclude(position__in=[2,3])
         list_agent = []
         for ag in agent:
             list_agent.append({"username": ag.username, "fullname": ag.fullname})
@@ -255,7 +255,7 @@ def leader_profile(request):
             elif 'noti_chat' in request.POST:
                 agent.noti_chat = 0
                 agent.save()
-        return render(request,"agent/profile_leader.html", {'agent': agent, 'noti_noti': agent.noti_noti,
+        return render(request,"leader/profile_leader.html", {'agent': agent, 'noti_noti': agent.noti_noti,
                                                      'noti_chat': agent.noti_chat,
                                                      'topic': topicag,
                                                      'agent_name': mark_safe(json.dumps(agent.username)),
