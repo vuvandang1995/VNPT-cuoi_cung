@@ -60,6 +60,7 @@ $(document).ready(function(){
                 url:location.href,
                 data: {'csrfmiddlewaretoken':token, 'position': position, 'agid':id},
                 success: function(){
+                    $('#list_user').DataTable().ajax.reload()
                 }
             });
         }else{

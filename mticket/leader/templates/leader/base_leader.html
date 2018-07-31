@@ -110,6 +110,10 @@
                     	<li class="nav-label">Quản trị viên</li>
                         <li><a href="{% url 'leader:home_leader' %}"><i class="fa fa-ticket"></i> Quản lý yêu cầu </a></li>
                         <li><a href="{% url 'leader:leader_manage_agent' %}"><i class="fa fa fa-user-secret"></i> Quản lý nhân viên </a></li>
+                        {% if leader.position == 4 %}
+                            <li><a href="{% url 'leader:leader_to_agent' %}"><i class="fa fa-exchange"></i> Chế độ nhân viên xử lý </a></li>
+                        {% endif%}
+                    </ul>
                     </ul>
                 </nav>
                 <!-- End Sidebar navigation -->

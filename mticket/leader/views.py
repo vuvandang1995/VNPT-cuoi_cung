@@ -43,7 +43,8 @@ def home_leader(request):
                     'list_ag': list_ag,
                     'agent_name': mark_safe(json.dumps(leader.username)),
                     'fullname': mark_safe(json.dumps(leader.fullname)),
-                    'topic_all': Services.objects.all()
+                    'topic_all': Services.objects.all(),
+                    'leader': leader
                     }
             if request.method == 'POST':
                 if 'close' in request.POST:
@@ -83,7 +84,7 @@ def home_leader(request):
                             tkag1.delete()
                             tk.status = 0
                             tk.save()
-                            action = "nhận xử lý yêu cầu được giao từ quản trị viên " + leader.username
+                            action = "nhận xử lý yêu cầu được giao từ quản trị viên"
                             tklog = TicketLog.objects.filter(action=action)
                             tklog.delete()
                         except:
@@ -94,7 +95,7 @@ def home_leader(request):
                             tk = Tickets.objects.get(id=ticketid)
                             tkag1 = TicketAgent.objects.filter(ticketid=tk)
                             tkag1.delete()
-                            action = "nhận xử lý yêu cầu được giao từ quản trị viên " + leader.username
+                            action = "nhận xử lý yêu cầu được giao từ quản trị viên"
                             tklog = TicketLog.objects.filter(action=action)
                             tklog.delete()
                         except:
@@ -106,7 +107,7 @@ def home_leader(request):
                             tkag.save()
                             tk.status = 1
                             tk.save()
-                            action = "nhận xử lý yêu cầu được giao từ quản trị viên " + leader.username
+                            action = "nhận xử lý yêu cầu được giao từ quản trị viên"
                             if agent.receive_email == 1:
                                 email = EmailMessage(
                                     'Chuyển yêu cầu',
@@ -143,7 +144,8 @@ def home_leader(request):
                     'list_ag': list_ag,
                     'agent_name': mark_safe(json.dumps(leader.username)),
                     'fullname': mark_safe(json.dumps(leader.fullname)),
-                    'topic_all': Services.objects.all()
+                    'topic_all': Services.objects.all(),
+                    'leader': leader
                     }
             if request.method == 'POST':
                 if 'close' in request.POST:
@@ -183,7 +185,7 @@ def home_leader(request):
                             tkag1.delete()
                             tk.status = 0
                             tk.save()
-                            action = "nhận xử lý yêu cầu được giao từ quản trị viên " + leader.username
+                            action = "nhận xử lý yêu cầu được giao từ quản trị viên"
                             tklog = TicketLog.objects.filter(action=action)
                             tklog.delete()
                         except:
@@ -194,7 +196,7 @@ def home_leader(request):
                             tk = Tickets.objects.get(id=ticketid)
                             tkag1 = TicketAgent.objects.filter(ticketid=tk)
                             tkag1.delete()
-                            action = "nhận xử lý yêu cầu được giao từ quản trị viên " + leader.username
+                            action = "nhận xử lý yêu cầu được giao từ quản trị viên"
                             tklog = TicketLog.objects.filter(action=action)
                             tklog.delete()
                         except:
@@ -206,7 +208,7 @@ def home_leader(request):
                             tkag.save()
                             tk.status = 1
                             tk.save()
-                            action = "nhận xử lý yêu cầu được giao từ quản trị viên " + leader.username
+                            action = "nhận xử lý yêu cầu được giao từ quản trị viên"
                             if agent.receive_email == 1:
                                 email = EmailMessage(
                                     'Chuyển yêu cầu',
@@ -307,14 +309,15 @@ def leader_manage_agent(request):
                     try:
                         ag = Agents.objects.get(id=request.POST['agid'])
                         sv = Services.objects.get(name=request.POST['svname'])
-                        if (ag.position != 4):
+                        if sv.leader_bk == None:
                             ag.position = 4
                             ag.save()
                             sv.leader_bk = ag
                             sv.save()
                         else:
-                            ag.position = 1
-                            ag.save()
+                            if Services.objects.filter(leader_bk=ag).count() == 1:
+                                ag.position = 1
+                                ag.save()
                             sv.leader_bk = None
                             sv.save()
                     except:
@@ -336,6 +339,7 @@ def leader_manage_agent(request):
                     'list_tk': list_tk,
                     'agent_name': mark_safe(json.dumps(leader.username)),
                     'fullname': mark_safe(json.dumps(leader.fullname)),
+                    'leader': leader
                     }
             return render(request, 'leader/leader_manage_agent.html', content)
         else:
@@ -390,6 +394,7 @@ def leader_manage_agent(request):
                     'list_tk': list_tk,
                     'agent_name': mark_safe(json.dumps(leader.username)),
                     'fullname': mark_safe(json.dumps(leader.fullname)),
+                    'leader': leader
                     }
             return render(request, 'leader/leader_manage_agent.html', content)
     else:
@@ -442,7 +447,8 @@ def leader_profile(request):
                                                         'topic': topicag,
                                                         'agent_name': mark_safe(json.dumps(agent.username)),
                                                         'fullname': mark_safe(json.dumps(agent.fullname)),
-                                                        'list_tp': mark_safe(json.dumps(list_tp))})
+                                                        'list_tp': mark_safe(json.dumps(list_tp)),
+                                                        'leader': agent})
         else:
             agent = Agents.objects.get(username=request.session['leader'])
             topicag = Services.objects.filter(leader_bk=agent)
@@ -476,7 +482,8 @@ def leader_profile(request):
                                                         'topic': topicag,
                                                         'agent_name': mark_safe(json.dumps(agent.username)),
                                                         'fullname': mark_safe(json.dumps(agent.fullname)),
-                                                        'list_tp': mark_safe(json.dumps(list_tp))})
+                                                        'list_tp': mark_safe(json.dumps(list_tp)),
+                                                        'leader': agent})
     else:
         return redirect("/")
 
@@ -487,14 +494,5 @@ def leader_to_agent(request):
         request.session['agent'] = request.session['leader']
         del request.session['leader']
         return redirect('/agent')
-    else:
-        return redirect("/")
-
-
-def agent_to_leader(request):
-    if request.session.has_key('agent')and(Agents.objects.get(username=request.session['agent'])).status == 1:
-        request.session['leader'] = request.session['agent']
-        del request.session['agent']
-        return redirect('/agent/leader')
     else:
         return redirect("/")

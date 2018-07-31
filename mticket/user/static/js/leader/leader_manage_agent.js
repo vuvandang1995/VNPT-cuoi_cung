@@ -11,7 +11,7 @@ $(document).ready(function(){
                 url:location.href,
                 data: {'delete':id, 'csrfmiddlewaretoken':token},
                 success: function(){
-                    $("body .table").load(location.href + " .table");
+                    $("body #list_topic").load(location.href + " #list_topic");
                     var date = formatAMPM(new Date());
                     ag_leader.unshift('admin_delete_topic');
                     ag_leader.unshift(leader);
@@ -42,7 +42,7 @@ $(document).ready(function(){
             data: {'csrfmiddlewaretoken':token, 'serviceid': serviceid, 'list_agent[]': JSON.stringify(list_agent)},
             success: function(){
                 // window.location.reload();
-                $("body .table").load(location.href + " .table");
+                $("body #list_topic").load(location.href + " #list_topic");
                 document.getElementById("add_topic_close").click();
                 var date = formatAMPM(new Date());
                 ag_leader.unshift('admin_add_topic');
@@ -81,7 +81,7 @@ $(document).ready(function(){
                 }
             });
         }else{
-            $("body .table").load(location.href + " .table");
+            $("body #list_topic").load(location.href + " #list_topic");
         }
     });
 
