@@ -255,9 +255,12 @@ def home_leader_data(request, servicename):
                     status = r'<span class ="label label-success" id="leader' + str(tk.id) + '">Hoàn thành</span>'
                 else:
                     status = r'<span class ="label label-default" id="leader' + str(tk.id) + '">Đóng</span>'
-                handler = '<p id="hd' + str(tk.id) + '">'
+                handler = '<p hidden id="hd' + str(tk.id) + '">'
                 for t in TicketAgent.objects.filter(ticketid=tk.id):
                     handler += t.agentid.username + "<br>"
+                handler += '</p><p>'
+                for t in TicketAgent.objects.filter(ticketid=tk.id):
+                    handler += t.agentid.fullname + "<br>"
                 handler += '</p>'
             downtime = '''<span class="downtime label label-danger" id="downtime-'''+str(tk.id)+'''"></span>'''
             idtk = r'''<button type="button" class="btn" data-toggle="modal" data-target="#''' + str(
@@ -269,7 +272,7 @@ def home_leader_data(request, servicename):
                 level = r'<span class ="label label-warning"> Trung bình </span>'
             else:
                 level = r'<span class ="label label-danger"> Cao </span>'
-            sender = '<p id="sender' + str(tk.id) + '">' + tk.sender.username + '</p>'
+            sender = '<p hidden id="sender' + str(tk.id) + '">' + tk.sender.username + '</p><p>' + tk.sender.fullname + '</p>'
             option = r'''<button type="button" class="btn btn-primary" id="''' + str(tk.id) + '''" data-toggle="tooltip" title="Mở / Đóng yêu cầu"><i class="fa fa-power-off"></i></button>
                         <button type="button" class="btn btn-danger" id="''' + str(tk.id) + '''" data-toggle="tooltip" title="Xóa yêu cầu"><i class="fa fa-trash-o"></i></button>
                         <button type="button" class="btn btn-info" data-title="forward" id="'''+str(tk.id)+'''"data-toggle="modal" data-target="#forward_modal"><i class="fa fa-share-square-o" data-toggle="tooltip" title="Chuyển tiếp" ></i></button>

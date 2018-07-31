@@ -20,6 +20,11 @@ $(document).ready(function(){
             "contentType": "application/json; charset=utf-8",
             "data": function(result){
                 return JSON.stringify(result);
+            },
+            "complete": function(){
+                setTimeout(function(){
+                    countdowntime();
+                }, 1000);
             }
         },
         'dom': 'Rlfrtip',
@@ -50,6 +55,11 @@ $(document).ready(function(){
             "contentType": "application/json; charset=utf-8",
             "data": function(result){
                 return JSON.stringify(result);
+            },
+            "complete": function(){
+                setTimeout(function(){
+                    countdowntime();
+                }, 1000);
             }
         },
         'dom': 'Rlfrtip',

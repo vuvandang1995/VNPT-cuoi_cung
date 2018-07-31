@@ -32,7 +32,7 @@
                                 Chủ đề {{ key.name }}
                             </div>
                             <div class="card-body tk_div" id="tabdiv_{{ forloop.counter }}">
-                                <table style="width:100%;"  class="display nowrap table table-hover table-striped table-bordered" id="list_ticket_leader_{{ forloop.counter }}">
+                                <table style="width:100%;"  class="display nowrap table table-hover table-striped table-bordered" id="list_agent_leader_{{key.name}}">
                                     <thead>
                                         <tr align="center">
                                             <th>Họ và tên</th>
@@ -64,27 +64,24 @@
                                                 {% endif %}
                                             {% endfor %}
                                             <th>
-                                                {% if va.position == 4 %}
+                                                {% if key.leader_bk == None  %}
+                                                    <label class="switch" id="{{va.id}}-{{key.name}}">
+                                                        <input type="checkbox">
+                                                        <span class="slider round"></span>
+                                                    </label>
+                                                {% else %}
                                                     {% if key.leader_bk.username == va.username%}
                                                         <label class="switch" id="{{va.id}}-{{key.name}}">
                                                             <input type="checkbox" checked>
                                                             <span class="slider round"></span>
                                                         </label>
-                                                    {% else %}
-                                                        <label class="switch" id="{{va.id}}-{{key.name}}">
-                                                            <input type="checkbox">
-                                                            <span class="slider round"></span>
-                                                        </label>
                                                     {% endif%}
-                                                {% else %}
-                                                    <label class="switch" id="{{va.id}}-{{key.name}}">
-                                                        <input type="checkbox">
-                                                        <span class="slider round"></span>
-                                                    </label>
                                                 {% endif%}
+
                                             </th>
                                             <th>
                                                 <button type="button" class="btn btn-danger" id="del_{{key.id}}_{{va.id}}" data-toggle="tooltip" title="Xóa">
+                                                    <p hidden>{{key.name}}</p>
                                                     <i class="fa fa-trash"></i>
                                                 </button>
                                             </th>

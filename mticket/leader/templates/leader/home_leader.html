@@ -60,15 +60,27 @@
                                     <div class="modal-body form-group ct" id="ct{{tk.id}}">
                                         <b>Người gửi:</b>
                                         <p>{{tk.sender.fullname}}</p>
-                                        <b>Tiêu đề:</b>
-                                        <p>{{tk.title}}</p>
-                                        <b>Chủ đề:</b>
-                                        <p>{{tk.topicid.name}}</p>
+                                        <b>Dịch vụ:</b>
+                                        <p>{{tk.serviceid.name}}</p>
+                                        <b>Loại sự cố:</b>
+                                        <p>{{tk.loai_su_co}}</p>
                                         <b>Nội dung:</b>
                                         <p>{{tk.content}}</p>
+                                        <b>Thông số kỹ thuật:</b>
+                                        <p>{{tk.thong_so_kt}}</p>
+                                        {% if tk.attach != '' %}
+                                        <b>Đính kèm:</b><br>
+                                        <img src="/media/{{tk.attach}}" alt="none" style="max-width:80%;max-height:600px;display: block;margin-left: auto;margin-right: auto;">
+                                        {% endif %}
+                                        <b>Ghi chú:</b><br>
+                                        <p id="note{{tk.id}}">{{tk.note}}</p>
+                                        <b>Khách hàng:</b>
+                                        <p>{{tk.client}}</p>
+                                        <b>Thông tin khách hàng:</b>
+                                        <p>{{tk.info_client}}</p>
                                         <b>Ngày gửi:</b>
                                         <p>{{ tk.datestart}}</p>
-                                        <b>Ngày hêt hạn:</b>
+                                        <b>Ngày hết hạn:</b>
                                         <p id="dateend{{tk.id}}">{{tk.dateend}}</p>
                                         {% if tk.attach != '' %}
                                         <b>Đính kèm:</b><br>
