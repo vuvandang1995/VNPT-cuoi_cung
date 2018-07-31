@@ -29,13 +29,14 @@
                             <div class="card-body">
                                 <table  class="table display table-bordered table-striped">
                                     <thead>
-                                    <tr>
-                                        <th width="12%">Tên</th>
+                                    <tr align="center">
+                                        <th width="10%">Tên</th>
                                         <th width="10%">Nhóm dịch vụ</th>
-                                        <th width="7%">Trạng thái</th>
-                                        <th width="20%">Mô tả</th>
+                                        <th width="5%">Trạng thái</th>
+                                        <th width="15%">Mô tả</th>
                                         <th width="12%">Quản trị viên</th>
-                                        <th width="15%">Nhân viên xử lý</th>
+                                        <th width="12%">Phó Quản trị viên</th>
+                                        <th width="12%">Nhân viên xử lý</th>
                                         <th width="10%">Thời gian tối đa xử lý</th>
                                         <th>Tùy chọn</th>
                                     </tr>
@@ -43,7 +44,7 @@
                                     <tbody>
                                         {% csrf_token %}
                                     {% for sv in service %}
-                                    <tr>
+                                    <tr align="center">
 
                                         <td>{{sv.name}}</td>
                                         <td>{{sv.groupserviceid.name}}</td>
@@ -58,6 +59,10 @@
                                         <td id="leader_topic{{sv.id}}">
                                             <p>{{ sv.leader.fullname}}</p>
                                             <input type="hidden" name="{{sv.leader.username}}" value="{{sv.leader.username}}">
+                                        </td>
+                                        <td>
+                                            <p>{{ sv.leader_bk.fullname}}</p>
+                                            <input type="hidden" name="{{sv.leader_bk.username}}" value="{{sv.leader_bk.username}}">
                                         </td>
                                         <td>
                                             {% for key,value in list_ag.items %}

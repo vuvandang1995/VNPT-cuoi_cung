@@ -34,7 +34,11 @@
                                     <tbody>
                                         <tr>
                                             <td>Vị trí</td>
-                                            <td>Nhân viên xử lý</td>
+                                            {% if agent.position == 2%}
+                                                <td>Quản trị viên</td>
+                                            {% else %}
+                                                <td>Phó Quản trị viên</td>
+                                            {% endif%}
                                         </tr>
                                         <tr>
                                             <td>Tên đăng nhập</td>

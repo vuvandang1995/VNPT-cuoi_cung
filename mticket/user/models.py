@@ -16,7 +16,8 @@ class Services(models.Model):
     name = models.CharField(max_length=255)
     status = models.IntegerField(default=1)
     description = models.TextField()
-    leader = models.ForeignKey('Agents', models.SET_NULL, null=True, db_column='agentid')
+    leader = models.ForeignKey('Agents', models.SET_NULL, null=True, db_column='agentid', related_name='leader')
+    leader_bk = models.ForeignKey('Agents', models.SET_NULL, null=True, db_column='agentid_bk', related_name='leader_bk')
     downtime = models.IntegerField()
     groupserviceid = models.ForeignKey('GroupServices', models.SET_NULL, null=True, db_column='groupserviceid')
 
