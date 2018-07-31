@@ -200,6 +200,7 @@ def homeuser(request):
             if 'tkid' in request.POST:
                 ticket = Tickets.objects.get(id=request.POST['tkid'])
                 ticket.status = 3
+                ticket.date_close = timezone.now()
                 ticket.save()
                 TicketLog.objects.create(agentid=user,
                                          ticketid=ticket,

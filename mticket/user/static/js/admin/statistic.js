@@ -14,7 +14,7 @@ $(document).ready(function(){
             }else {
                 all = 0;
             }
-        location.href="/agent/admin/statistic_"+all+"_"+month+"_"+year;
+        location.href="/agent/admin/statistic";
     });
 
 });

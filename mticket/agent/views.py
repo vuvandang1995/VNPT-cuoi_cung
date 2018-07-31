@@ -316,19 +316,25 @@ def processing_ticket_data(request):
 
 
 def history(request,id):
-    if (request.session.has_key('agent')and(Agents.objects.get(username=request.session['agent'])).status == 1) or request.session.has_key('leader'):
+    if (request.session.has_key('agent')and(Agents.objects.get(username=request.session['agent'])).status == 1):
         tems = TicketLog.objects.filter(ticketid=id)
         result = []
         for tem in tems:
-            if tem.userid is not None:
-                action = "<b>User " + str(tem.userid.username) + "</b><br/>"
+            if tem.agentid.position == 0:
+                action = "<b>Người dùng "
+            elif tem.agentid.position == 1:
+                action = "<b>Nhân viên "
+            elif tem.agentid.position == 2:
+                action = "<b>Quản trị "
             else:
-                if tem.agentid.admin == 0:
-                    action = "<b>Nhân viên " + str(tem.agentid.username) + "</b><br/>" + tem.action
-                else:
-                    action = "<b>Quản trị " + str(tem.agentid.username) + "</b><br/>" + tem.action
+                action = "<b>Quyền quản trị "
+            action += str(tem.agentid.fullname) + "</b><br/>" + tem.action
             if tem.action == 'tạo mới yêu cầu':
                 cont = "<i class='fa fa-plus' ></i>"
+            elif tem.action == 'tạo mới và tự xử lý yêu cầu':
+                cont = "<i class='fa fa-tag' ></i>"
+            elif tem.action == 'gửi yêu cầu':
+                cont = "<i class='fa fa-share-square' ></i>"
             elif tem.action == 'đóng yêu cầu':
                 cont = "<i class='fa fa-power-off' ></i>"
             elif tem.action == 'nhận xử lý yêu cầu':
@@ -366,10 +372,11 @@ def history(request,id):
                        "group": "overview",
                        "start": str(mintime.date) + "T" + str(mintime.time)[:-7]})
         tk = json.loads(json.dumps(result))
-        if request.session.has_key('agent'):
-            return render(request, 'agent/history_for_agent.html', {'tk': tk, 'id': str(id)})
-        else:
-            return render(request, 'agent/history_for_leader.html', {'tk': tk, 'id': str(id), 'today': timezone.now().date()})
+        agent = Agents.objects.get(username=request.session['agent'])
+        tpag = ServiceAgent.objects.filter(agentid=agent).values('serviceid')
+        idleader = Services.objects.filter(id__in=tpag).values('leader')
+        list_leader = Agents.objects.filter(id__in=idleader)
+        return render(request, 'agent/history_for_agent.html', {'tk': tk, 'id': str(id), 'list_leader': list_leader})
     else:
         return redirect("/")
 
