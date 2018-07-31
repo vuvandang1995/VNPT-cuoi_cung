@@ -15,6 +15,8 @@ urlpatterns = [
     path('services', views.manage_serivce, name='manage_serivce'),
     path('admin/leader', views.fullname_agent_data, name='fullname_agent_data'),
     path('statistic', views.statistic, name='statistic'),
-    path('statistic_data_agent', views.statistic_data_agent, name='statistic_data_agent'),
+    path('statistic_data_agent_<str:filter>', views.statistic_data_agent, name='statistic_data_agent'),
+    path('statistic_data_call_center_<str:filter>', views.statistic_data_call_center, name='statistic_data_call_center'),
+    path('statistic_data_service_<str:filter>', views.statistic_data_service, name='statistic_data_service'),
 
 ]
