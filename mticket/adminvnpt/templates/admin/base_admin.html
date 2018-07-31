@@ -290,7 +290,9 @@
             $("body #processing").load(location.href + " #processing");
             $("body #done").load(location.href + " #done");
         }, 2000);
-        countdowntime();
+        setTimeout(function(){
+            countdowntime();
+        }, 2000);
 
     };
 </script>

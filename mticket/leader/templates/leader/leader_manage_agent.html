@@ -1,4 +1,4 @@
-{% extends 'agent/base_leader.html' %}
+{% extends 'leader/base_leader.html' %}
 {% block title %} Dashboard {% endblock %}
 {% load staticfiles %}
 {% block content %}
@@ -118,6 +118,11 @@
                                 <input style="border-radius: 0px;width: 300px" type="text" id="search" name="search" class="input-large" placeholder="Nhập tên quản trị viên">
                                 <input type="hidden" name="username_leader" value="">
 
+                                <div>
+                                    <ol id="list_agent">
+                                    </ol> 
+                                </div>
+
                                 <font id="leadererr" color="red"></font><br>
                             </div>
 
@@ -136,5 +141,5 @@
     </div>
 {% endblock %}
 {% block js %}
-    <script src="{% static 'js/leader_manage_agent.js' %}"></script>
+    <script src="{% static 'js/leader/leader_manage_agent.js' %}"></script>
 {% endblock %}

@@ -62,8 +62,8 @@
                                         <td>
                                             {% for key,value in list_ag.items %}
                                                 {% if key == sv.name %}
-                                                <i data-toggle="collapse" data-toggle="collapse" data-target="#demo" class="fa fa-toggle-down"></i>
-                                                <div id="demo" class="collapse">
+                                                <i data-toggle="collapse" data-toggle="collapse" data-target="#demo{{sv.id}}" class="fa fa-toggle-down"></i>
+                                                <div id="demo{{sv.id}}" class="collapse">
                                                     {% for va in value %}
                                                         <div class="listagent{{sv.id}}">
                                                             {{va.fullname}} <br>
