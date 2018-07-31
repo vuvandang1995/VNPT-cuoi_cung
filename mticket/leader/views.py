@@ -28,104 +28,206 @@ def logout_leader(request):
 
 def home_leader(request):
     if request.session.has_key('leader')and(Agents.objects.get(username=request.session['leader'])).status == 1:
-        leader = Agents.objects.get(username=request.session.get('leader'))
-        list_topic = Services.objects.filter(leader=leader)
-        list_ticket = {}
-        list_ag = {}
-        for tp in list_topic:
-            list_ticket[tp.name] = Tickets.objects.filter(serviceid=tp)
-            ag = ServiceAgent.objects.filter(serviceid=tp)
-            list_ag[tp.name] = [a.agentid for a in ag]
-        content = {'tickets': list_ticket,
-                   'leng': len(list_topic),
-                   'topic': list_topic,
-                   'list_ag': list_ag,
-                   'agent_name': mark_safe(json.dumps(leader.username)),
-                   'fullname': mark_safe(json.dumps(leader.fullname)),
-                   'topic_all': Services.objects.all()
-                   }
-        if 'close' in request.POST:
-            ticketid = request.POST['close']
-            tk = Tickets.objects.get(id=ticketid)
-            if tk.status == 3:
-                if not TicketAgent.objects.filter(ticketid=tk):
-                    tk.status = 0
-                    action = "mở lại yêu cầu"
-                else:
-                    tk.status = 1
-                    action = "xử lý lại yêu cầu"
-            else:
-                tk.status = 3
-                action = "đóng yêu cầu"
-            tk.save()
-            TicketLog.objects.create(agentid=leader, ticketid=tk,
-                                     action=action,
-                                     date=timezone.now().date(),
-                                     time=timezone.now().time())
-        elif 'delete' in request.POST:
-            ticketid = request.POST['delete']
-            tk = Tickets.objects.get(id=ticketid)
-            tk.delete()
-            try:
-                os.remove(r'notification/chat/chat_' + ticketid + '.txt')
-            except:
-                pass
-        elif 'ticketid' in request.POST:
-            list_agent = request.POST['list_agent[]']
-            list_agent = json.loads(list_agent)
-            ticketid = request.POST['ticketid']
-            if not list_agent:
-                try:
+        if Agents.objects.get(username=request.session['leader']).position == 2:
+            leader = Agents.objects.get(username=request.session.get('leader'))
+            list_topic = Services.objects.filter(leader=leader)
+            list_ticket = {}
+            list_ag = {}
+            for tp in list_topic:
+                list_ticket[tp.name] = Tickets.objects.filter(serviceid=tp)
+                ag = ServiceAgent.objects.filter(serviceid=tp)
+                list_ag[tp.name] = [a.agentid for a in ag]
+            content = {'tickets': list_ticket,
+                    'leng': len(list_topic),
+                    'topic': list_topic,
+                    'list_ag': list_ag,
+                    'agent_name': mark_safe(json.dumps(leader.username)),
+                    'fullname': mark_safe(json.dumps(leader.fullname)),
+                    'topic_all': Services.objects.all()
+                    }
+            if request.method == 'POST':
+                if 'close' in request.POST:
+                    ticketid = request.POST['close']
                     tk = Tickets.objects.get(id=ticketid)
-                    tkag1 = TicketAgent.objects.filter(ticketid=tk)
-                    tkag1.delete()
-                    tk.status = 0
+                    if tk.status == 3:
+                        if not TicketAgent.objects.filter(ticketid=tk):
+                            tk.status = 0
+                            action = "mở lại yêu cầu"
+                        else:
+                            tk.status = 1
+                            action = "xử lý lại yêu cầu"
+                    else:
+                        tk.status = 3
+                        action = "đóng yêu cầu"
                     tk.save()
-                    action = "nhận xử lý yêu cầu được giao từ quản trị viên " + leader.username
-                    tklog = TicketLog.objects.filter(action=action)
-                    tklog.delete()
-                except:
-                    tk.status = 0
-                    tk.save()
-            else:
-                try:
+                    TicketLog.objects.create(agentid=leader, ticketid=tk,
+                                            action=action,
+                                            date=timezone.now().date(),
+                                            time=timezone.now().time())
+                elif 'delete' in request.POST:
+                    ticketid = request.POST['delete']
                     tk = Tickets.objects.get(id=ticketid)
-                    tkag1 = TicketAgent.objects.filter(ticketid=tk)
-                    tkag1.delete()
-                    action = "nhận xử lý yêu cầu được giao từ quản trị viên " + leader.username
-                    tklog = TicketLog.objects.filter(action=action)
-                    tklog.delete()
-                except:
-                    pass
-                for agentid in list_agent:
-                    agent = Agents.objects.get(username=agentid)
-                    tk = Tickets.objects.get(id=ticketid)
-                    tkag = TicketAgent(agentid=agent, ticketid=tk)
-                    tkag.save()
-                    tk.status = 1
+                    tk.delete()
+                    try:
+                        os.remove(r'notification/chat/chat_' + ticketid + '.txt')
+                    except:
+                        pass
+                elif 'ticketid' in request.POST:
+                    list_agent = request.POST['list_agent[]']
+                    list_agent = json.loads(list_agent)
+                    ticketid = request.POST['ticketid']
+                    if not list_agent:
+                        try:
+                            tk = Tickets.objects.get(id=ticketid)
+                            tkag1 = TicketAgent.objects.filter(ticketid=tk)
+                            tkag1.delete()
+                            tk.status = 0
+                            tk.save()
+                            action = "nhận xử lý yêu cầu được giao từ quản trị viên " + leader.username
+                            tklog = TicketLog.objects.filter(action=action)
+                            tklog.delete()
+                        except:
+                            tk.status = 0
+                            tk.save()
+                    else:
+                        try:
+                            tk = Tickets.objects.get(id=ticketid)
+                            tkag1 = TicketAgent.objects.filter(ticketid=tk)
+                            tkag1.delete()
+                            action = "nhận xử lý yêu cầu được giao từ quản trị viên " + leader.username
+                            tklog = TicketLog.objects.filter(action=action)
+                            tklog.delete()
+                        except:
+                            pass
+                        for agentid in list_agent:
+                            agent = Agents.objects.get(username=agentid)
+                            tk = Tickets.objects.get(id=ticketid)
+                            tkag = TicketAgent(agentid=agent, ticketid=tk)
+                            tkag.save()
+                            tk.status = 1
+                            tk.save()
+                            action = "nhận xử lý yêu cầu được giao từ quản trị viên " + leader.username
+                            if agent.receive_email == 1:
+                                email = EmailMessage(
+                                    'Chuyển yêu cầu',
+                                    render_to_string('agent/mail/forward_mail_leader.html',
+                                                    {'receiver': agent,
+                                                    'domain': (get_current_site(request)).domain,
+                                                    'sender': 'Leader'}),
+                                    to=[agent.email],
+                                )
+                                thread = EmailThread(email)
+                                thread.start()
+                            TicketLog.objects.create(agentid=agent, ticketid=tk,
+                                                    action=action,
+                                                    date=timezone.now().date(),
+                                                    time=timezone.now().time())
+                elif 'ticketid_change' in request.POST:
+                    tp = Services.objects.get(id=request.POST['serviceid'])
+                    tk = Tickets.objects.get(id=request.POST['ticketid_change'])
+                    tk.serviceid = tp
                     tk.save()
-                    action = "nhận xử lý yêu cầu được giao từ quản trị viên " + leader.username
-                    if agent.receive_email == 1:
-                        email = EmailMessage(
-                            'Chuyển yêu cầu',
-                            render_to_string('agent/mail/forward_mail_leader.html',
-                                             {'receiver': agent,
-                                            'domain': (get_current_site(request)).domain,
-                                            'sender': 'Leader'}),
-                            to=[agent.email],
-                        )
-                        thread = EmailThread(email)
-                        thread.start()
-                    TicketLog.objects.create(agentid=agent, ticketid=tk,
-                                             action=action,
-                                             date=timezone.now().date(),
-                                             time=timezone.now().time())
-        elif 'ticketid_change' in request.POST:
-            tp = Services.objects.get(id=request.POST['serviceid'])
-            tk = Tickets.objects.get(id=request.POST['ticketid_change'])
-            tk.serviceid = tp
-            tk.save()
-        return render(request, 'leader/home_leader.html', content)
+            return render(request, 'leader/home_leader.html', content)
+        else:
+            leader = Agents.objects.get(username=request.session.get('leader'))
+            list_topic = Services.objects.filter(leader_bk=leader)
+            list_ticket = {}
+            list_ag = {}
+            for tp in list_topic:
+                list_ticket[tp.name] = Tickets.objects.filter(serviceid=tp)
+                ag = ServiceAgent.objects.filter(serviceid=tp)
+                list_ag[tp.name] = [a.agentid for a in ag]
+            content = {'tickets': list_ticket,
+                    'leng': len(list_topic),
+                    'topic': list_topic,
+                    'list_ag': list_ag,
+                    'agent_name': mark_safe(json.dumps(leader.username)),
+                    'fullname': mark_safe(json.dumps(leader.fullname)),
+                    'topic_all': Services.objects.all()
+                    }
+            if request.method == 'POST':
+                if 'close' in request.POST:
+                    ticketid = request.POST['close']
+                    tk = Tickets.objects.get(id=ticketid)
+                    if tk.status == 3:
+                        if not TicketAgent.objects.filter(ticketid=tk):
+                            tk.status = 0
+                            action = "mở lại yêu cầu"
+                        else:
+                            tk.status = 1
+                            action = "xử lý lại yêu cầu"
+                    else:
+                        tk.status = 3
+                        action = "đóng yêu cầu"
+                    tk.save()
+                    TicketLog.objects.create(agentid=leader, ticketid=tk,
+                                            action=action,
+                                            date=timezone.now().date(),
+                                            time=timezone.now().time())
+                elif 'delete' in request.POST:
+                    ticketid = request.POST['delete']
+                    tk = Tickets.objects.get(id=ticketid)
+                    tk.delete()
+                    try:
+                        os.remove(r'notification/chat/chat_' + ticketid + '.txt')
+                    except:
+                        pass
+                elif 'ticketid' in request.POST:
+                    list_agent = request.POST['list_agent[]']
+                    list_agent = json.loads(list_agent)
+                    ticketid = request.POST['ticketid']
+                    if not list_agent:
+                        try:
+                            tk = Tickets.objects.get(id=ticketid)
+                            tkag1 = TicketAgent.objects.filter(ticketid=tk)
+                            tkag1.delete()
+                            tk.status = 0
+                            tk.save()
+                            action = "nhận xử lý yêu cầu được giao từ quản trị viên " + leader.username
+                            tklog = TicketLog.objects.filter(action=action)
+                            tklog.delete()
+                        except:
+                            tk.status = 0
+                            tk.save()
+                    else:
+                        try:
+                            tk = Tickets.objects.get(id=ticketid)
+                            tkag1 = TicketAgent.objects.filter(ticketid=tk)
+                            tkag1.delete()
+                            action = "nhận xử lý yêu cầu được giao từ quản trị viên " + leader.username
+                            tklog = TicketLog.objects.filter(action=action)
+                            tklog.delete()
+                        except:
+                            pass
+                        for agentid in list_agent:
+                            agent = Agents.objects.get(username=agentid)
+                            tk = Tickets.objects.get(id=ticketid)
+                            tkag = TicketAgent(agentid=agent, ticketid=tk)
+                            tkag.save()
+                            tk.status = 1
+                            tk.save()
+                            action = "nhận xử lý yêu cầu được giao từ quản trị viên " + leader.username
+                            if agent.receive_email == 1:
+                                email = EmailMessage(
+                                    'Chuyển yêu cầu',
+                                    render_to_string('agent/mail/forward_mail_leader.html',
+                                                    {'receiver': agent,
+                                                    'domain': (get_current_site(request)).domain,
+                                                    'sender': 'Leader'}),
+                                    to=[agent.email],
+                                )
+                                thread = EmailThread(email)
+                                thread.start()
+                            TicketLog.objects.create(agentid=agent, ticketid=tk,
+                                                    action=action,
+                                                    date=timezone.now().date(),
+                                                    time=timezone.now().time())
+                elif 'ticketid_change' in request.POST:
+                    tp = Services.objects.get(id=request.POST['serviceid'])
+                    tk = Tickets.objects.get(id=request.POST['ticketid_change'])
+                    tk.serviceid = tp
+                    tk.save()
+            return render(request, 'leader/home_leader.html', content)
     else:
         return redirect("/")
 
@@ -182,35 +284,114 @@ def home_leader_data(request, servicename):
 
 def leader_manage_agent(request):
     if request.session.has_key('leader')and(Agents.objects.get(username=request.session['leader'])).status == 1:
-        if request.method == 'POST':
-            if 'delete' in request.POST:
-                ss, tpid, agid = request.POST['delete'].split('_')
-                ServiceAgent.objects.get(serviceid=Services.objects.get(id=tpid), agentid=Agents.objects.get(id=agid)).delete()
-            elif 'serviceid' in request.POST:
-                agen = Agents.objects.get(username=request.POST['leader'])
-                top = Services.objects.get(id=request.POST['serviceid'])
-                try:
-                    ServiceAgent.objects.get(agentid=agen, serviceid=top)
-                except ObjectDoesNotExist:
-                    ServiceAgent.objects.create(agentid=agen, serviceid=top)
-        leader = Agents.objects.get(username=request.session.get('leader'))
-        list_topic = Services.objects.filter(leader=leader)
-        list_ag = {}
-        list_tk = {}
-        for tp in list_topic:
-            ag = ServiceAgent.objects.filter(serviceid=tp)
-            list_ag[tp] = [a.agentid for a in ag]
-        for ag in Agents.objects.all():
-            list_tk[ag.username] = count_tk(ag.username)
-        content = {'list_ag': list_ag,
-                   'topic': list_topic,
-                   'leng': len(list_topic),
-                   'topic': list_topic,
-                   'list_tk': list_tk,
-                   'agent_name': mark_safe(json.dumps(leader.username)),
-                   'fullname': mark_safe(json.dumps(leader.fullname)),
-                   }
-        return render(request, 'leader/leader_manage_agent.html', content)
+        if Agents.objects.get(username=request.session['leader']).position == 2:
+            if request.method == 'POST':
+                if 'delete' in request.POST:
+                    ss, tpid, agid = request.POST['delete'].split('_')
+                    ServiceAgent.objects.get(serviceid=Services.objects.get(id=tpid), agentid=Agents.objects.get(id=agid)).delete()
+                elif 'serviceid' in request.POST:
+                    list_agent = request.POST['list_agent[]']
+                    list_agent = json.loads(list_agent)
+                    top = Services.objects.get(id=request.POST['serviceid'])
+                    if not list_agent:
+                            pass
+                    else:
+                        for agentname in list_agent:
+                            try:
+                                ag = Agents.objects.get(username=agentname)
+                                ServiceAgent.objects.get(agentid=ag, serviceid=top)
+                            except ObjectDoesNotExist:
+                                ag = Agents.objects.get(username=agentname)
+                                ServiceAgent.objects.create(agentid=ag, serviceid=top)
+                elif 'svname' in request.POST:
+                    try:
+                        ag = Agents.objects.get(id=request.POST['agid'])
+                        sv = Services.objects.get(name=request.POST['svname'])
+                        if (ag.position != 4):
+                            ag.position = 4
+                            ag.save()
+                            sv.leader_bk = ag
+                            sv.save()
+                        else:
+                            ag.position = 1
+                            ag.save()
+                            sv.leader_bk = None
+                            sv.save()
+                    except:
+                        pass
+
+            leader = Agents.objects.get(username=request.session.get('leader'))
+            list_topic = Services.objects.filter(leader=leader)
+            list_ag = {}
+            list_tk = {}
+            for tp in list_topic:
+                ag = ServiceAgent.objects.filter(serviceid=tp)
+                list_ag[tp] = [a.agentid for a in ag]
+            for ag in Agents.objects.all():
+                list_tk[ag.username] = count_tk(ag.username)
+            content = {'list_ag': list_ag,
+                    'topic': list_topic,
+                    'leng': len(list_topic),
+                    'topic': list_topic,
+                    'list_tk': list_tk,
+                    'agent_name': mark_safe(json.dumps(leader.username)),
+                    'fullname': mark_safe(json.dumps(leader.fullname)),
+                    }
+            return render(request, 'leader/leader_manage_agent.html', content)
+        else:
+            if request.method == 'POST':
+                if 'delete' in request.POST:
+                    ss, tpid, agid = request.POST['delete'].split('_')
+                    ServiceAgent.objects.get(serviceid=Services.objects.get(id=tpid), agentid=Agents.objects.get(id=agid)).delete()
+                elif 'serviceid' in request.POST:
+                    list_agent = request.POST['list_agent[]']
+                    list_agent = json.loads(list_agent)
+                    top = Services.objects.get(id=request.POST['serviceid'])
+                    if not list_agent:
+                            pass
+                    else:
+                        for agentname in list_agent:
+                            try:
+                                ag = Agents.objects.get(username=agentname)
+                                ServiceAgent.objects.get(agentid=ag, serviceid=top)
+                            except ObjectDoesNotExist:
+                                ag = Agents.objects.get(username=agentname)
+                                ServiceAgent.objects.create(agentid=ag, serviceid=top)
+                elif 'svname' in request.POST:
+                    try:
+                        ag = Agents.objects.get(id=request.POST['agid'])
+                        sv = Services.objects.get(name=request.POST['svname'])
+                        if (ag.position != 4):
+                            ag.position = 4
+                            ag.save()
+                            sv.leader_bk = ag
+                            sv.save()
+                        else:
+                            ag.position = 1
+                            ag.save()
+                            sv.leader_bk = None
+                            sv.save()
+                    except:
+                        pass
+
+            leader = Agents.objects.get(username=request.session.get('leader'))
+            list_topic = Services.objects.filter(leader_bk=leader)
+            list_ag = {}
+            list_tk = {}
+            for tp in list_topic:
+                ag = ServiceAgent.objects.filter(serviceid=tp)
+                list_ag[tp] = [a.agentid for a in ag]
+            for ag in Agents.objects.all():
+                list_tk[ag.username] = count_tk(ag.username)
+            content = {'list_ag': list_ag,
+                    'topic': list_topic,
+                    'leng': len(list_topic),
+                    'topic': list_topic,
+                    'list_tk': list_tk,
+                    'agent_name': mark_safe(json.dumps(leader.username)),
+                    'fullname': mark_safe(json.dumps(leader.fullname)),
+                    }
+            return render(request, 'leader/leader_manage_agent.html', content)
     else:
         return redirect("/")
 
@@ -228,39 +409,74 @@ def leader_agent_data(request):
 
 def leader_profile(request):
     if request.session.has_key('leader')and(Agents.objects.get(username=request.session['leader'])).status == 1:
-        agent = Agents.objects.get(username=request.session['leader'])
-        topicag = Services.objects.filter(leader=agent)
-        list_tp = ""
-        for tp1 in topicag:
-            list_tp += str(tp1.name) + "!"
-        if request.method == 'POST':
-            if 'change_user' in request.POST:
-                u = Agents.objects.get(id=request.POST['agentid'])
-                fullname = request.POST['change_user']
-                email = request.POST['email']
-                phone = request.POST['phone']
-                receive_mail = request.POST['receive_mail']
-                u.fullname = fullname
-                u.email = email
-                u.phone = phone
-                u.receive_email = receive_mail
-                u.save()
-            elif 'pwd' in request.POST:
-                u = Agents.objects.get(id=request.POST['agentid'])
-                u.password = request.POST['pwd']
-                u.save()
-            elif 'noti_noti' in request.POST:
-                agent.noti_noti = 0
-                agent.save()
-            elif 'noti_chat' in request.POST:
-                agent.noti_chat = 0
-                agent.save()
-        return render(request,"leader/profile_leader.html", {'agent': agent, 'noti_noti': agent.noti_noti,
-                                                     'noti_chat': agent.noti_chat,
-                                                     'topic': topicag,
-                                                     'agent_name': mark_safe(json.dumps(agent.username)),
-                                                     'fullname': mark_safe(json.dumps(agent.fullname)),
-                                                     'list_tp': mark_safe(json.dumps(list_tp))})
+        if Agents.objects.get(username=request.session['leader']).position == 2:
+            agent = Agents.objects.get(username=request.session['leader'])
+            topicag = Services.objects.filter(leader=agent)
+            list_tp = ""
+            for tp1 in topicag:
+                list_tp += str(tp1.name) + "!"
+            if request.method == 'POST':
+                if 'change_user' in request.POST:
+                    u = Agents.objects.get(id=request.POST['agentid'])
+                    fullname = request.POST['change_user']
+                    email = request.POST['email']
+                    phone = request.POST['phone']
+                    receive_mail = request.POST['receive_mail']
+                    u.fullname = fullname
+                    u.email = email
+                    u.phone = phone
+                    u.receive_email = receive_mail
+                    u.save()
+                elif 'pwd' in request.POST:
+                    u = Agents.objects.get(id=request.POST['agentid'])
+                    u.password = request.POST['pwd']
+                    u.save()
+                elif 'noti_noti' in request.POST:
+                    agent.noti_noti = 0
+                    agent.save()
+                elif 'noti_chat' in request.POST:
+                    agent.noti_chat = 0
+                    agent.save()
+            return render(request,"leader/profile_leader.html", {'agent': agent, 'noti_noti': agent.noti_noti,
+                                                        'noti_chat': agent.noti_chat,
+                                                        'topic': topicag,
+                                                        'agent_name': mark_safe(json.dumps(agent.username)),
+                                                        'fullname': mark_safe(json.dumps(agent.fullname)),
+                                                        'list_tp': mark_safe(json.dumps(list_tp))})
+        else:
+            agent = Agents.objects.get(username=request.session['leader'])
+            topicag = Services.objects.filter(leader_bk=agent)
+            list_tp = ""
+            for tp1 in topicag:
+                list_tp += str(tp1.name) + "!"
+            if request.method == 'POST':
+                if 'change_user' in request.POST:
+                    u = Agents.objects.get(id=request.POST['agentid'])
+                    fullname = request.POST['change_user']
+                    email = request.POST['email']
+                    phone = request.POST['phone']
+                    receive_mail = request.POST['receive_mail']
+                    u.fullname = fullname
+                    u.email = email
+                    u.phone = phone
+                    u.receive_email = receive_mail
+                    u.save()
+                elif 'pwd' in request.POST:
+                    u = Agents.objects.get(id=request.POST['agentid'])
+                    u.password = request.POST['pwd']
+                    u.save()
+                elif 'noti_noti' in request.POST:
+                    agent.noti_noti = 0
+                    agent.save()
+                elif 'noti_chat' in request.POST:
+                    agent.noti_chat = 0
+                    agent.save()
+            return render(request,"leader/profile_leader.html", {'agent': agent, 'noti_noti': agent.noti_noti,
+                                                        'noti_chat': agent.noti_chat,
+                                                        'topic': topicag,
+                                                        'agent_name': mark_safe(json.dumps(agent.username)),
+                                                        'fullname': mark_safe(json.dumps(agent.fullname)),
+                                                        'list_tp': mark_safe(json.dumps(list_tp))})
     else:
         return redirect("/")
 

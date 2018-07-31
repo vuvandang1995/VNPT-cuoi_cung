@@ -41,13 +41,13 @@ def login_user(request):
     mess_register_error = 'Thông tin đăng ký không hợp lý'
     mess_register_ok = 'Hãy kiểm tra email của bạn để hoàn tất đăng ký'
     mess_login_error = 'Đăng nhập thất bại'
-    if request.session.has_key('user')and (Agents.objects.get(username=request.session['user'])).status == 0:
+    if request.session.has_key('user')and (Agents.objects.get(username=request.session['user'])).status == 1:
         return redirect("/user")
     elif request.session.has_key('agent')and(Agents.objects.get(username=request.session['agent'])).status == 1:
         return redirect('/agent')
-    elif request.session.has_key('admin')and(Agents.objects.get(username=request.session['admin'])).status == 3:
+    elif request.session.has_key('admin')and(Agents.objects.get(username=request.session['admin'])).status == 1:
         return redirect('/admin')
-    elif request.session.has_key('leader')and(Agents.objects.get(username=request.session['leader'])).status == 2:
+    elif request.session.has_key('leader')and(Agents.objects.get(username=request.session['leader'])).status == 1:
         return redirect('/leader')
     else:
         if request.method == 'POST':

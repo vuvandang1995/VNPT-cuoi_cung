@@ -11,7 +11,7 @@ $(document).ready(function(){
                 url:location.href,
                 data: {'delete':id, 'csrfmiddlewaretoken':token},
                 success: function(){
-                    $("#list_topic").load(location.href + " #list_topic");
+                    $("body .table").load(location.href + " .table");
                     var date = formatAMPM(new Date());
                     ag_leader.unshift('admin_delete_topic');
                     ag_leader.unshift(leader);
@@ -42,7 +42,7 @@ $(document).ready(function(){
             data: {'csrfmiddlewaretoken':token, 'serviceid': serviceid, 'list_agent[]': JSON.stringify(list_agent)},
             success: function(){
                 // window.location.reload();
-                $("#list_topic").load(location.href + " #list_topic");
+                $("body .table").load(location.href + " .table");
                 document.getElementById("add_topic_close").click();
                 var date = formatAMPM(new Date());
                 ag_leader.unshift('admin_add_topic');
@@ -66,6 +66,23 @@ $(document).ready(function(){
 
     $('body #list_agent').on('change', '.check_agent', function() {
         $(this).parent().remove();
+    });
+
+    $('body #list_topic').on('change', '.switch', function() {
+        var agid = parseInt($(this).attr('id').split('-')[0]);
+        var svname = $(this).attr('id').split('-')[1];
+        var token = $("input[name=csrfmiddlewaretoken]").val();
+        if(confirm("Are you sure ?")){
+            $.ajax({
+                type:'POST',
+                url:location.href,
+                data: {'csrfmiddlewaretoken':token, 'agid':agid, 'svname': svname},
+                success: function(){
+                }
+            });
+        }else{
+            $("body .table").load(location.href + " .table");
+        }
     });
 
 });

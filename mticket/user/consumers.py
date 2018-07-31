@@ -278,40 +278,45 @@ class AgentConsumer(WebsocketConsumer):
             self.channel_name
         )
         self.accept()
-        
         try:
-            f = r'notification/agent/noti_'+agentName+'.txt'
-            file = open(f, 'r')
-            if len(open(f).readlines()) > 15:
-                count = len(open(f).readlines()) - 15
-                for i, line in enumerate(file):
-                    if i > count:
-                        if '*&*%^chat' in line:
-                            msg = line.split('*&*%^chat')[0]
-                            self.send(text_data=json.dumps({
-                                'message': msg,
-                                'type' : 're-noti-chat'
-                            }))
-                        else:
-                            self.send(text_data=json.dumps({
-                                'message': line,
-                                'type' : 're-noti'
-                            }))
-            else:
-                for line in file:
-                    if '*&*%^chat' in line:
-                        msg = line.split('*&*%^chat')[0]
-                        self.send(text_data=json.dumps({
-                            'message': msg,
-                            'type' : 're-noti-chat'
-                        }))
+            if Agents.objects.get(username=agentName).position == 1 or Agents.objects.get(username=agentName).position == 2:
+                try:
+                    f = r'notification/agent/noti_'+agentName+'.txt'
+                    file = open(f, 'r')
+                    if len(open(f).readlines()) > 15:
+                        count = len(open(f).readlines()) - 15
+                        for i, line in enumerate(file):
+                            if i > count:
+                                if '*&*%^chat' in line:
+                                    msg = line.split('*&*%^chat')[0]
+                                    self.send(text_data=json.dumps({
+                                        'message': msg,
+                                        'type' : 're-noti-chat'
+                                    }))
+                                else:
+                                    self.send(text_data=json.dumps({
+                                        'message': line,
+                                        'type' : 're-noti'
+                                    }))
                     else:
-                        self.send(text_data=json.dumps({
-                            'message': line,
-                            'type' : 're-noti'
-                        }))
+                        for line in file:
+                            if '*&*%^chat' in line:
+                                msg = line.split('*&*%^chat')[0]
+                                self.send(text_data=json.dumps({
+                                    'message': msg,
+                                    'type' : 're-noti-chat'
+                                }))
+                            else:
+                                self.send(text_data=json.dumps({
+                                    'message': line,
+                                    'type' : 're-noti'
+                                }))
+                except:
+                    pass
         except:
             pass
+        
+        
 
     def disconnect(self, close_code):
         # Leave room group
