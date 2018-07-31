@@ -81,7 +81,7 @@ def home_leader(request):
                     tkag1.delete()
                     tk.status = 0
                     tk.save()
-                    action = "nhận xử lý yêu cầu được giao từ quản trị viên " + leader.username
+                    action = "nhận xử lý yêu cầu được giao từ quản trị viên"
                     tklog = TicketLog.objects.filter(action=action)
                     tklog.delete()
                 except:
@@ -92,7 +92,7 @@ def home_leader(request):
                     tk = Tickets.objects.get(id=ticketid)
                     tkag1 = TicketAgent.objects.filter(ticketid=tk)
                     tkag1.delete()
-                    action = "nhận xử lý yêu cầu được giao từ quản trị viên " + leader.username
+                    action = "nhận xử lý yêu cầu được giao từ quản trị viên"
                     tklog = TicketLog.objects.filter(action=action)
                     tklog.delete()
                 except:
@@ -104,7 +104,7 @@ def home_leader(request):
                     tkag.save()
                     tk.status = 1
                     tk.save()
-                    action = "nhận xử lý yêu cầu được giao từ quản trị viên " + leader.username
+                    action = "nhận xử lý yêu cầu được giao từ quản trị viên"
                     if agent.receive_email == 1:
                         email = EmailMessage(
                             'Chuyển yêu cầu',

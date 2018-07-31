@@ -74,7 +74,14 @@
                                                 {% endif %}
                                             {% endfor %}
                                         </td>
-                                        <td id="downtime{{sv.id}}">{{sv.downtime}}</td>
+                                        <td>
+                                            <p hidden id="downtime{{sv.id}}">{{sv.downtime}}</p>
+                                            {% for key,value in downtime.items %}
+                                            {% if key == sv.id %}
+                                            {{ value }}
+                                            {% endif %}
+                                            {% endfor %}
+                                        </td>
 
                                         <td>
                                             <button type="button" class="btn btn-primary close_" id="{{sv.id}}" data-toggle="tooltip" title="mở / đóng">

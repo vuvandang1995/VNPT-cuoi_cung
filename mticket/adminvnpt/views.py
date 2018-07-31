@@ -18,10 +18,14 @@ import string
 import os
 from datetime import datetime
 from datetime import timedelta
+import pytz
+
+utc=pytz.UTC
 min_char = 8
 max_char = 12
 allchar = string.ascii_letters + string.digits
 # Create your views here.
+
 
 def home_admin(request):
     if request.session.has_key('admin'):
@@ -131,9 +135,17 @@ def home_admin_data(request):
         tk = Tickets.objects.filter().order_by("-id")
         data = []
         for tk in tk:
+            content = r'<a data-toggle="collapse" data-target="#content' + str(tk.id) + '">' + str(
+                tk.content[:16]) + '...</a><br><div id="content' + str(
+                tk.id) + '" class="collapse">' + tk.content + '</div>'
+            # if tk.attach != '':
+            #     attach = r'<a class="fa fa-image" data-title="' + str(
+            #         tk.attach) + '" data-toggle="modal" data-target="#image" id="' + str(tk.id) + '"></a>'
+            # else:
+            #     attach = ''
             if tk.status == 0:
                 status = r'<span class ="label label-danger" id="leader'+str(tk.id)+'">Chờ</span>'
-                handler = '<p id="hd' + str(tk.id) + '">Không có ai</p>'
+                handler = '<p hidden id="hd' + str(tk.id) + '">Không có ai</p>'
             else:
                 if tk.status == 1:
                     status = r'<span class ="label label-warning" id="leader'+str(tk.id)+'">Đang xử lý</span>'
@@ -141,21 +153,23 @@ def home_admin_data(request):
                     status = r'<span class ="label label-success" id="leader'+str(tk.id)+'">Hoàn thành</span>'
                 else:
                     status = r'<span class ="label label-default" id="leader'+str(tk.id)+'">Đóng</span>'
-                handler = '<p id="hd' + str(tk.id) + '">'
+                handler = '<p hidden id="hd' + str(tk.id) + '">'
                 for t in TicketAgent.objects.filter(ticketid=tk.id):
                     handler += t.agentid.username + "<br>"
                 handler += '</p>'
-            if tk.lv_priority == 0:
-                level = r'<span class ="label label-success"> Thấp </span>'
-            elif tk.lv_priority == 1:
-                level = r'<span class ="label label-warning"> Trung bình </span>'
-            else:
-                level = r'<span class ="label label-danger"> Cao </span>'
+            for t in TicketAgent.objects.filter(ticketid=tk.id):
+                handler += t.agentid.fullname + '<br>'
+            # if tk.lv_priority == 0:
+            #     level = r'<span class ="label label-success"> Thấp </span>'
+            # elif tk.lv_priority == 1:
+            #     level = r'<span class ="label label-warning"> Trung bình </span>'
+            # else:
+            #     level = r'<span class ="label label-danger"> Cao </span>'
             downtime = '''<span class="downtime label label-danger" id="downtime-'''+str(tk.id)+'''"></span>'''
             id = r'''<button type="button" class="btn" data-toggle="modal" data-target="#'''+str(tk.id)+'''content">'''+str(tk.id)+'''</button>'''
-            sender = '<p id="sender' + str(tk.id) + '">' + tk.sender.username + '</p>'
+            sender = '<p hidden id="sender' + str(tk.id) + '">' + tk.sender.username + '</p>'+ tk.sender.fullname
             service = '<p id="tp' + str(tk.id) + '">' + tk.serviceid.name + '</p>'
-            data.append([id, tk.thong_so_kt, service, sender, level, downtime, status, handler])
+            data.append([id, sender, tk.loai_su_co, service, content, downtime, status, handler])
         ticket = {"data": data}
         tickets = json.loads(json.dumps(ticket))
         return JsonResponse(tickets, safe=False)
@@ -299,10 +313,19 @@ def manage_serivce(request):
         gpsv = GroupServices.objects.all()
         sv = Services.objects.all()
         list_ag = {}
+        downtime = {}
         for s in sv:
             svag = ServiceAgent.objects.filter(serviceid=s, agentid__in=agent)
             list_ag[s.name] = [a.agentid for a in svag]
-        content = {'service': Services.objects.all(),
+            t = s.downtime
+            if t < 60:
+                downtime[s.id] = str(t) + ' phút'
+            elif t < 1440:
+                downtime[s.id] = str(t // 60) + ' giờ ' + str(t % 60) + ' phút '
+            else:
+                downtime[s.id] = str(t // 1440) + ' ngày ' + str(t % 1440 // 60) + ' giờ ' + str(t % 1440 % 60) + ' phút '
+        content = {'service': sv,
+                   'downtime': downtime,
                    'list_ag': list_ag,
                    'admin': admin,
                    'today': timezone.now().date(),
@@ -414,3 +437,63 @@ def fullname_agent_choose_leader_data(request):
         return JsonResponse(list_agent_leader, safe=False)
     else:
         return redirect('/')
+
+
+def statistic(request):
+    if request.session.has_key('admin'):
+        admin = Agents.objects.get(username=request.session['admin'])
+        agents = Agents.objects.exclude(position__in=[2, 3])
+        year = timezone.now().year
+        month = timezone.now().month
+        tk_dung_han = Tickets.objects.filter(expired=0, status=3, date_close__year=2018,
+                                             date_close__month=10)
+        tk_sai_han = Tickets.objects.filter(expired=1, status=3, date_close__year=2018)
+        print(tk_dung_han,tk_sai_han)
+
+
+        tklog_dung_han = TicketLog.objects.filter(action='đóng yêu cầu', date__month=month, date__year=year,
+                                          ticketid__in=tk_dung_han)
+        tklog_sai_han = TicketLog.objects.filter(action='đóng yêu cầu', date__month=month, date__year=year,
+                                          ticketid__in=tk_sai_han)
+        list_ag = {}
+        sum_dung_han = 0
+        sum_sai_han = 0
+        sum_cham_han = 0
+        tkid_dung = [tk.ticketid for tk in tklog_dung_han]
+        tkid_sai = []
+        tkid_cham = []
+        open_tk = ['nhận xử lý yêu cầu', 'xử lý lại yêu cầu', 'mở lại yêu cầu',
+                   "nhận xử lý yêu cầu được giao từ quản trị viên"]
+        for tk in tklog_sai_han:
+            tkid = tk.ticketid
+            tik = TicketLog.objects.filter(action__in=open_tk, ticketid=tkid).order_by("-id")
+            date_open = timezone.datetime.combine(tik[0].date, tik[0].time).replace(tzinfo=utc)
+            date_end = tk.ticketid.dateend
+            if date_open <= date_end:
+                tkid_cham.append(tk.ticketid)
+            else:
+                tkid_sai.append(tk.ticketid)
+        for ag in agents:
+            d = TicketAgent.objects.filter(agentid=ag, ticketid__in=tkid_dung).count()
+            s = TicketAgent.objects.filter(agentid=ag, ticketid__in=tkid_sai).count()
+            c = TicketAgent.objects.filter(agentid=ag, ticketid__in=tkid_cham).count()
+            list_ag[ag] = [d, s, c]
+            sum_dung_han += d
+            sum_sai_han += s
+            sum_cham_han += c
+        print(d,s,c)
+        content = {'agent': Agents.objects.all(),
+                   'admin': admin,
+                   'list_ag': list_ag,
+                   'sumd': sum_dung_han,
+                   'sums': sum_sai_han,
+                   'today': timezone.now().date(),
+                   'all': 1,
+                   'month': month,
+                   'year': year,
+                   'agent_name': mark_safe(json.dumps(admin.username)),
+                   'fullname': mark_safe(json.dumps(admin.fullname)),}
+        return render(request, 'admin/statistic.html', content)
+    else:
+        return redirect('/')
+

@@ -78,6 +78,7 @@ class Tickets(models.Model):
     lv_priority = models.IntegerField(default=0)
     expired = models.IntegerField(default=0)
     loai_su_co = models.TextField()
+    date_close = models.DateTimeField(null=True)
 
     class Meta:
         managed = True

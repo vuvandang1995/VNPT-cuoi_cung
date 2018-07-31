@@ -133,7 +133,6 @@
                             <li> <a href="{% url 'agent:outbox' %}" aria-expanded="false"><i class="fa fa-send-o"></i><span class="hide-menu">Yêu cầu gửi đi</span></a></li>
                             <li> <a href="{% url 'agent:processing_ticket' %}" aria-expanded="false"><i class="fa fa-hourglass-2"></i><span class="hide-menu">Yêu cầu đang xử lý</span></a></li>
                             <li> <a href="{% url 'agent:closed_ticket' %}" aria-expanded="false"><i class="fa fa-check-circle"></i><span class="hide-menu">Yêu cầu đã đóng</span></a></li>
-                            <li> <a href="{% url 'agent:manage_user' %}" aria-expanded="false"><i class="fa fa-user"></i><span class="hide-menu">Quản lý user</span></a></li>
                             <li> <a aria-expanded="false"><i class="fa fa-commenting-o"></i><span class="hide-menu">Trao đổi với Leader</span> <span class="fa fa-chevron-down"></span></a>
                                 <ul class="nav child_menu">
                                   {% for leader in list_leader %}

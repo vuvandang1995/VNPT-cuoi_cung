@@ -14,4 +14,6 @@ urlpatterns = [
     path('manage_agent/data', views.manage_agent_data, name="manage_agent_data"),
     path('services', views.manage_serivce, name='manage_serivce'),
     path('admin/leader', views.fullname_agent_data, name='fullname_agent_data'),
+    path('statistic', views.statistic, name='statistic'),
+
 ]
