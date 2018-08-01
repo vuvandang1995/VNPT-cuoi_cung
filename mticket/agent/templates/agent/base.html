@@ -245,35 +245,8 @@
     function countdowntime(){
         $('body .downtime').each(function(){
             var tkid = $(this).attr('id').split('-')[1];
-            var dateend = $('body #dateend'+tkid).html();
-            var time = dateend.split(',')[2];
-            if (time.includes('p.m.')){
-                if (time.includes(':')){
-                    var endtime = parseInt(time.split(':')[0]) + 12;
-                    if (endtime < 24){
-                        var endtime1 = endtime.toString()+':'+time.split(' ')[1].split(':')[1]+':00';
-                    }else{
-                        var endtime1 = '00:'+time.split(' ')[1].split(':')[1]+':00';
-                    }
-                }else{
-                    var endtime = parseInt(time.split(' ')[1]) + 12;
-                    if (endtime < 24){
-                        var endtime1 = endtime.toString()+':00:00';
-                    }else{
-                        var endtime1 = '00:00:00';
-                    }
-                }
-            }else if(time.includes('a.m.')){
-                if (time.split(':')[0].includes('12')){
-                    var endtime1 = '00:'+time.split(':')[1].split(' ')[0]+':00';
-                }else{
-                    var endtime1 = time.split(' ')[1]+':00';
-                }
-            }else if (time.includes('midnight')){
-                var endtime1 = '00:00:00';
-            }
-            var dateend1 = dateend.split(',')[0]+', '+dateend.split(',')[1]+' '+endtime1;
-            var countDownDate = new Date(dateend1).getTime();
+            var dateend = $('body #dateend'+tkid).text();
+            var countDownDate = new Date(dateend).getTime();
             var x = setInterval(function() {
 
                 // Get todays date and time
@@ -306,6 +279,7 @@
             }, 1000);
         });
     }
+
 
     
     if (noti_noti != 0){
@@ -358,7 +332,7 @@
                         $('body .noti_fy').prepend(noti1);
                         
                         setTimeout(function(){
-                            $("body #list_ticket_home").load(location.href + " #list_ticket_home");
+                            $("#list_ticket_home").DataTable().ajax.reload();
                             $("body #pending").load(location.href + " #pending");
                         }, 2000);
                         x.play();
@@ -366,7 +340,7 @@
 
                     case 'ticket da duoc xu ly':
                         setTimeout(function(){
-                            $("body #list_ticket_home").load(location.href + " #list_ticket_home");
+                            $("#list_ticket_home").DataTable().ajax.reload();
                             $("body #pending").load(location.href + " #pending");
                             $("body #processing").load(location.href + " #processing");
                         }, 2000);
@@ -384,7 +358,7 @@
                             $('body .noti_fy').prepend(noti1);
                             
                             setTimeout(function(){
-                                $("body #list_ticket_home").load(location.href + " #list_ticket_home");
+                                $("#list_ticket_home").DataTable().ajax.reload();
                                 $("body #pending").load(location.href + " #pending");
                             }, 2000);
                             x.play();
@@ -397,7 +371,7 @@
                     for (i = 0; i <= list_tp.length-1; i++){
                         if (message1 == list_tp[i]){
                             setTimeout(function(){
-                                $("body #list_ticket_home").load(location.href + " #list_ticket_home");
+                                $("#list_ticket_home").DataTable().ajax.reload();
                             }, 2000);
                         }
                     }
@@ -414,7 +388,7 @@
                             $('body .noti_fy').prepend(noti1);
                             
                             setTimeout(function(){
-                                $("body #list_ticket_home").load(location.href + " #list_ticket_home");
+                                $("#list_ticket_home").DataTable().ajax.reload();
                                 $("body #pending").load(location.href + " #pending");
                                 $("#list_ticket_processing").DataTable().ajax.reload();
                                 
@@ -539,7 +513,7 @@
                         $("#list_ticket_processing").DataTable().ajax.reload();
                         $("body #processing").load(location.href + " #processing");
                         $("body #pending").load(location.href + " #pending");
-                        $("body #list_ticket_home").load(location.href + " #list_ticket_home");
+                        $("#list_ticket_home").DataTable().ajax.reload();
                     
                     }, 2000);
                     countdowntime();
@@ -560,7 +534,7 @@
                         $("#list_ticket_processing").DataTable().ajax.reload();
                         $("body #done").load(location.href + " #done");
                         $("body #processing").load(location.href + " #processing");
-                        $("body #list_ticket_home").load(location.href + " #list_ticket_home");
+                        $("#list_ticket_home").DataTable().ajax.reload();
                         
                     }, 2000);
                     countdowntime();
@@ -582,7 +556,7 @@
                         $("#list_ticket_processing").DataTable().ajax.reload();
                         $("body #done").load(location.href + " #done");
                         $("body #processing").load(location.href + " #processing");
-                        $("body #list_ticket_home").load(location.href + " #list_ticket_home");
+                        $("#list_ticket_home").DataTable().ajax.reload();
                         
                     }, 2000);
                     countdowntime();
@@ -607,7 +581,7 @@
                         $("#list_ticket_processing").DataTable().ajax.reload();
                         $("body #done").load(location.href + " #done");
                         $("body #processing").load(location.href + " #processing");
-                        $("body #list_ticket_home").load(location.href + " #list_ticket_home");
+                        $("#list_ticket_home").DataTable().ajax.reload();
                         
                     }, 2000);
                     countdowntime();
@@ -640,7 +614,7 @@
                     
                     setTimeout(function(){
                         $("body #example23").load(location.href + " #example23");
-                        $("body #list_ticket_home").load(location.href + " #list_ticket_home");
+                        $("#list_ticket_home").DataTable().ajax.reload();
                         $("body #done").load(location.href + " #done");
                         $("body #processing").load(location.href + " #processing");
                         $("#list_ticket_processing").DataTable().ajax.reload();
@@ -652,7 +626,7 @@
 
                 if (message == 'reload_home_agent') {
                     setTimeout(function(){
-                        $("body #list_ticket_home").load(location.href + " #list_ticket_home");
+                        $("#list_ticket_home").DataTable().ajax.reload();
                     }, 2000);
                 }
 

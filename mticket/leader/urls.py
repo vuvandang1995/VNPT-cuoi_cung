@@ -11,4 +11,5 @@ urlpatterns = [
     path('manage_agent', views.leader_manage_agent, name="leader_manage_agent"),
     path('profile', views.leader_profile, name="leader_profile"),
     path('logout_leader/', views.logout_leader, name='logout_leader'),
+    path('leader_to_agent', views.leader_to_agent, name='leader_to_agent'),
 ]

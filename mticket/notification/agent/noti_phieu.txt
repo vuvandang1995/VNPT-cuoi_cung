@@ -1,0 +1,3 @@
+<a href="/agent/closed_ticket"><div class="btn btn-success btn-circle m-r-10"><i class="fa fa-check"></i></div><div class="mail-contnet"><span class="mail-desc">Leader đã đóng yêu cầu số 36</span> <span class="time">1:33 AM 1/7/2018</span></div></a>
+<a href="/agent/processing_ticket"><div class="btn btn-warning btn-circle m-r-10"><i class="fa fa-folder-open"></i></div><div class="mail-contnet"><span class="mail-desc">Leader đã mở yêu cầu số 36</span> <span class="time">1:35 AM 1/7/2018</span></div></a>
+<a href="/agent/closed_ticket"><div class="btn btn-success btn-circle m-r-10"><i class="fa fa-check"></i></div><div class="mail-contnet"><span class="mail-desc">Leader đã đóng yêu cầu số 36</span> <span class="time">1:36 AM 1/7/2018</span></div></a>

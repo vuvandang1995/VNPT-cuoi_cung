@@ -625,19 +625,10 @@ def closed_ticket(request):
         return redirect("/")
 
 
-def leader_to_agent(request):
-    if request.session.has_key('leader')and(Agents.objects.get(username=request.session['leader'])).status == 1:
-        request.session['agent'] = request.session['leader']
-        del request.session['leader']
-        return redirect('/agent')
-    else:
-        return redirect("/")
-
-
 def agent_to_leader(request):
     if request.session.has_key('agent')and(Agents.objects.get(username=request.session['agent'])).status == 1:
         request.session['leader'] = request.session['agent']
         del request.session['agent']
-        return redirect('/agent/leader')
+        return redirect('/leader')
     else:
         return redirect("/")

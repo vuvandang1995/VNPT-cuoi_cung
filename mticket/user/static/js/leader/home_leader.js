@@ -19,6 +19,11 @@ $(document).ready(function(){
                 "contentType": "application/json; charset=utf-8",
                 "data": function(result){
                     return JSON.stringify(result);
+                },
+                "complete": function(){
+                    setTimeout(function(){
+                        countdowntime();
+                    }, 1000);
                 }
             },
             "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
@@ -282,9 +287,4 @@ $(document).ready(function(){
             });
         }
     });
-
-    
-    setTimeout(function(){
-        countdowntime();
-    }, 2500);
 });
