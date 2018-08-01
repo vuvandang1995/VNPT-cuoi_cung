@@ -185,6 +185,11 @@
 </audio>
 <script src="{% static 'js/lib/datatables/datatables.min.js' %}"></script>
 <script>
+    $(".sidebar-nav").hover(function(){
+        $(".left-sidebar").css("width", "260px");
+    }, function(){
+        $(".left-sidebar").css("width", "auto");
+    });
     var x = document.getElementById("myAudio"); 
     var fullname = {{ fullname }};
     var agentName = {{ agent_name }};
