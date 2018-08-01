@@ -22,7 +22,7 @@
                     <div class="col-12">
                         <div class="card">
                             <div class="card-body" style="text-align:center;">
-                                <h1 id="title">Thống kê {{month}}/{{year}}</h1>
+                                <h1 id="title">Thống kê tuần từ {{today|date:"d/m/Y"}}</h1>
                                  <button class="btn btn-danger" data-toggle="modal" data-target="#filter">
                                         <i class="fa fa-cogs"></i>
                                     </button>
@@ -144,13 +144,9 @@
       </div>
           <div class="modal-body">
                 {% csrf_token %}
-                  <label for="content">Tháng</label><br/>
-                <input id="date" class="form-control" type="number" name="month" value="{{month}}" min="1" max="12" ><br/>
+                  <label for="content">Tuần bắt đầu từ ngày</label><br/>
+                <input id="date" class="form-control" type="date" name="date" value='{{today|safe}}'><br/>
                 <div id="invalid-date"><font color="red"></font></div>
-                <label for="content2">Năm</label>
-                <input id="date2" class="form-control" type="number" name="year" value="{{year}}" min="2018" max="2050"><br/>
-                <div id="invalid-date2"><font color="red"></font></div>
-                <input class="inputText" style="transform: scale(1.5)" type="checkbox" name="all" > Thống kê cả năm
           </div>
           <div class="modal-footer">
              <button type="button" class="btn btn-primary" id="update">Cập nhật</button>
@@ -170,5 +166,5 @@
     <script src="{% static 'js/lib/datatables/cdn.datatables.net/buttons/1.2.2/js/buttons.html5.min.js' %}"></script>
     <script src="{% static 'js/lib/datatables/cdn.datatables.net/buttons/1.2.2/js/buttons.print.min.js' %}"></script>
     <script src="{% static 'js/lib/datatables/datatables-init.js' %}"></script>
-    <script src="{% static 'js/admin/statistic.js' %}"></script>
+    <script src="{% static 'js/admin/statistic_week.js' %}"></script>
 {% endblock %}
