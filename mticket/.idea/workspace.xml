@@ -14,8 +14,8 @@
       <file leaf-file-name="views.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/adminvnpt/views.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="613">
-              <caret line="518" column="22" selection-start-line="518" selection-start-column="22" selection-end-line="518" selection-end-column="22" />
+            <state relative-caret-position="348">
+              <caret line="565" column="48" selection-start-line="565" selection-start-column="48" selection-end-line="565" selection-end-column="48" />
               <folding>
                 <element signature="e#0#59#0" expanded="true" />
                 <element signature="e#860#5903#0" />
@@ -34,8 +34,8 @@
       <file leaf-file-name="views.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/user/views.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="454">
-              <caret line="312" column="48" lean-forward="true" selection-start-line="311" selection-start-column="8" selection-end-line="312" selection-end-column="48" />
+            <state relative-caret-position="154">
+              <caret line="452" column="59" selection-start-line="452" selection-start-column="32" selection-end-line="452" selection-end-column="59" />
             </state>
           </provider>
         </entry>
@@ -43,8 +43,8 @@
       <file leaf-file-name="statistic.html" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/adminvnpt/templates/admin/statistic.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="415">
-              <caret line="77" selection-start-line="77" selection-end-line="77" />
+            <state relative-caret-position="723">
+              <caret line="37" column="28" selection-start-line="37" selection-start-column="28" selection-end-line="37" selection-end-column="28" />
               <folding>
                 <element signature="n#style#0;n#h2#0;n#div#0;n#div#0;n#div#0;n#div#0;n#div#1;n#div#0;n#!!top" expanded="true" />
               </folding>
@@ -55,8 +55,8 @@
       <file leaf-file-name="statistic.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/user/static/js/admin/statistic.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="220">
-              <caret line="10" column="22" lean-forward="true" selection-start-line="10" selection-start-column="22" selection-end-line="10" selection-end-column="22" />
+            <state relative-caret-position="520">
+              <caret line="30" column="48" selection-start-line="30" selection-start-column="48" selection-end-line="30" selection-end-column="48" />
             </state>
           </provider>
         </entry>
@@ -73,8 +73,8 @@
       <file leaf-file-name="urls.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/adminvnpt/urls.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="374">
-              <caret line="17" column="90" lean-forward="true" selection-start-line="17" selection-start-column="90" selection-end-line="17" selection-end-column="90" />
+            <state relative-caret-position="440">
+              <caret line="20" lean-forward="true" selection-start-line="20" selection-end-line="20" />
               <folding>
                 <element signature="e#0#28#0" expanded="true" />
               </folding>
@@ -151,9 +151,9 @@
         <option value="$PROJECT_DIR$/user/views.py" />
         <option value="$PROJECT_DIR$/leader/views.py" />
         <option value="$PROJECT_DIR$/user/models.py" />
-        <option value="$PROJECT_DIR$/adminvnpt/urls.py" />
-        <option value="$PROJECT_DIR$/user/static/js/admin/statistic.js" />
         <option value="$PROJECT_DIR$/adminvnpt/templates/admin/statistic.html" />
+        <option value="$PROJECT_DIR$/user/static/js/admin/statistic.js" />
+        <option value="$PROJECT_DIR$/adminvnpt/urls.py" />
         <option value="$PROJECT_DIR$/adminvnpt/views.py" />
       </list>
     </option>
@@ -330,14 +330,14 @@
     <frame x="1361" y="-5" width="1930" height="1090" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.11433087" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.11433087" />
       <window_info anchor="bottom" id="TODO" order="6" />
       <window_info anchor="bottom" id="Event Log" order="7" side_tool="true" />
       <window_info anchor="bottom" id="Run" order="2" />
       <window_info anchor="bottom" id="Version Control" order="7" show_stripe_button="false" />
       <window_info anchor="bottom" id="Python Console" order="7" weight="0.32978722" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
-      <window_info anchor="bottom" id="Terminal" order="7" visible="true" weight="0.20531915" />
+      <window_info active="true" anchor="bottom" id="Terminal" order="7" visible="true" weight="0.16595745" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
@@ -650,23 +650,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/user/views.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="454">
-          <caret line="312" column="48" lean-forward="true" selection-start-line="311" selection-start-column="8" selection-end-line="312" selection-end-column="48" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/adminvnpt/urls.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="374">
-          <caret line="17" column="90" lean-forward="true" selection-start-line="17" selection-start-column="90" selection-end-line="17" selection-end-column="90" />
-          <folding>
-            <element signature="e#0#28#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/adminvnpt/templates/admin/manage_service.html">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1254">
@@ -698,23 +681,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/user/static/js/admin/statistic.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="220">
-          <caret line="10" column="22" lean-forward="true" selection-start-line="10" selection-start-column="22" selection-end-line="10" selection-end-column="22" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/adminvnpt/templates/admin/statistic.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="415">
-          <caret line="77" selection-start-line="77" selection-end-line="77" />
-          <folding>
-            <element signature="n#style#0;n#h2#0;n#div#0;n#div#0;n#div#0;n#div#0;n#div#1;n#div#0;n#!!top" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/user/models.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="323">
@@ -722,10 +688,44 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/user/static/js/admin/statistic.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="520">
+          <caret line="30" column="48" selection-start-line="30" selection-start-column="48" selection-end-line="30" selection-end-column="48" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/adminvnpt/templates/admin/statistic.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="723">
+          <caret line="37" column="28" selection-start-line="37" selection-start-column="28" selection-end-line="37" selection-end-column="28" />
+          <folding>
+            <element signature="n#style#0;n#h2#0;n#div#0;n#div#0;n#div#0;n#div#0;n#div#1;n#div#0;n#!!top" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/adminvnpt/urls.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="440">
+          <caret line="20" lean-forward="true" selection-start-line="20" selection-end-line="20" />
+          <folding>
+            <element signature="e#0#28#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/user/views.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="154">
+          <caret line="452" column="59" selection-start-line="452" selection-start-column="32" selection-end-line="452" selection-end-column="59" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/adminvnpt/views.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="613">
-          <caret line="518" column="22" selection-start-line="518" selection-start-column="22" selection-end-line="518" selection-end-column="22" />
+        <state relative-caret-position="348">
+          <caret line="565" column="48" selection-start-line="565" selection-start-column="48" selection-end-line="565" selection-end-column="48" />
           <folding>
             <element signature="e#0#59#0" expanded="true" />
             <element signature="e#860#5903#0" />
