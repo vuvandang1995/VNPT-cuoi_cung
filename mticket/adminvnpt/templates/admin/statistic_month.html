@@ -21,13 +21,12 @@
                 <div class="row">
                     <div class="col-12">
                         <div class="card">
-                            <div class="card-body">
-                                <h1 style="text-align:center;">Thống kê
-                                    {{month}}/{{year}}
-                                    <button class="btn btn-danger" data-toggle="modal" data-target="#filter">
-                                        <i class="fa fa-search"></i>
+                            <div class="card-body" style="text-align:center;">
+                                <h1 id="title">Thống kê {{month}}/{{year}}</h1>
+                                 <button class="btn btn-danger" data-toggle="modal" data-target="#filter">
+                                        <i class="fa fa-cogs"></i>
                                     </button>
-                                </h1>
+                                <!--<input type="hidden" id="year" name="year" value="{{year}}">-->
                             </div>
                         </div>
                     </div>
@@ -39,13 +38,14 @@
                                 <h2>Nhân viên tiếp nhận</h2>
                             </div>
                             <div class="card-body">
-                                <table id="tb_call_center" class="display nowrap table table-hover table-striped table-bordered">
+                                <table id="tb_call_center" class="display nowrap table table-hover table-striped table-bordered" style="width:100%;">
                                     <thead>
                                         <tr>
                                             <th>Nhân viên</th>
-                                            <th>Sự cố gửi đi</th>
-                                            <th>Sự cố tự xử lý đúng hạn</th>
-                                            <th>Sự cố tự xử lý chậm</th>
+                                            <th>Xử lý sự cố đúng hạn</th>
+                                            <th>Xử lý sự cố chậm</th>
+                                            <th>Xử lý sự cố quá hạn</th>
+                                            <th>Tổng</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -70,13 +70,14 @@
                                 <h2>Nhân viên xử lý</h2>
                             </div>
                             <div class="card-body">
-                                <table id="tb_agent" class="display nowrap table table-hover table-striped table-bordered">
+                                <table id="tb_agent" class="display nowrap table table-hover table-striped table-bordered" style="width:100%;">
                                     <thead>
                                         <tr>
                                             <th>Nhân viên</th>
                                             <th>Xử lý sự cố đúng hạn</th>
                                             <th>Xử lý sự cố chậm</th>
                                             <th>Xử lý sự cố quá hạn</th>
+                                            <th>Tổng</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -101,7 +102,7 @@
                                 <h2>Dịch vụ</h2>
                             </div>
                             <div class="card-body">
-                                <table id="tb_service" class="display nowrap table table-hover table-striped table-bordered">
+                                <table id="tb_service" class="display nowrap table table-hover table-striped table-bordered" style="width:100%;">
                                     <thead>
                                         <tr>
                                             <th>Nhóm dịch vụ</th>
@@ -109,7 +110,7 @@
                                             <th>Xử lý sự cố đúng hạn</th>
                                             <th>Xử lý sự cố chậm</th>
                                             <th>Xử lý sự cố quá hạn</th>
-
+                                            <th>Tổng</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -149,7 +150,6 @@
                 <label for="content2">Năm</label>
                 <input id="date2" class="form-control" type="number" name="year" value="{{year}}" min="2018" max="2050"><br/>
                 <div id="invalid-date2"><font color="red"></font></div>
-                <input class="inputText" style="transform: scale(1.5)" type="checkbox" name="all" > Thống kê cả năm
           </div>
           <div class="modal-footer">
              <button type="button" class="btn btn-primary" id="update">Cập nhật</button>
@@ -169,5 +169,5 @@
     <script src="{% static 'js/lib/datatables/cdn.datatables.net/buttons/1.2.2/js/buttons.html5.min.js' %}"></script>
     <script src="{% static 'js/lib/datatables/cdn.datatables.net/buttons/1.2.2/js/buttons.print.min.js' %}"></script>
     <script src="{% static 'js/lib/datatables/datatables-init.js' %}"></script>
-    <script src="{% static 'js/admin/statistic.js' %}"></script>
+    <script src="{% static 'js/admin/statistic_month.js' %}"></script>
 {% endblock %}

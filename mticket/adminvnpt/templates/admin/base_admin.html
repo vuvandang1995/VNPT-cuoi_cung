@@ -82,7 +82,13 @@
                         <li><a href="{% url 'admin:group_service' %}"><i class="fa fa fa-list-ol"></i> Quản lý nhóm dịch vụ </a></li>
                         <li><a href="{% url 'admin:manage_agent' %}"><i class="fa fa-user-secret"></i> Quản lý nhân viên </a></li>
                         <li><a href="{% url 'admin:manage_serivce' %}"><i class="fa fa-list-alt"></i> Quản lý dịch vụ </a></li>
-                        <li><a href="{% url 'admin:statistic' %}"><i class="fa fa-server"></i> Thống kê </a></li>
+                        <li> <a class="has-arrow  " aria-expanded="false"><i class="fa fa-server"></i><span class="hide-menu">Thống kê</span></a>
+                            <ul aria-expanded="false" class="collapse">
+                                <li><a href="{% url 'admin:statistic_week' %}"> Tuần </a></li>
+                                <li><a href="{% url 'admin:statistic_month' %}"> Tháng </a></li>
+                                <li><a href="{% url 'admin:statistic_year' %}"> Năm </a></li>
+                            </ul>
+                        </li>
                     </ul>
                 </nav>
                 <!-- End Sidebar navigation -->
@@ -121,6 +127,11 @@
     
 
 <script>
+    $(".sidebar-nav").hover(function(){
+        $(".left-sidebar").css("width", "260px");
+    }, function(){
+        $(".left-sidebar").css("width", "auto");
+    });
     var fullname = {{ fullname }};
     var agentName = {{ agent_name }};
     /*var chatSocket = new WebSocket(
