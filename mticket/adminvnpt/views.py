@@ -125,7 +125,7 @@ def home_admin(request):
                                                  action=action,
                                                  date=timezone.now().date(),
                                                  time=timezone.now().time())
-        return render(request, 'admin/home_admin.html', content)
+        return render(request, 'admin/chart.html', content)
     else:
         return redirect('/')
 

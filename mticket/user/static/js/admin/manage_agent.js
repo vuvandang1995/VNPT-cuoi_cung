@@ -44,7 +44,7 @@ $(document).ready(function(){
                  url:location.href,
                  data: {'agid':id, 'csrfmiddlewaretoken':token, 'stt': 0},
                  success: function(){
-                    $('#list_user').DataTable().ajax.reload()
+                    $('#list_user').DataTable().ajax.reload();
                  }
              });
         }
