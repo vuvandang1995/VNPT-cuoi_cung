@@ -15,7 +15,7 @@ $(document).ready(function(){
             ],
             "ajax": {
                 "type": "GET",
-                "url": location.href +"data/" + topicname,
+                "url": location.href +"/data/" + topicname,
                 "contentType": "application/json; charset=utf-8",
                 "data": function(result){
                     return JSON.stringify(result);

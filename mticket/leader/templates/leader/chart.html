@@ -1,0 +1,137 @@
+{% extends 'leader/base_leader.html' %}
+{% block title %} Trang chủ {% endblock %}
+{% load staticfiles %}
+{% block content %}
+    <div class="page-wrapper">
+            <!-- Bread crumb -->
+            <div class="row page-titles">
+                <div class="col-md-5 align-self-center">
+                    <h3 class="text-primary">Biểu đồ</h3> </div>
+                <div class="col-md-7 align-self-center">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="javascript:void(0)">Trang chủ</a></li>
+                    </ol>
+                </div>
+            </div>
+            <!-- Container fluid  -->
+
+            <div class="container-fluid">
+                <!-- Start Page Content -->
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card" id="info-user">
+                            <div class="card-title" style="text-align:center;">
+                                <h2 id="title_month" style="text-align:center">Tổng số sự cố dịch vụ {{1_service.name}} {{today.month}}/{{today.year}}</h2>
+                                <input type="hidden" value="{{1_service.name}}" id="sv_name_1">
+                                <button class="btn btn-primary" data-toggle="modal" data-target="#filter_month">
+                                        <i class="fa fa-cogs"></i>
+                                    </button>
+                            </div>
+                            <div class="card-body" >
+                                <div style="margin: auto;width:100%;">
+                                    <div style="float:left;width:60%;" id="cha_1">
+                                        <canvas id="bieu_do_1"></canvas>
+                                    </div>
+                                    <div style="float:right;width:40%;"id="cha_2">
+                                        <canvas id="bieu_do_2"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card" id="info-user-1">
+                            <div class="card-title" style="text-align:center;">
+                                <h2 id="title_year" style="text-align:center">Tổng số sự cố dịch vụ {{1_service.name}} {{today.year}}</h2>
+                                <input type="hidden" value="{{1_service.name}}" id="sv_name_2">
+                                <button class="btn btn-primary" data-toggle="modal" data-target="#filter_year">
+                                        <i class="fa fa-cogs"></i>
+                                    </button>
+                            </div>
+                            <div class="card-body" >
+                                <div style="margin: auto;width:100%;">
+                                    <div style="float:left;width:60%;" id="cha_3">
+                                        <canvas id="bieu_do_3"></canvas>
+                                    </div>
+                                    <div style="float:right;width:40%;"id="cha_4">
+                                        <canvas id="bieu_do_4"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+<div id="filter_month" class="modal" role="dialog">
+  <div class="modal-dialog modal-sm">
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Tùy chọn</h4>
+      </div>
+          <div class="modal-body">
+                {% csrf_token %}
+                <label>Dịch vụ</label>
+                <select name="service" class="form-control" id="service_1">
+                     {% for sv in service %}
+                        <option value="{{sv.name}}" name="service_1_choose">{{sv.name}} - {{sv.description}}</option>
+                     {% endfor %}
+                 </select><br>
+                  <label for="content">Tháng</label><br/>
+                <input id="month_1" class="form-control" type="number" name="month" value="{{today.month}}" min="1" max="12" ><br/>
+                <div id="invalid-date"><font color="red"></font></div>
+                <label for="content2">Năm</label>
+                <input id="year_1" class="form-control" type="number" name="year" value="{{today.year}}" min="2018" max="2050"><br/>
+                <div id="invalid-date2"><font color="red"></font></div>
+          </div>
+          <div class="modal-footer">
+             <button type="button" class="btn btn-primary" id="update_month">Cập nhật</button>
+            <button type="button" class="btn btn-default" data-dismiss="modal" id="close_month">Đóng</button>
+          </div>
+    </div>
+  </div>
+</div>
+<div id="filter_year" class="modal" role="dialog">
+  <div class="modal-dialog modal-sm">
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Tùy chọn</h4>
+      </div>
+          <div class="modal-body">
+                {% csrf_token %}
+                <select name="service" class="form-control" id="service_2">
+                     {% for sv in service %}
+                        <option value="{{sv.name}}" name="service_2_choose">{{sv.name}} - {{sv.description}}</option>
+                     {% endfor %}
+                 </select><br>
+                <label for="content2">Năm</label>
+                <input id="year_2" class="form-control" type="number" name="year" value="{{today.year}}" min="2018" max="2050"><br/>
+                <div id="invalid-date3"><font color="red"></font></div>
+          </div>
+          <div class="modal-footer">
+             <button type="button" class="btn btn-primary" id="update_year">Cập nhật</button>
+            <button type="button" class="btn btn-default" data-dismiss="modal" id="close_year">Đóng</button>
+          </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+{% block js %}
+    <script src="{% static 'js/lib/datatables/datatables.min.js' %}"></script>
+    <script src="{% static 'js/lib/datatables/cdn.datatables.net/buttons/1.2.2/js/dataTables.buttons.min.js' %}"></script>
+    <script src="{% static 'js/lib/datatables/cdn.datatables.net/buttons/1.2.2/js/buttons.flash.min.js' %}"></script>
+    <script src="{% static 'js/lib/datatables/cdnjs.cloudflare.com/ajax/libs/jszip/2.5.0/jszip.min.js' %}"></script>
+    <script src="{% static 'js/lib/datatables/cdn.rawgit.com/bpampuch/pdfmake/0.1.18/build/pdfmake.min.js' %}"></script>
+    <script src="{% static 'js/lib/datatables/cdn.rawgit.com/bpampuch/pdfmake/0.1.18/build/vfs_fonts.js' %}"></script>
+    <script src="{% static 'js/lib/datatables/cdn.datatables.net/buttons/1.2.2/js/buttons.html5.min.js' %}"></script>
+    <script src="{% static 'js/lib/datatables/cdn.datatables.net/buttons/1.2.2/js/buttons.print.min.js' %}"></script>
+    <script src="{% static 'js/lib/datatables/datatables-init.js' %}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.min.js"></script>
+    <script src="{% static 'js/leader/chart_home.js' %}"></script>
+
+{% endblock %}

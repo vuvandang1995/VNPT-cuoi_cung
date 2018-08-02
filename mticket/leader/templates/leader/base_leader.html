@@ -108,6 +108,7 @@
                 <nav class="sidebar-nav">
                     <ul id="sidebarnav">
                     	<li class="nav-label">Quản trị viên</li>
+                        <li><a href="{% url 'leader:home_chart' %}"><i class="fa fa-bar-chart"></i> Biểu đồ </a></li>
                         <li><a href="{% url 'leader:home_leader' %}"><i class="fa fa-ticket"></i> Quản lý yêu cầu </a></li>
                         <li><a href="{% url 'leader:leader_manage_agent' %}"><i class="fa fa fa-user-secret"></i> Quản lý nhân viên </a></li>
                         {% if leader.position == 4 %}
