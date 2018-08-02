@@ -3,7 +3,7 @@ $(document).ready(function(){
     var year_1 = $('#year_1').val();
     $.ajax({
          type: "GET",
-         url: '/admin/data_line_month_'+month_1+'_'+year_1,
+         url: '/admin/data_line_month_'+month_1+'_'+year_1+'_all',
          contentType: "application/json; charset=utf-8",
          success: function(response){
             var ctx_1 = $("#bieu_do_1");
@@ -46,7 +46,7 @@ $(document).ready(function(){
     });
     $.ajax({
          type: "GET",
-         url: '/admin/data_pie_month_'+month_1+'_'+year_1,
+         url: '/admin/data_pie_month_'+month_1+'_'+year_1+'_all',
          contentType: "application/json; charset=utf-8",
          success: function(response){
             var ctx_2 = $("#bieu_do_2");
@@ -75,7 +75,7 @@ $(document).ready(function(){
     var year_2 = $('#year_2').val();
     $.ajax({
          type: "GET",
-         url: '/admin/data_line_year_'+year_2,
+         url: '/admin/data_line_year_'+year_2+'_all',
          contentType: "application/json; charset=utf-8",
          success: function(response){
             var ctx_3 = $("#bieu_do_3");
@@ -118,7 +118,7 @@ $(document).ready(function(){
     });
     $.ajax({
          type: "GET",
-         url: '/admin/data_pie_year_'+year_2,
+         url: '/admin/data_pie_year_'+year_2+'_all',
          contentType: "application/json; charset=utf-8",
          success: function(response){
             var ctx_4 = $("#bieu_do_4");
@@ -145,11 +145,12 @@ $(document).ready(function(){
     });
 
     $('body').on('click', '#update_month', function(){
+        var service_1 = $("#service_1").val();
         var month_1 = $('#month_1').val();
         var year_1 = $('#year_1').val();
         $.ajax({
          type: "GET",
-         url: '/admin/data_line_month_'+month_1+'_'+year_1,
+         url: '/admin/data_line_month_'+month_1+'_'+year_1+'_'+service_1,
          contentType: "application/json; charset=utf-8",
          success: function(response){
             $("#bieu_do_1").remove();
@@ -194,7 +195,7 @@ $(document).ready(function(){
     });
         $.ajax({
          type: "GET",
-         url: '/admin/data_pie_month_'+month_1+'_'+year_1,
+         url: '/admin/data_pie_month_'+month_1+'_'+year_1+'_'+service_1,
          contentType: "application/json; charset=utf-8",
          success: function(response){
             $("#bieu_do_2").remove();
@@ -221,14 +222,20 @@ $(document).ready(function(){
             });
          }
     });
-        $("#title_month").html("Tổng số sự cố "+month_1+'/'+year_1);
+        if(service_1==='all'){
+            $("#title_month").html("Tổng số sự cố "+month_1+'/'+year_1);
+        }
+        else{
+            $("#title_month").html("Tổng số sự cố "+service_1+" "+month_1+'/'+year_1);
+        }
         $("#close_month").click();
     });
     $('body').on('click', '#update_year', function(){
+        var service_2 = $("#service_2").val();
         var year_2 = $('#year_2').val();
         $.ajax({
          type: "GET",
-         url: '/admin/data_line_year_'+year_2,
+         url: '/admin/data_line_year_'+year_2+'_'+service_2,
          contentType: "application/json; charset=utf-8",
          success: function(response){
             $("#bieu_do_3").remove();
@@ -273,7 +280,7 @@ $(document).ready(function(){
     });
         $.ajax({
          type: "GET",
-         url: '/admin/data_pie_year_'+year_2,
+         url: '/admin/data_pie_year_'+year_2+'_'+service_2,
          contentType: "application/json; charset=utf-8",
          success: function(response){
             $("#bieu_do_4").remove();
@@ -300,7 +307,13 @@ $(document).ready(function(){
             });
          }
     });
-        $("#title_year").html("Tổng số sự cố "+year_2);
+        if(service_2==='all'){
+            $("#title_year").html("Tổng số sự cố "+year_2);
+        }
+        else{
+            $("#title_year").html("Tổng số sự cố "+service_2+" "+year_2);
+        }
         $("#close_year").click();
+
     });
 });
