@@ -16,7 +16,7 @@
         </div>
         <!-- End Bread crumb -->
                 {% csrf_token %}
-            <div class="container-fluid" id="list_topic">
+            <div class="container-fluid">
                 <!-- Start Page Content -->
                 <div class="row">
                     <div class="col-12">
@@ -27,7 +27,7 @@
                                 </button>
                             </div>
                             <div class="card-body">
-                                <table  class="table display table-bordered table-striped">
+                                <table  class="table display table-bordered table-striped" id="list_topic">
                                     <thead>
                                     <tr align="center">
                                         <th width="10%">Tên</th>
@@ -134,12 +134,12 @@
                             <font id="gpsverr" color="red"></font><br>
 
                             <label for="agent"><b>Chọn quản trị viên dịch vụ</b></label></br>
-                            <input style="border-radius: 0px;width: 300px" type="text" id="search" name="search" class="input-large" placeholder="Nhập tên quản trị viên">
+                            <input class="form-control" type="text" id="search" name="search" placeholder="Nhập tên quản trị viên">
                             <input type="hidden" name="username_leader" value="">
                             <font id="leadererr" color="red"></font><br>
 
                             <label for="agent"><b>Chọn các nhân viên xử lý dịch vụ</b></label></br>
-                            <input style="border-radius: 0px;width: 300px" type="text" id="search_agent" name="search" class="input-large" placeholder="Nhập tên nhân viên">
+                            <input class="form-control" type="text" id="search_agent" name="search" placeholder="Nhập tên nhân viên">
                             <font id="agenterr" color="red"></font><br>
 
                             <div>

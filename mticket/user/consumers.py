@@ -369,8 +369,6 @@ class AgentConsumer(WebsocketConsumer):
                 }
             )
         
-
-
         if 'được đóng bởi' in message[-1]:
             notifi = message[-1]
             list_agent = message
