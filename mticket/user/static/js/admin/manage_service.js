@@ -87,13 +87,17 @@ $(document).ready(function(){
                     // window.location.reload();
                     $("#list_topic").load(location.href + " #list_topic");
                     document.getElementById("add_topic_close").click();
-                    /*var date = formatAMPM(new Date());
-                    ag_leader.unshift('admin_add_leader');
-                    ag_leader.unshift(leader);
+                    var date = formatAMPM(new Date());
+                    ag_leader.unshift('admin_add_topic');
+                    ag_leader.unshift(list_agent);
+                    ag_leader.unshift(svname);
                     group_agent_Socket.send(JSON.stringify({
                         'message' : ag_leader,
                         'time' : date
-                    }));*/
+                    }));
+
+                    
+                    
                 }
             });
         }
