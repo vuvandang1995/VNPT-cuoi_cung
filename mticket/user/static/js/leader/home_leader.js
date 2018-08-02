@@ -23,7 +23,7 @@ $(document).ready(function(){
                 "complete": function(){
                     setTimeout(function(){
                         countdowntime();
-                    }, 1000);
+                    }, 2000);
                 }
             },
             "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
@@ -74,7 +74,7 @@ $(document).ready(function(){
                         'ws://' + window.location.host +
                         '/ws/user/' + sender + '/');
 
-                        message = 'Yêu cầu số '+id+' đã được đóng bởi Admin!'
+                        message = 'Yêu cầu số '+id+' đã được đóng bởi Quản trị viên!'
                         Socket1.onopen = function (event) {
                             setTimeout(function(){
                                 Socket1.send(JSON.stringify({
@@ -102,7 +102,7 @@ $(document).ready(function(){
                         'ws://' + window.location.host +
                         '/ws/user/' + sender + '/');
 
-                        message = 'Yêu cầu số '+id+' đang được xử lý bởi Admin!'
+                        message = 'Yêu cầu số '+id+' đang được xử lý bởi Quản trị viên!'
                         Socket1.onopen = function (event) {
                             setTimeout(function(){
                                 Socket1.send(JSON.stringify({
@@ -148,7 +148,7 @@ $(document).ready(function(){
                     'ws://' + window.location.host +
                     '/ws/user/' + sender + '/');
 
-                    message = 'Yêu cầu số '+id+' bị xóa bởi Admin!'
+                    message = 'Yêu cầu số '+id+' bị xóa bởi Quản trị viên!'
                     Socket1.onopen = function (event) {
                         setTimeout(function(){
                             Socket1.send(JSON.stringify({
@@ -200,7 +200,7 @@ $(document).ready(function(){
                 'ws://' + window.location.host +
                 '/ws/user/' + sender + '/');
 
-                message = 'Yêu cầu số '+id+' đã được Admin xử lý!'
+                message = 'Yêu cầu số '+id+' đã được Quản trị viên xử lý!'
                 Socket1.onopen = function (event) {
                     setTimeout(function(){
                         Socket1.send(JSON.stringify({
@@ -255,7 +255,7 @@ $(document).ready(function(){
     $(".change_topic").click(function(){
         var token = $("input[name=csrfmiddlewaretoken]").val();
         var id = $("input[name=ticketid]").val();
-        var topicid = $("#mySelect").val();
+        var serviceid = $("#mySelect").val();
         var topic_old = $("#tp"+id).text();
         var topic_name = $("#mySelect").find('option:selected').attr("name");
         var date = formatAMPM(new Date());
@@ -265,7 +265,7 @@ $(document).ready(function(){
             $.ajax({
                 type:'POST',
                 url:location.href,
-                data: {'csrfmiddlewaretoken':token, 'ticketid_change': id, 'topicid':topicid},
+                data: {'csrfmiddlewaretoken':token, 'ticketid_change': id, 'serviceid':serviceid},
                 success: function(){
                     document.getElementById("change_topic_close").click();
                     $('.tk_table').DataTable().ajax.reload();
@@ -283,6 +283,22 @@ $(document).ready(function(){
                         'message' : message2,
                         'time' : date
                     }));
+
+                    var sender = $('#sender'+id).html();
+                    var Socket1 = new WebSocket(
+                    'ws://' + window.location.host +
+                    '/ws/user/' + sender + '/');
+
+                    message = 'Yêu cầu số  ' + id + ' đã được Quản trị viên chuyển sang chủ đề  '+ topic_name + '!';
+                    Socket1.onopen = function (event) {
+                        setTimeout(function(){
+                            Socket1.send(JSON.stringify({
+                                'message' : message,
+                                'time' : date,
+                            }));
+                            Socket1.close();
+                        }, 1000);
+                    };
                 }
             });
         }

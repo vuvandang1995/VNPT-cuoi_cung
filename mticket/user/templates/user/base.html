@@ -22,7 +22,7 @@
 </head>
 <body class="skin-blue sidebar-mini sidebar-collapse">
 <div class="wrapper">
-    <div class="main-header">
+    <div class="main-header" style="position: fixed ; width: 100%;">
     <!-- Logo -->
     <a  class="logo">
       <!-- mini logo for sidebar mini 50x50 pixels -->
@@ -84,7 +84,7 @@
     </nav>
   </div>
      <!-- Left side column. contains the logo and sidebar -->
-  <aside class="main-sidebar">
+  <aside class="main-sidebar" style="position: fixed;">
     <!-- sidebar: style can be found in sidebar.less -->
     <section class="sidebar">
       <!-- Sidebar user panel -->
@@ -295,22 +295,20 @@
             }else{
                 $('.notification_chat').prepend(message);
             }
-
         }else{
             if (message ==  'give up'){
                 setTimeout(function(){
-                    $("#list_tk_user").DataTable().ajax.reload();
+                    $("#list_tk_gui_di").DataTable().ajax.reload();
                     
                 }, 2000);
-                countdowntime();
+                
             }
 
             if (message ==  'process'){
                 setTimeout(function(){
-                    $("#list_tk_user").DataTable().ajax.reload();
-                    
+                    $("#list_tk_gui_di").DataTable().ajax.reload();
                 }, 2000);
-                countdowntime();
+                
             }
 
             if (message.includes('new+chat')){
@@ -353,11 +351,11 @@
                 $('body .msg').html('You have '+noti_noti1+' new notifications');
                 x.play();
                 setTimeout(function(){
-                    $("#list_tk_user").DataTable().ajax.reload();
+                    $("#list_tk_gui_di").DataTable().ajax.reload();
                     $("body #ct"+message.split(' ')[3]).load(location.href + " #ct"+message.split(' ')[3]);
                     
                 }, 1000);
-                countdowntime();
+                
 
             }
 
@@ -373,13 +371,12 @@
                 $('body .msg').html('You have '+noti_noti1+' new notifications');
                 x.play();
                 setTimeout(function(){
-                    $("#list_tk_user").DataTable().ajax.reload();
-                    
+                    $("#list_tk_gui_di").DataTable().ajax.reload(); 
                 }, 2000);
-                countdowntime();
+                
             }
 
-            if (message.includes('đã được đóng bởi Admin!')){
+            if (message.includes('đã được đóng bởi Quản trị viên!')){
                     var href="{% url 'user:homeuser' %}"
                     var noti = '<a href="'+href+'"><div style="float:left;width:15%" class="btn btn-success btn-circle m-r-10"><i class="fa fa-check-circle-o"></i></div><div style="float:right; width:80%"><p>'+message+'</p><small><i class="fa fa-clock-o"></i>'+time+'</small></div></a>';
                     $('.noti_noti').prepend(noti);
@@ -390,13 +387,13 @@
                     $('body .msg').html('You have '+noti_noti1+' new notifications');
                     x.play();
                     setTimeout(function(){
-                        $("#list_tk_user").DataTable().ajax.reload();
-                        
+                        $("#list_tk_gui_di").DataTable().ajax.reload();
+                        $("#list_tk_tu_xu_ly").DataTable().ajax.reload();
                     }, 2000);
-                    countdowntime();
+                    
             }
 
-            if (message.includes('đang được xử lý bởi Admin!')){
+            if (message.includes('đang được xử lý bởi Quản trị viên!')){
                     var href="{% url 'user:homeuser' %}"
                     var noti = '<a href="'+href+'"><div style="float:left;width:15%" class="btn btn-warning btn-circle m-r-10"><i class="fa fa-folder-open"></i></div><div style="float:right; width:80%"><p>'+message+'</p><small><i class="fa fa-clock-o"></i>'+time+'</small></div></a>';
                     $('.noti_noti').prepend(noti);
@@ -407,13 +404,13 @@
                     $('body .msg').html('You have '+noti_noti1+' new notifications');
                     x.play();
                     setTimeout(function(){
-                        $("#list_tk_user").DataTable().ajax.reload();
-                        
+                        $("#list_tk_gui_di").DataTable().ajax.reload();
+                        $("#list_tk_tu_xu_ly").DataTable().ajax.reload();
                     }, 2000);
-                    countdowntime();
+                    
             }
 
-            if (message.includes('bị xóa bởi Admin!')){
+            if (message.includes('bị xóa bởi Quản trị viên!')){
                     var href="{% url 'user:homeuser' %}"
                     var noti = '<a href="'+href+'"><div style="float:left;width:15%" class="btn btn-danger btn-circle m-r-10"><i class="fa fa-remove"></i></div><div style="float:right; width:80%"><p>'+message+'</p><small><i class="fa fa-clock-o"></i>'+time+'</small></div></a>';
                     $('.noti_noti').prepend(noti);
@@ -424,13 +421,13 @@
                     $('body .msg').html('You have '+noti_noti1+' new notifications');
                     x.play();
                     setTimeout(function(){
-                        $("#list_tk_user").DataTable().ajax.reload();
-                        
+                        $("#list_tk_gui_di").DataTable().ajax.reload();
+                        $("#list_tk_tu_xu_ly").DataTable().ajax.reload();
                     }, 2000);
-                    countdowntime();
+                    
             }
 
-            if (message.includes('đã được Admin xử lý!')){
+            if (message.includes('đã được Quản trị viên xử lý!')){
                     var href="{% url 'user:homeuser' %}"
                     var noti = '<a href="'+href+'"><div style="float:left;width:15%" class="btn btn-warning btn-circle m-r-10"><i class="fa fa-folder-open"></i></div><div style="float:right; width:80%"><p>'+message+'</p><small><i class="fa fa-clock-o"></i>'+time+'</small></div></a>';
                     $('.noti_noti').prepend(noti);
@@ -441,10 +438,10 @@
                     $('body .msg').html('You have '+noti_noti1+' new notifications');
                     x.play();
                     setTimeout(function(){
-                        $("#list_tk_user").DataTable().ajax.reload();
-                        
+                        $("#list_tk_gui_di").DataTable().ajax.reload();
+                        $("#list_tk_tu_xu_ly").DataTable().ajax.reload();
                     }, 2000);
-                    countdowntime();
+                    
             }
 
 
@@ -459,10 +456,27 @@
                 $('body .msg').html('You have '+noti_noti1+' new notifications');
                 x.play();
                 setTimeout(function(){
-                    $("#list_tk_user").DataTable().ajax.reload();
-                    
+                    $("#list_tk_gui_di").DataTable().ajax.reload();
+                    $("#list_tk_tu_xu_ly").DataTable().ajax.reload();
                 }, 2000);
-                countdowntime();
+                
+            }
+
+            if (message.includes('đã được Quản trị viên chuyển sang dịch vụ')){
+                var href="{% url 'user:homeuser' %}"
+                var noti = '<a href="'+href+'"><div style="float:left;width:15%" class="btn btn-warning btn-circle m-r-10"><i class="fa fa-folder-open"></i></div><div style="float:right; width:80%"><p>'+message+'</p><small><i class="fa fa-clock-o"></i>'+time+'</small></div></a>';
+                $('.noti_noti').prepend(noti);
+                $('body .num_noti').remove();
+                var noti1 = '<span class="label label-warning num_noti">'+noti_noti1+'</span>';
+                $('body .noti_fy').prepend(noti1);
+                $('body .msg').empty();
+                $('body .msg').html('You have '+noti_noti1+' new notifications');
+                x.play();
+                setTimeout(function(){
+                    $("#list_tk_gui_di").DataTable().ajax.reload();
+                    $("#list_tk_tu_xu_ly").DataTable().ajax.reload();
+                }, 2000);
+                
             }
         }
     };

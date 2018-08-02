@@ -80,8 +80,6 @@ class ChatConsumer(WebsocketConsumer):
             'time' :  time
         }))
 
-
-
 class UserConsumer(WebsocketConsumer):
     def connect(self):
         self.user_name = self.scope['url_route']['kwargs']['username']
@@ -175,7 +173,7 @@ class UserConsumer(WebsocketConsumer):
             u.noti_noti = u.noti_noti + 1
             u.save()
 
-        if 'đã được đóng bởi Admin!' in message:
+        if 'đã được đóng bởi Quản trị viên!' in message:
             f = r'notification/user/'+self.room_group_name+'.txt'
             file = open(f,'a')
             noti = '<a href="/user/"><div style="float:left;width:15%" class="btn btn-success btn-circle m-r-10"><i class="fa fa-check-circle-o"></i></div><div style="float:right; width:80%"><p>'+message+'</p><small><i class="fa fa-clock-o"></i>'+time+'</small></div></a>'
@@ -184,7 +182,7 @@ class UserConsumer(WebsocketConsumer):
             u.noti_noti = u.noti_noti + 1
             u.save()
 
-        if 'đang được xử lý bởi Admin!' in message:
+        if 'đang được xử lý bởi Quản trị viên!' in message:
             f = r'notification/user/'+self.room_group_name+'.txt'
             file = open(f,'a')
             noti = '<a href="/user/"><div style="float:left;width:15%" class="btn btn-warning btn-circle m-r-10"><i class="fa fa-folder-open"></i></div><div style="float:right; width:80%"><p>'+message+'</p><small><i class="fa fa-clock-o"></i>'+time+'</small></div></a>'
@@ -193,7 +191,7 @@ class UserConsumer(WebsocketConsumer):
             u.noti_noti = u.noti_noti + 1
             u.save()
 
-        if 'bị xóa bởi Admin!' in message:
+        if 'bị xóa bởi Quản trị viên!' in message:
             f = r'notification/user/'+self.room_group_name+'.txt'
             file = open(f,'a')
             noti = '<a href="/user/"><div style="float:left;width:15%" class="btn btn-danger btn-circle m-r-10"><i class="fa fa-remove"></i></div><div style="float:right; width:80%"><p>'+message+'</p><small><i class="fa fa-clock-o"></i>'+time+'</small></div></a>'
@@ -202,7 +200,16 @@ class UserConsumer(WebsocketConsumer):
             u.noti_noti = u.noti_noti + 1
             u.save()
 
-        if 'đã được Admin xử lý!' in message:
+        if 'đã được Quản trị viên xử lý!' in message:
+            f = r'notification/user/'+self.room_group_name+'.txt'
+            file = open(f,'a')
+            noti = '<a href="/user/"><div style="float:left;width:15%" class="btn btn-warning btn-circle m-r-10"><i class="fa fa-folder-open"></i></div><div style="float:right; width:80%"><p>'+message+'</p><small><i class="fa fa-clock-o"></i>'+time+'</small></div></a>'
+            file.write(noti + "\n")
+            file.close()
+            u.noti_noti = u.noti_noti + 1
+            u.save()
+
+        if 'đã được Quản trị viên chuyển sang dịch vụ ' in message:
             f = r'notification/user/'+self.room_group_name+'.txt'
             file = open(f,'a')
             noti = '<a href="/user/"><div style="float:left;width:15%" class="btn btn-warning btn-circle m-r-10"><i class="fa fa-folder-open"></i></div><div style="float:right; width:80%"><p>'+message+'</p><small><i class="fa fa-clock-o"></i>'+time+'</small></div></a>'
@@ -261,8 +268,6 @@ class UserConsumer(WebsocketConsumer):
             'noti_chat': noti_chat,
             'noti_noti': noti_noti
         }))
-
-
 
 class AgentConsumer(WebsocketConsumer):
     def connect(self):
@@ -349,8 +354,7 @@ class AgentConsumer(WebsocketConsumer):
                     status = '<td><span class="label label-success">Done</span></td>'
                 else:
                     status = '<td><span class="label label-default">Close</span></td>'
-                noti = noti + '<tr><td>'+str(tk.id)+'</td><td>'+tk.title+'</td><td>'+tk.topicid.name+'</td><td>'+tk.sender.username+'</td>'+status+'<td>'+str(tk.dateend).split(' ')[0]+'</td></tr>'
-                # noti = r'<div class="card"><div class="card-title"><h4>History </h4></div><div class="card-body"><div class="table-responsive m-t-40"><table id="example23" class="display nowrap table table-hover table-striped table-bordered" cellspacing="0" width="100%"><thead><tr><th width="10%">ID</th><th width="30%">Title</th><th width="20%">Topic</th><th width="10%">Sender</th><th width="15%">Created</th><th width="15%">Expired</th></tr></thead><tbody><tr><td>'+str(tk.id)+'</td><td>'+tk.title+'</td><td>'+tk.topicid.name+'</td><td>'+tk.sender.username+'</td><td>'+str(tk.datestart).split(' ')[0]+'</td><td>'+str(tk.dateend).split(' ')[0]+'</td></tr></tbody></table></div></div></div>'
+                noti = noti + '<tr><td>'+str(tk.id)+'</td><td>'+tk.loai_su_co+'</td><td>'+tk.serviceid.name+'</td><td>'+tk.sender.username+'</td>'+status+'<td>'+str(tk.dateend).split(' ')[0]+'</td></tr>'
             self.send(text_data=json.dumps({
                         'message': noti,
                         'type' : 'date'
