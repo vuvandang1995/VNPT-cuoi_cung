@@ -222,7 +222,12 @@ $(document).ready(function(){
             });
          }
     });
-        $("#title_month").html("Tổng số sự cố "+service_1+" "+month_1+'/'+year_1);
+        if(service_1==='all'){
+            $("#title_month").html("Tổng số sự cố "+month_1+'/'+year_1);
+        }
+        else{
+            $("#title_month").html("Tổng số sự cố "+service_1+" "+month_1+'/'+year_1);
+        }
         $("#close_month").click();
     });
     $('body').on('click', '#update_year', function(){
@@ -302,7 +307,13 @@ $(document).ready(function(){
             });
          }
     });
-        $("#title_year").html("Tổng số sự cố "+service_2+" "+year_2);
+        if(service_2==='all'){
+            $("#title_year").html("Tổng số sự cố "+year_2);
+        }
+        else{
+            $("#title_year").html("Tổng số sự cố "+service_2+" "+year_2);
+        }
         $("#close_year").click();
+
     });
 });
