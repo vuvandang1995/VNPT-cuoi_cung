@@ -313,16 +313,15 @@
 
             if (message.includes('new+chat')){
                 var tkid = message[0];
-                if ($('body .chat'+tkid).length){
+                if ($('body #chat'+tkid).css('display') == 'block'){
                     if ($('body .chat'+tkid).css('display') == 'none'){
                         var href="javascript:register_popup('chat"+message[0]+"', "+message[0]+");"
-                        var noti = '<a href="'+href+' class="noti_chat"><div style="float:left;width:15%" class="btn btn-info btn-circle m-r-10"><i class="fa fa-envelope-o"></i></div><div style="float:right; width:80%"><p>'+message[0]+'</p><small><i class="fa fa-clock-o"></i>'+time+'</small></div></a>';
+                        var noti = '<a href="'+href+'" class="noti_chat"><div style="float:left;width:15%" class="btn btn-info btn-circle m-r-10"><i class="fa fa-envelope-o"></i></div><div style="float:right; width:80%"><p>'+message[0]+'</p><small><i class="fa fa-clock-o"></i>'+time+'</small></div></a>';
                         $('.notification_chat').prepend(noti);
                         $('body .num_chat').remove();
                         var noti1 = '<span class="label label-success num_chat">'+noti_chat1+'</span>';
                         $('body .chat_noti').prepend(noti1);
                         $('body .msg-chat').empty();
-                        $('body .msg-chat').html('You have '+noti_chat1+' new messages');
                         x.play();
 
                     }
@@ -334,7 +333,6 @@
                     var noti1 = '<span class="label label-success num_chat">'+noti_chat1+'</span>';
                     $('body .chat_noti').prepend(noti1);
                     $('body .msg-chat').empty();
-                    $('body .msg-chat').html('You have '+noti_chat1+' new messages');
                     x.play();
 
                 }

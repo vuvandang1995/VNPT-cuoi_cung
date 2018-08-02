@@ -723,7 +723,7 @@
 
                 if (check_exits(agentName, message) && check_exits('new_chat', message)) {
                     var tkid = message[0];
-                    if ($('body .chat'+tkid).length){
+                    if ($('body #chat'+tkid).css('display') == 'block'){
                         if ($('body .chat'+tkid).css('display') == 'none'){
                             var href="javascript:register_popup_agent('chat"+message[0]+"', "+message[0]+", '"+message[2]+"', '"+message[1].split('_')[0]+"');"
                             var src = "{% static 'images/avatar.png' %}"; 
