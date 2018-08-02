@@ -73,6 +73,13 @@
       </div>
           <div class="modal-body">
                 {% csrf_token %}
+                <label>Dịch vụ</label>
+                <select name="service" class="form-control" id="service_1">
+                     {% for sv in service %}
+                        <option value="{{sv.name}}" name="service_1_choose">{{sv.name}} - {{sv.description}}</option>
+                     {% endfor %}
+                        <option value="all" name="service_1_choose">Tất cả</option>
+                 </select><br>
                   <label for="content">Tháng</label><br/>
                 <input id="month_1" class="form-control" type="number" name="month" value="{{today.month}}" min="1" max="12" ><br/>
                 <div id="invalid-date"><font color="red"></font></div>
@@ -96,6 +103,13 @@
       </div>
           <div class="modal-body">
                 {% csrf_token %}
+                <label>Dịch vụ</label>
+                <select name="service" class="form-control" id="service_2">
+                     {% for sv in service %}
+                        <option value="{{sv.name}}" name="service_2_choose">{{sv.name}} - {{sv.description}}</option>
+                     {% endfor %}
+                        <option value="all" name="service_1_choose">Tất cả</option>
+                 </select><br>
                 <label for="content2">Năm</label>
                 <input id="year_2" class="form-control" type="number" name="year" value="{{today.year}}" min="2018" max="2050"><br/>
                 <div id="invalid-date3"><font color="red"></font></div>

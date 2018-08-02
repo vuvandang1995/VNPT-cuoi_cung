@@ -6,10 +6,10 @@ from django.views.generic import TemplateView
 app_name = 'admin'
 urlpatterns = [
     path('', views.home_admin, name='home_admin'),
-    path('data_line_year_<int:year>', views.home_admin_data_line_year, name='home_admin_data_line_year'),
-    path('data_line_month_<int:month>_<int:year>', views.home_admin_data_line_month, name='home_admin_data_line_month'),
-    path('data_pie_year_<int:year>', views.home_admin_data_pie_year, name='home_admin_data_pie_year'),
-    path('data_pie_month_<int:month>_<int:year>', views.home_admin_data_pie_month, name='home_admin_data_pie_month'),
+    path('data_line_year_<int:year>_<str:service>', views.home_admin_data_line_year, name='home_admin_data_line_year'),
+    path('data_line_month_<int:month>_<int:year>_<str:service>', views.home_admin_data_line_month, name='home_admin_data_line_month'),
+    path('data_pie_year_<int:year>_<str:service>', views.home_admin_data_pie_year, name='home_admin_data_pie_year'),
+    path('data_pie_month_<int:month>_<int:year>_<str:service>', views.home_admin_data_pie_month, name='home_admin_data_pie_month'),
     path('choose_leader/data', views.fullname_agent_choose_leader_data, name='fullname_agent_choose_leader_data'),
     path('logout_admin', views.logout_admin, name='logout_admin'),
     path('group_service', views.group_service, name='group_service'),
