@@ -17,6 +17,9 @@ import string
 import os
 from datetime import datetime
 from datetime import timedelta
+import pytz
+
+utc=pytz.UTC
 min_char = 8
 max_char = 12
 allchar = string.ascii_letters + string.digits
@@ -25,6 +28,7 @@ allchar = string.ascii_letters + string.digits
 def logout_leader(request):
     del request.session['leader']
     return redirect("/")
+
 
 def home_leader(request):
     if request.session.has_key('leader')and(Agents.objects.get(username=request.session['leader'])).status == 1:
@@ -234,7 +238,6 @@ def home_leader(request):
         return redirect("/")
 
 
-
 def home_leader_data(request, servicename):
     if request.session.has_key('leader')and(Agents.objects.get(username=request.session['leader'])).status == 1:
         agent = Agents.objects.get(username=request.session['leader'])
@@ -286,6 +289,286 @@ def home_leader_data(request, servicename):
         ticket = {"data": data}
         tickets = json.loads(json.dumps(ticket))
         return JsonResponse(tickets, safe=False)
+
+
+def home_chart(request):
+    if request.session.has_key('leader')and(Agents.objects.get(username=request.session['leader'])).status == 1:
+        leader = Agents.objects.get(username=request.session.get('leader'))
+        content = {
+            'today': timezone.now().date(),
+            'agent_name': mark_safe(json.dumps(leader.username)),
+            'fullname': mark_safe(json.dumps(leader.fullname)),
+            'leader': leader,
+        }
+        if Agents.objects.get(username=request.session['leader']).position == 2:
+            try:
+                service = Services.objects.filter(leader=leader)
+            except ObjectDoesNotExist:
+                pass
+            else:
+                content['service'] = service
+                content['1_service'] = service[0]
+
+        else:
+            try:
+                service = Services.objects.filter(leader_bk=leader)
+            except ObjectDoesNotExist:
+                pass
+            else:
+                content['service'] = service
+                content['1_service'] = service[0]
+
+        return render(request, 'leader/chart.html', content)
+    else:
+        return redirect("/")
+
+
+def data_line_year(request, year, service):
+    sv = Services.objects.get(name=service)
+    year_now = int(timezone.now().year)
+    month_now = int(timezone.now().month)
+    labels = []
+    data = []
+    if year == year_now:
+        for i in range(1, month_now+1):
+            labels.append('Tháng ' + str(i))
+            data.append(Tickets.objects.filter(serviceid=sv, date_close__year=year, date_close__month=i, status=3).count())
+    elif year < year_now:
+        for i in range(1, 13):
+            labels.append('Tháng ' + str(i))
+            data.append(Tickets.objects.filter(serviceid=sv, date_close__year=year, date_close__month=i, status=3).count())
+    else:
+        for i in range(1, 13):
+            labels.append('Tháng ' + str(i))
+            data.append(0)
+    datasets = [{"label": 'Sự cố',
+                 "backgroundColor": 'rgba(255, 0, 0, 1)',
+                 "borderColor": 'rgba(255, 0, 0, 0.4)',
+                 "data": data,
+                 "fill": 'false',
+                 }]
+    big_data = {
+        "labels": labels,
+        "datasets": datasets,
+    }
+    return JsonResponse(big_data, safe=False)
+
+
+def data_line_month(request, month, year, service):
+    sv = Services.objects.get(name=service)
+    day_now = int(timezone.now().day)
+    year_now = int(timezone.now().year)
+    month_now = int(timezone.now().month)
+    labels = []
+    data = []
+    if year == year_now:
+        if month == month_now:
+            for i in range(1, day_now+1):
+                labels.append('Ngày ' + str(i))
+                data.append(Tickets.objects.filter(date_close__year=year, date_close__month=month, date_close__day=i,
+                                                   status=3, serviceid=sv).count())
+        elif month < month_now:
+            if month in [1, 3, 5, 7, 8, 10, 12]:
+                day_range = 31
+            elif month == 2:
+                if year%4 == 0:
+                    day_range = 29
+                else:
+                    day_range = 28
+            else:
+                day_range = 30
+            for i in range(1, day_range+1):
+                labels.append('Ngày ' + str(i))
+                data.append(Tickets.objects.filter(date_close__year=year, date_close__month=month,
+                                                   date_close__day=i, status=3, serviceid=sv).count())
+        else:
+            if month in [1, 3, 5, 7, 8, 10, 12]:
+                day_range = 31
+            elif month == 2:
+                if year%4 == 0:
+                    day_range = 29
+                else:
+                    day_range = 28
+            else:
+                day_range = 30
+            for i in range(1, day_range+1):
+                labels.append('Ngày ' + str(i))
+                data.append(0)
+    elif year < year_now:
+        if month in [1, 3, 5, 7, 8, 10, 12]:
+            day_range = 31
+        elif month == 2:
+            if year % 4 == 0:
+                day_range = 29
+            else:
+                day_range = 28
+        else:
+            day_range = 30
+        for i in range(1, day_range + 1):
+            labels.append('Ngày ' + str(i))
+            data.append(Tickets.objects.filter(date_close__year=year, date_close__month=month,
+                                               date_close__day=i, status=3, serviceid=sv).count())
+    else:
+        if month in [1, 3, 5, 7, 8, 10, 12]:
+            day_range = 31
+        elif month == 2:
+            if year % 4 == 0:
+                day_range = 29
+            else:
+                day_range = 28
+        else:
+            day_range = 30
+        for i in range(1, day_range + 1):
+            labels.append('Ngày ' + str(i))
+            data.append(0)
+    datasets = [{"label": 'Sự cố',
+                 "backgroundColor": 'rgba(255, 0, 0, 1)',
+                 "borderColor": 'rgba(255, 0, 0, 0.4)',
+                 "data": data,
+                 "fill": 'false',
+                 }]
+    big_data = {
+        "labels": labels,
+        "datasets": datasets,
+    }
+    return JsonResponse(big_data, safe=False)
+
+
+def data_pie_year(request, year, service):
+    sv = Services.objects.get(name=service)
+    year_now = int(timezone.now().year)
+    if year <= year_now:
+        tk_dung_han = Tickets.objects.filter(expired=0, serviceid=sv, status=3, date_close__year=year)
+        tk_sai_han = Tickets.objects.filter(expired=1, serviceid=sv, status=3, date_close__year=year)
+        tklog_dung_han = TicketLog.objects.filter(action='đóng yêu cầu', ticketid__in=tk_dung_han)
+        tklog_sai_han = TicketLog.objects.filter(action='đóng yêu cầu', ticketid__in=tk_sai_han)
+        tkid_dung = [tk.ticketid for tk in tklog_dung_han]
+        tkid_qua = []
+        tkid_cham = []
+        open_tk = ['nhận xử lý yêu cầu', 'xử lý lại yêu cầu', 'mở lại yêu cầu',
+                   "nhận xử lý yêu cầu được giao từ quản trị viên",
+                   'tạo mới và tự xử lý yêu cầu']
+        for tk in tklog_sai_han:
+            tkid = tk.ticketid
+            tik = TicketLog.objects.filter(action__in=open_tk, ticketid=tkid).order_by("-id")
+            if len(tik) == 0:
+                continue
+            else:
+                date_open = timezone.datetime.combine(tik[0].date, tik[0].time).replace(tzinfo=utc)
+                date_end = tk.ticketid.dateend
+                if date_open <= date_end:
+                    tkid_cham.append(tk.ticketid)
+                else:
+                    tkid_qua.append(tk.ticketid)
+        dung = TicketAgent.objects.filter(ticketid__in=tkid_dung).count()
+        cham = TicketAgent.objects.filter(ticketid__in=tkid_cham).count()
+        qua = TicketAgent.objects.filter(ticketid__in=tkid_qua).count()
+        data = [dung, cham, qua]
+    else:
+        data = [0, 0, 0]
+    datasets = [{"label": 'Sự cố',
+                 "backgroundColor": [
+                    'rgba(255,127,80, 0.5)',
+                    'rgba(0, 255, 0, 0.5)',
+                    'rgba(0, 0, 255, 0.5)',
+                    ],
+                 "borderColor": [
+                    'rgba(255,127,80, 1)',
+                    'rgba(0, 255, 0, 1)',
+                    'rgba(0, 0, 255, 1)',
+                    ],
+                 "data": data,
+                 "fill": 'false',
+                 }]
+    big_data = {
+        "labels": ['Đúng hạn', 'Chậm', 'Quá hạn'],
+        "datasets": datasets,
+    }
+    return JsonResponse(big_data, safe=False)
+
+
+def data_pie_month(request, month, year, service):
+    sv = Services.objects.get(name=service)
+    year_now = int(timezone.now().year)
+    month_now = int(timezone.now().month)
+    if year == year_now:
+        if month <= month_now:
+            tk_dung_han = Tickets.objects.filter(expired=0, serviceid=sv, status=3, date_close__year=year, date_close__month=month)
+            tk_sai_han = Tickets.objects.filter(expired=1, serviceid=sv, status=3, date_close__year=year, date_close__month=month)
+            tklog_dung_han = TicketLog.objects.filter(action='đóng yêu cầu', ticketid__in=tk_dung_han)
+            tklog_sai_han = TicketLog.objects.filter(action='đóng yêu cầu', ticketid__in=tk_sai_han)
+            tkid_dung = [tk.ticketid for tk in tklog_dung_han]
+            tkid_qua = []
+            tkid_cham = []
+            open_tk = ['nhận xử lý yêu cầu', 'xử lý lại yêu cầu', 'mở lại yêu cầu',
+                       "nhận xử lý yêu cầu được giao từ quản trị viên",
+                       'tạo mới và tự xử lý yêu cầu']
+            for tk in tklog_sai_han:
+                tkid = tk.ticketid
+                tik = TicketLog.objects.filter(action__in=open_tk, ticketid=tkid).order_by("-id")
+                if len(tik) == 0:
+                    continue
+                else:
+                    date_open = timezone.datetime.combine(tik[0].date, tik[0].time).replace(tzinfo=utc)
+                    date_end = tk.ticketid.dateend
+                    if date_open <= date_end:
+                        tkid_cham.append(tk.ticketid)
+                    else:
+                        tkid_qua.append(tk.ticketid)
+            dung = TicketAgent.objects.filter(ticketid__in=tkid_dung).count()
+            cham = TicketAgent.objects.filter(ticketid__in=tkid_cham).count()
+            qua = TicketAgent.objects.filter(ticketid__in=tkid_qua).count()
+            data = [dung, cham, qua]
+        else:
+            data = [0, 0, 0]
+    elif year < year_now:
+        tk_dung_han = Tickets.objects.filter(expired=0,serviceid=sv, status=3, date_close__year=year, date_close__month=month)
+        tk_sai_han = Tickets.objects.filter(expired=1,serviceid=sv, status=3, date_close__year=year, date_close__month=month)
+        tklog_dung_han = TicketLog.objects.filter(action='đóng yêu cầu', ticketid__in=tk_dung_han)
+        tklog_sai_han = TicketLog.objects.filter(action='đóng yêu cầu', ticketid__in=tk_sai_han)
+        tkid_dung = [tk.ticketid for tk in tklog_dung_han]
+        tkid_qua = []
+        tkid_cham = []
+        open_tk = ['nhận xử lý yêu cầu', 'xử lý lại yêu cầu', 'mở lại yêu cầu',
+                   "nhận xử lý yêu cầu được giao từ quản trị viên",
+                   'tạo mới và tự xử lý yêu cầu']
+        for tk in tklog_sai_han:
+            tkid = tk.ticketid
+            tik = TicketLog.objects.filter(action__in=open_tk, ticketid=tkid).order_by("-id")
+            if len(tik) == 0:
+                continue
+            else:
+                date_open = timezone.datetime.combine(tik[0].date, tik[0].time).replace(tzinfo=utc)
+                date_end = tk.ticketid.dateend
+                if date_open <= date_end:
+                    tkid_cham.append(tk.ticketid)
+                else:
+                    tkid_qua.append(tk.ticketid)
+        dung = TicketAgent.objects.filter(ticketid__in=tkid_dung).count()
+        cham = TicketAgent.objects.filter(ticketid__in=tkid_cham).count()
+        qua = TicketAgent.objects.filter(ticketid__in=tkid_qua).count()
+        data = [dung, cham, qua]
+    else:
+        data = [0, 0, 0]
+    datasets = [{"label": 'Sự cố',
+                 "backgroundColor": [
+                    'rgba(255,127,80, 0.5)',
+                    'rgba(0, 255, 0, 0.5)',
+                    'rgba(0, 0, 255, 0.5)',
+                    ],
+                 "borderColor": [
+                    'rgba(255,127,80, 1)',
+                    'rgba(0, 255, 0, 1)',
+                    'rgba(0, 0, 255, 1)',
+                    ],
+                 "data": data,
+                 "fill": 'false',
+                 }]
+    big_data = {
+        "labels": ['Đúng hạn', 'Chậm', 'Quá hạn'],
+        "datasets": datasets,
+    }
+    return JsonResponse(big_data, safe=False)
 
 
 def leader_manage_agent(request):
@@ -490,7 +773,6 @@ def leader_profile(request):
                                                         'leader': agent})
     else:
         return redirect("/")
-
 
 
 def leader_to_agent(request):
