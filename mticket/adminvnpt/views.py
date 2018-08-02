@@ -30,149 +30,259 @@ allchar = string.ascii_letters + string.digits
 def home_admin(request):
     if request.session.has_key('admin'):
         admin = Agents.objects.get(username=request.session['admin'])
-        agent = Agents.objects.exclude(username=request.session['admin'])
-        agent_total = Agents.objects.count()
-        tk_processing = Tickets.objects.filter(Q(status=1) | Q(status=2)).count()
-        tk_done = Tickets.objects.filter(status=3).count()
-        tk_open = Tickets.objects.filter(status=0).count()
-        tp = Services.objects.all()
-        content = {'ticket': Tickets.objects.filter().order_by("-id"),
-                   'service': tp,
-                   'handler': TicketAgent.objects.all(),
+        content = {
                    'admin': admin,
                    'today': timezone.now().date(),
-                   'agent': agent,
                    'agent_name': mark_safe(json.dumps(admin.username)),
                    'fullname': mark_safe(json.dumps(admin.fullname)),
-                   'agent_total': agent_total,
-                   'tk_open': tk_open,
-                   'tk_processing': tk_processing,
-                   'tk_done': tk_done}
-        if request.method == 'POST':
-            if 'close' in request.POST:
-                ticketid = request.POST['close']
-                tk = Tickets.objects.get(id=ticketid)
-                if tk.status == 3:
-                    if not TicketAgent.objects.filter(ticketid=tk):
-                        tk.status = 0
-                        action = "mở lại yêu cầu"
-                    else:
-                        tk.status = 1
-                        action = "xử lý lại yêu cầu"
-                else:
-                    tk.status = 3
-                    action = "đóng yêu cầu"
-                tk.save()
-                TicketLog.objects.create(agentid=admin, ticketid=tk,
-                                         action=action,
-                                         date=timezone.now().date(),
-                                         time=timezone.now().time())
-            elif 'delete' in request.POST:
-                ticketid = request.POST['delete']
-                tk = Tickets.objects.get(id=ticketid)
-                tk.delete()
-                try:
-                    os.remove(r'notification/chat/chat_'+ticketid+'.txt')
-                except:
-                    pass
-            elif 'ticketid' in request.POST:
-                list_agent = request.POST['list_agent[]']
-                list_agent = json.loads(list_agent)
-                ticketid = request.POST['ticketid']
-                if not list_agent:
-                    try:
-                        tk = Tickets.objects.get(id=ticketid)
-                        tkag1 = TicketAgent.objects.filter(ticketid=tk)
-                        tkag1.delete()
-                        tk.status = 0
-                        tk.save()
-                        action = "nhận yêu cầu được giao bởi (admin)" + admin.username
-                        tklog = TicketLog.objects.filter(action=action)
-                        tklog.delete()
-                    except:
-                        tk.status = 0
-                        tk.save()
-                else:
-                    try:
-                        tk = Tickets.objects.get(id=ticketid)
-                        tkag1 = TicketAgent.objects.filter(ticketid=tk)
-                        tkag1.delete()
-                        action = "nhận yêu cầu được giao bởi (admin)" + admin.username
-                        tklog = TicketLog.objects.filter(action=action)
-                        tklog.delete()
-                    except:
-                        pass
-                    for agentid in list_agent:
-                        agent = Agents.objects.get(username=agentid)
-                        tk = Tickets.objects.get(id=ticketid)
-                        tkag = TicketAgent(agentid=agent, ticketid=tk)
-                        tkag.save()
-                        tk.status = 1
-                        tk.save()
-                        action = "nhận yêu cầu được giao bởi (admin)" + admin.username
-                        if agent.receive_email == 1:
-                            email = EmailMessage(
-                                'Forward ticket',
-                                render_to_string('agent/mail/forward_mail_leader.html',
-                                                 {'receiver': agent,
-                                                  'domain': (get_current_site(request)).domain,
-                                                  'sender': 'Leader'}),
-                                to=[agent.email],
-                            )
-                            thread = EmailThread(email)
-                            thread.start()
-                        TicketLog.objects.create(agentid=agent, ticketid=tk,
-                                                 action=action,
-                                                 date=timezone.now().date(),
-                                                 time=timezone.now().time())
+                   }
         return render(request, 'admin/chart.html', content)
     else:
         return redirect('/')
 
 
-def home_admin_data(request):
-    if request.session.has_key('admin'):
-        tk = Tickets.objects.filter().order_by("-id")
-        data = []
-        for tk in tk:
-            content = r'<a data-toggle="collapse" data-target="#content' + str(tk.id) + '">' + str(
-                tk.content[:16]) + '...</a><br><div id="content' + str(
-                tk.id) + '" class="collapse">' + tk.content + '</div>'
-            # if tk.attach != '':
-            #     attach = r'<a class="fa fa-image" data-title="' + str(
-            #         tk.attach) + '" data-toggle="modal" data-target="#image" id="' + str(tk.id) + '"></a>'
-            # else:
-            #     attach = ''
-            if tk.status == 0:
-                status = r'<span class ="label label-danger" id="leader'+str(tk.id)+'">Chờ</span>'
-                handler = '<p hidden id="hd' + str(tk.id) + '">Không có ai</p>'
-            else:
-                if tk.status == 1:
-                    status = r'<span class ="label label-warning" id="leader'+str(tk.id)+'">Đang xử lý</span>'
-                elif tk.status == 2:
-                    status = r'<span class ="label label-success" id="leader'+str(tk.id)+'">Hoàn thành</span>'
+def home_admin_data_line_year(request, year):
+    year_now = int(timezone.now().year)
+    month_now = int(timezone.now().month)
+    labels = []
+    data = []
+    if year == year_now:
+        for i in range(1, month_now+1):
+            labels.append('Tháng ' + str(i))
+            data.append(Tickets.objects.filter(date_close__year=year, date_close__month=i, status=3).count())
+    elif year < year_now:
+        for i in range(1, 13):
+            labels.append('Tháng ' + str(i))
+            data.append(Tickets.objects.filter(date_close__year=year, date_close__month=i, status=3).count())
+    else:
+        for i in range(1, 13):
+            labels.append('Tháng ' + str(i))
+            data.append(0)
+    datasets = [{"label": 'Sự cố',
+                 "backgroundColor": 'rgba(255, 0, 0, 1)',
+                 "borderColor": 'rgba(255, 0, 0, 0.4)',
+                 "data": data,
+                 "fill": 'false',
+                 }]
+    big_data = {
+        "labels": labels,
+        "datasets": datasets,
+    }
+    return JsonResponse(big_data, safe=False)
+
+
+def home_admin_data_line_month(request, month, year):
+    day_now = int(timezone.now().day)
+    year_now = int(timezone.now().year)
+    month_now = int(timezone.now().month)
+    labels = []
+    data = []
+    if year == year_now:
+        if month == month_now:
+            for i in range(1, day_now+1):
+                labels.append('Ngày ' + str(i))
+                data.append(Tickets.objects.filter(date_close__year=year, date_close__month=month, date_close__day=i,
+                                                   status=3).count())
+        elif month < month_now:
+            if month in [1, 3, 5, 7, 8, 10, 12]:
+                day_range = 31
+            elif month == 2:
+                if year%4 == 0:
+                    day_range = 29
                 else:
-                    status = r'<span class ="label label-default" id="leader'+str(tk.id)+'">Đóng</span>'
-                handler = '<p hidden id="hd' + str(tk.id) + '">'
-                for t in TicketAgent.objects.filter(ticketid=tk.id):
-                    handler += t.agentid.username + "<br>"
-                handler += '</p>'
-            for t in TicketAgent.objects.filter(ticketid=tk.id):
-                handler += t.agentid.fullname + '<br>'
-            # if tk.lv_priority == 0:
-            #     level = r'<span class ="label label-success"> Thấp </span>'
-            # elif tk.lv_priority == 1:
-            #     level = r'<span class ="label label-warning"> Trung bình </span>'
-            # else:
-            #     level = r'<span class ="label label-danger"> Cao </span>'
-            downtime = '''<span class="downtime label label-danger" id="downtime-'''+str(tk.id)+'''"></span>'''
-            id = r'''<button type="button" class="btn" data-toggle="modal" data-target="#'''+str(tk.id)+'''content">'''+str(tk.id)+'''</button>'''
-            sender = '<p hidden id="sender' + str(tk.id) + '">' + tk.sender.username + '</p>'+ tk.sender.fullname
-            service = '<p id="tp' + str(tk.id) + '">' + tk.serviceid.name + '</p>'
-            data.append([id, sender, tk.loai_su_co, service, content, downtime, status, handler])
-        ticket = {"data": data}
-        tickets = json.loads(json.dumps(ticket))
-        return JsonResponse(tickets, safe=False)
+                    day_range = 28
+            else:
+                day_range = 30
+            for i in range(1, day_range+1):
+                labels.append('Ngày ' + str(i))
+                data.append(Tickets.objects.filter(date_close__year=year, date_close__month=month,
+                                                   date_close__day=i, status=3).count())
+        else:
+            if month in [1, 3, 5, 7, 8, 10, 12]:
+                day_range = 31
+            elif month == 2:
+                if year%4 == 0:
+                    day_range = 29
+                else:
+                    day_range = 28
+            else:
+                day_range = 30
+            for i in range(1, day_range+1):
+                labels.append('Ngày ' + str(i))
+                data.append(0)
+    elif year < year_now:
+        if month in [1, 3, 5, 7, 8, 10, 12]:
+            day_range = 31
+        elif month == 2:
+            if year % 4 == 0:
+                day_range = 29
+            else:
+                day_range = 28
+        else:
+            day_range = 30
+        for i in range(1, day_range + 1):
+            labels.append('Ngày ' + str(i))
+            data.append(Tickets.objects.filter(date_close__year=year, date_close__month=month,
+                                               date_close__day=i, status=3).count())
+    else:
+        if month in [1, 3, 5, 7, 8, 10, 12]:
+            day_range = 31
+        elif month == 2:
+            if year % 4 == 0:
+                day_range = 29
+            else:
+                day_range = 28
+        else:
+            day_range = 30
+        for i in range(1, day_range + 1):
+            labels.append('Ngày ' + str(i))
+            data.append(0)
+    datasets = [{"label": 'Sự cố',
+                 "backgroundColor": 'rgba(255, 0, 0, 1)',
+                 "borderColor": 'rgba(255, 0, 0, 0.4)',
+                 "data": data,
+                 "fill": 'false',
+                 }]
+    big_data = {
+        "labels": labels,
+        "datasets": datasets,
+    }
+    return JsonResponse(big_data, safe=False)
+
+
+def home_admin_data_pie_year(request, year):
+    year_now = int(timezone.now().year)
+    if year <= year_now:
+        tk_dung_han = Tickets.objects.filter(expired=0, status=3, date_close__year=year)
+        tk_sai_han = Tickets.objects.filter(expired=1, status=3, date_close__year=year)
+        tklog_dung_han = TicketLog.objects.filter(action='đóng yêu cầu', ticketid__in=tk_dung_han)
+        tklog_sai_han = TicketLog.objects.filter(action='đóng yêu cầu', ticketid__in=tk_sai_han)
+        tkid_dung = [tk.ticketid for tk in tklog_dung_han]
+        tkid_qua = []
+        tkid_cham = []
+        open_tk = ['nhận xử lý yêu cầu', 'xử lý lại yêu cầu', 'mở lại yêu cầu',
+                   "nhận xử lý yêu cầu được giao từ quản trị viên",
+                   'tạo mới và tự xử lý yêu cầu']
+        for tk in tklog_sai_han:
+            tkid = tk.ticketid
+            tik = TicketLog.objects.filter(action__in=open_tk, ticketid=tkid).order_by("-id")
+            if len(tik) == 0:
+                continue
+            else:
+                date_open = timezone.datetime.combine(tik[0].date, tik[0].time).replace(tzinfo=utc)
+                date_end = tk.ticketid.dateend
+                if date_open <= date_end:
+                    tkid_cham.append(tk.ticketid)
+                else:
+                    tkid_qua.append(tk.ticketid)
+        dung = TicketAgent.objects.filter(ticketid__in=tkid_dung).count()
+        cham = TicketAgent.objects.filter(ticketid__in=tkid_cham).count()
+        qua = TicketAgent.objects.filter(ticketid__in=tkid_qua).count()
+        data = [dung, cham, qua]
+    else:
+        data = [0, 0, 0]
+    datasets = [{"label": 'Sự cố',
+                 "backgroundColor": [
+                    'rgba(255,127,80, 0.5)',
+                    'rgba(0, 255, 0, 0.5)',
+                    'rgba(0, 0, 255, 0.5)',
+                    ],
+                 "borderColor": [
+                    'rgba(255,127,80, 1)',
+                    'rgba(0, 255, 0, 1)',
+                    'rgba(0, 0, 255, 1)',
+                    ],
+                 "data": data,
+                 "fill": 'false',
+                 }]
+    big_data = {
+        "labels": ['Đúng hạn', 'Chậm', 'Quá hạn'],
+        "datasets": datasets,
+    }
+    return JsonResponse(big_data, safe=False)
+
+
+def home_admin_data_pie_month(request, month, year):
+    year_now = int(timezone.now().year)
+    month_now = int(timezone.now().month)
+    if year == year_now:
+        if month <= month_now:
+            tk_dung_han = Tickets.objects.filter(expired=0, status=3, date_close__year=year, date_close__month=month)
+            tk_sai_han = Tickets.objects.filter(expired=1, status=3, date_close__year=year, date_close__month=month)
+            tklog_dung_han = TicketLog.objects.filter(action='đóng yêu cầu', ticketid__in=tk_dung_han)
+            tklog_sai_han = TicketLog.objects.filter(action='đóng yêu cầu', ticketid__in=tk_sai_han)
+            tkid_dung = [tk.ticketid for tk in tklog_dung_han]
+            tkid_qua = []
+            tkid_cham = []
+            open_tk = ['nhận xử lý yêu cầu', 'xử lý lại yêu cầu', 'mở lại yêu cầu',
+                       "nhận xử lý yêu cầu được giao từ quản trị viên",
+                       'tạo mới và tự xử lý yêu cầu']
+            for tk in tklog_sai_han:
+                tkid = tk.ticketid
+                tik = TicketLog.objects.filter(action__in=open_tk, ticketid=tkid).order_by("-id")
+                if len(tik) == 0:
+                    continue
+                else:
+                    date_open = timezone.datetime.combine(tik[0].date, tik[0].time).replace(tzinfo=utc)
+                    date_end = tk.ticketid.dateend
+                    if date_open <= date_end:
+                        tkid_cham.append(tk.ticketid)
+                    else:
+                        tkid_qua.append(tk.ticketid)
+            dung = TicketAgent.objects.filter(ticketid__in=tkid_dung).count()
+            cham = TicketAgent.objects.filter(ticketid__in=tkid_cham).count()
+            qua = TicketAgent.objects.filter(ticketid__in=tkid_qua).count()
+            data = [dung, cham, qua]
+        else:
+            data = [0, 0, 0]
+    elif year < year_now:
+        tk_dung_han = Tickets.objects.filter(expired=0, status=3, date_close__year=year, date_close__month=month)
+        tk_sai_han = Tickets.objects.filter(expired=1, status=3, date_close__year=year, date_close__month=month)
+        tklog_dung_han = TicketLog.objects.filter(action='đóng yêu cầu', ticketid__in=tk_dung_han)
+        tklog_sai_han = TicketLog.objects.filter(action='đóng yêu cầu', ticketid__in=tk_sai_han)
+        tkid_dung = [tk.ticketid for tk in tklog_dung_han]
+        tkid_qua = []
+        tkid_cham = []
+        open_tk = ['nhận xử lý yêu cầu', 'xử lý lại yêu cầu', 'mở lại yêu cầu',
+                   "nhận xử lý yêu cầu được giao từ quản trị viên",
+                   'tạo mới và tự xử lý yêu cầu']
+        for tk in tklog_sai_han:
+            tkid = tk.ticketid
+            tik = TicketLog.objects.filter(action__in=open_tk, ticketid=tkid).order_by("-id")
+            if len(tik) == 0:
+                continue
+            else:
+                date_open = timezone.datetime.combine(tik[0].date, tik[0].time).replace(tzinfo=utc)
+                date_end = tk.ticketid.dateend
+                if date_open <= date_end:
+                    tkid_cham.append(tk.ticketid)
+                else:
+                    tkid_qua.append(tk.ticketid)
+        dung = TicketAgent.objects.filter(ticketid__in=tkid_dung).count()
+        cham = TicketAgent.objects.filter(ticketid__in=tkid_cham).count()
+        qua = TicketAgent.objects.filter(ticketid__in=tkid_qua).count()
+        data = [dung, cham, qua]
+    else:
+        data = [0, 0, 0]
+    datasets = [{"label": 'Sự cố',
+                 "backgroundColor": [
+                    'rgba(255,127,80, 0.5)',
+                    'rgba(0, 255, 0, 0.5)',
+                    'rgba(0, 0, 255, 0.5)',
+                    ],
+                 "borderColor": [
+                    'rgba(255,127,80, 1)',
+                    'rgba(0, 255, 0, 1)',
+                    'rgba(0, 0, 255, 1)',
+                    ],
+                 "data": data,
+                 "fill": 'false',
+                 }]
+    big_data = {
+        "labels": ['Đúng hạn', 'Chậm', 'Quá hạn'],
+        "datasets": datasets,
+    }
+    return JsonResponse(big_data, safe=False)
 
 
 def logout_admin(request):

@@ -28,10 +28,10 @@
                             </div>
                             <div class="card-body" >
                                 <div style="margin: auto;width:100%;">
-                                    <div style="float:left;width:60%;" >
+                                    <div style="float:left;width:60%;" id="cha_1">
                                         <canvas id="bieu_do_1"></canvas>
                                     </div>
-                                    <div style="float:right;width:40%;">
+                                    <div style="float:right;width:40%;"id="cha_2">
                                         <canvas id="bieu_do_2"></canvas>
                                     </div>
                                 </div>
@@ -50,10 +50,10 @@
                             </div>
                             <div class="card-body" >
                                 <div style="margin: auto;width:100%;">
-                                    <div style="float:left;width:60%;" >
+                                    <div style="float:left;width:60%;" id="cha_3">
                                         <canvas id="bieu_do_3"></canvas>
                                     </div>
-                                    <div style="float:right;width:40%;">
+                                    <div style="float:right;width:40%;"id="cha_4">
                                         <canvas id="bieu_do_4"></canvas>
                                     </div>
                                 </div>
@@ -97,7 +97,7 @@
           <div class="modal-body">
                 {% csrf_token %}
                 <label for="content2">Năm</label>
-                <input class="form-control" type="number" name="year" value="{{today.year}}" min="2018" max="2050"><br/>
+                <input id="year_2" class="form-control" type="number" name="year" value="{{today.year}}" min="2018" max="2050"><br/>
                 <div id="invalid-date3"><font color="red"></font></div>
           </div>
           <div class="modal-footer">
