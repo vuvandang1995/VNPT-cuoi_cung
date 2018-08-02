@@ -99,7 +99,7 @@ def home_agent_data(request):
                 attach = r'<a class="fa fa-image" data-title="' + str(tk.attach) + '" data-toggle="modal" data-target="#image" id="' + str(tk.id)+'"></a>'
             else:
                 attach = ''
-            datestart = tk.datestart + timezone.timedelta(hours=7)
+            datestart = r'<p>'+ str(tk.datestart + timezone.timedelta(hours=7))[:-16] +'</p>'
             dateend = r'<p id="dateend' + str(tk.id) + '">'+ str(tk.dateend + timezone.timedelta(hours=7))[:-16] +'</p>'
             downtime = '''<p class="downtime" id="downtime-''' + str(tk.id) + '''"></p>'''
             if tk.status == 0:
@@ -112,7 +112,7 @@ def home_agent_data(request):
                 status = r'<span class ="label label-default"> Đóng </span>'
             option = '<button type="button" class="btn btn-success assign_ticket" id="' + str(tk.id) + '">Nhận</button><input id="user_name'+str(tk.id)+'" type="hidden" value="'+ tk.sender.username+'">'
             data.append([tk.id, client, tk.serviceid.name, tk.loai_su_co, content, tk.thong_so_kt,
-                         attach, str(datestart)[:-16], dateend, downtime, status, tk.sender.fullname, option])
+                         attach, datestart, dateend, downtime, status, tk.sender.fullname, option])
         ticket = {"data": data}
         tickets = json.loads(json.dumps(ticket))
         return JsonResponse(tickets, safe=False)

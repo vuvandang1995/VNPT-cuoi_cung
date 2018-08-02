@@ -154,6 +154,11 @@
         <source src="{% static 'ping.mp3' %}" type="audio/mpeg">
     </audio>
 <script>
+        $(".sidebar-nav").hover(function(){
+            $(".left-sidebar").css("width", "260px");
+        }, function(){
+            $(".left-sidebar").css("width", "auto");
+        });
     var agentName = {{ agent_name }};
     var group_agent_Socket = new WebSocket(
         'ws://' + window.location.host +

@@ -301,7 +301,7 @@ def homeuser_data_tu_xu_ly(request):
             else:
                 attach = ''
             option = '''<div class="btn-group"><button type="button" class="btn btn-danger close_ticket_txl" data-toggle="tooltip" title="đóng" id="''' + str(tk.ticketid.id) + '''" ><span class="glyphicon glyphicon-off"></span></button>'''
-            option += '''<button type="button" class="btn btn-primary send_ticket" data-toggle="tooltip" title="gửi" id="''' + str(tk.ticketid.id) + '''" ><span class="glyphicon glyphicon-send"></span></button>'''
+            option += '''<button type="button" class="btn btn-primary send_ticket" data-toggle="tooltip" title="gửi" id="''' + tk.ticketid.serviceid.name + '''!'''+  str(tk.ticketid.id) + '''" ><span class="glyphicon glyphicon-send"></span></button>'''
             option += '''<a type="button" target=_blank class="btn btn-warning" href="/user/history_'''+str(tk.ticketid.id)+ '''" data-toggle="tooltip" title="dòng thời gian"><i class="fa fa-history"></i></a></div>'''
             datestart = tk.ticketid.datestart + timezone.timedelta(hours=7)
             dateend = r'<p id="dateend' + str(tk.ticketid.id) + '">'+ str(tk.ticketid.dateend + timezone.timedelta(hours=7))[:-16] +'</p>'
@@ -341,9 +341,12 @@ def homeuser_data_gui_di(request):
                     status = r'<span class ="label label-success"> Hoàn thành </span>'
                 else:
                     status = r'<span class ="label label-default"> Đóng </span>'
-                handler = '<p id="hd' + str(tk.id) + '">'
+                handler = '<p>'
                 for t in TicketAgent.objects.filter(ticketid=tk.id):
                     handler += t.agentid.fullname + "<br>"
+                handler += '</p><p hidden id="hd' + str(tk.id) + '">'
+                for t in TicketAgent.objects.filter(ticketid=tk.id):
+                    handler += t.agentid.username + "<br>"
                 handler += '</p>'
             option = ''
             if tk.status < 3:

@@ -281,7 +281,8 @@ def home_leader_data(request, servicename):
             # if tk.expired == 1:
             #     status += r'<br><span class ="label label-danger"> Quá hạn </span>'
             dateend = tk.dateend + timezone.timedelta(hours=7)
-            data.append([idtk, tk.loai_su_co, service, status, level, downtime, sender, handler, str(dateend)[:-16], option])
+            dateend = r'<p id="dateend' + str(tk.id) + '">'+ str(tk.dateend + timezone.timedelta(hours=7))[:-16] +'</p>'
+            data.append([idtk, tk.loai_su_co, service, status, level, downtime, sender, handler, dateend, option])
         ticket = {"data": data}
         tickets = json.loads(json.dumps(ticket))
         return JsonResponse(tickets, safe=False)

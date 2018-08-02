@@ -1,19 +1,19 @@
 $(document).ready(function(){
     var table = $('#list_tk_tu_xu_ly').DataTable({
         "columnDefs": [
-//                    { "width": "2%", "targets": 0 },
-//                    { "width": "12%", "targets": 1 },
-//                    { "width": "12%", "targets": 2 },
-//                    { "width": "12%", "targets": 3 },
-//                    { "width": "14%", "targets": 4 },
-//                    { "width": "6%", "targets": 5 },
-//                    { "width": "8%", "targets": 6 },
-//                    { "width": "8%", "targets": 7 },
-//                    { "width": "8%", "targets": 8 },
-//                    { "width": "6%", "targets": 9 },
-//                    { "width": "12%", "targets": 10 },
-                    { "width": "12%", "targets": 11 },
-                ],
+            { "width": "5%", "targets": 0 },
+            { "width": "10%", "targets": 1 },
+            { "width": "10%", "targets": 2 },
+            { "width": "10%", "targets": 3 },
+            { "width": "10%", "targets": 4 },
+            { "width": "5%", "targets": 5 },
+            { "width": "3%", "targets": 6 },
+            { "width": "10%", "targets": 7 },
+            { "width": "10%", "targets": 8 },
+            { "width": "7%", "targets": 9 },
+            { "width": "5%", "targets": 10 },
+            { "width": "15%", "targets": 11 },
+        ],
         "ajax": {
             "type": "GET",
             "url": location.href +"tu_xu_ly",
@@ -34,19 +34,19 @@ $(document).ready(function(){
     });
     var table = $('#list_tk_gui_di').DataTable({
         "columnDefs": [
-//                    { "width": "2%", "targets": 0 },
-//                    { "width": "11%", "targets": 1 },
-//                    { "width": "10%", "targets": 2 },
-//                    { "width": "10%", "targets": 3 },
-//                    { "width": "11%", "targets": 4 },
-//                    { "width": "6%", "targets": 5 },
-//                    { "width": "7%", "targets": 6 },
-//                    { "width": "7%", "targets": 7 },
-//                    { "width": "7%", "targets": 8 },
-//                    { "width": "6%", "targets": 9 },
-//                    { "width": "11%", "targets": 10 },
-//                    { "width": "11%", "targets": 11 },
-                    { "width": "12%", "targets": 12 },
+                    { "width": "5%", "targets": 0 },
+                    { "width": "10%", "targets": 1 },
+                    { "width": "5%", "targets": 2 },
+                    { "width": "10%", "targets": 3 },
+                    { "width": "10%", "targets": 4 },
+                    { "width": "5%", "targets": 5 },
+                    { "width": "3%", "targets": 6 },
+                    { "width": "10%", "targets": 7 },
+                    { "width": "10%", "targets": 8 },
+                    { "width": "7%", "targets": 9 },
+                    { "width": "5%", "targets": 10 },
+                    { "width": "5%", "targets": 11 },
+                    { "width": "15%", "targets": 12 },
                 ],
 
         "ajax": {
@@ -67,6 +67,7 @@ $(document).ready(function(){
         "order": [[ 0, "desc" ]],
         "displayLength": 25,
     });
+
     $('#invalid-msg').html("");
     function validateSize(){
         if(($("#attach"))[0].files[0].size > 10485760){
@@ -81,21 +82,39 @@ $(document).ready(function(){
         $("input[name=kind]").val(title);
     });
     $("#id02").submit(function() {
-        var chatSocket1 = new WebSocket(
-        'ws://' + window.location.host +
-        '/ws/agent/agent+group_agent_Socket/');
-        var message = '';
-        var topic = document.getElementById("mySelect").value;
-        var topic_name = $("#mySelect option[value='"+topic+"']").val();
-        message = 'Bạn có một yêu cầu mới!'+topic_name;
+        var type = $("input[name=kind]").val();
+        if (type == 'gui_di'){
+            var chatSocket1 = new WebSocket(
+            'ws://' + window.location.host +
+            '/ws/agent/agent+group_agent_Socket/');
+            var message = '';
+            var topic = document.getElementById("mySelect").value;
+            var topic_name = $("#mySelect option[value='"+topic+"']").val();
+            message = 'Bạn có một yêu cầu mới!'+topic_name;
+    
+            var date = formatAMPM(new Date());
+            chatSocket1.onopen = function (event) {
+                chatSocket1.send(JSON.stringify({
+                    'message' : message,
+                    'time' : date
+                }));
+            };
+        }else{
+            var chatSocket1 = new WebSocket(
+            'ws://' + window.location.host +
+            '/ws/agent/agent+group_agent_Socket/');
+            var message = '';
+            message = 'load';
+    
+            var date = formatAMPM(new Date());
+            chatSocket1.onopen = function (event) {
+                chatSocket1.send(JSON.stringify({
+                    'message' : message,
+                    'time' : date
+                }));
+            };
+        }
 
-        var date = formatAMPM(new Date());
-        chatSocket1.onopen = function (event) {
-            chatSocket1.send(JSON.stringify({
-                'message' : message,
-                'time' : date
-            }));
-        };
     });
     $("#image").on('show.bs.modal', function(event){
         var button = $(event.relatedTarget);
@@ -115,39 +134,28 @@ $(document).ready(function(){
                 data: {'tkid':id, 'csrfmiddlewaretoken':token},
                 success: function(){
                     $("#list_tk_tu_xu_ly").DataTable().ajax.reload();
-//                    countdowntime();
-//                    var array = $('#hd'+id).html().split("<br>");
-//                    for (i = 0; i < array.length-1; i++) {
-//                        var agentName = array[i].replace(/\s/g,'');
-//                        message.push(agentName);
-//                    }
-//
-//                    message.push(mgs);
-//                    var date = formatAMPM(new Date());
-//                    var chatSocket1 = new WebSocket(
-//                    'ws://' + window.location.host +
-//                    '/ws/agent/agent+group_agent_Socket/');
-//                    chatSocket1.onopen = function (event) {
-//                        chatSocket1.send(JSON.stringify({
-//                            'message' : message,
-//                            'time': date
-//                        }));
-//
-//                        chatSocket1.send(JSON.stringify({
-//                            'message' : 'reload_home_agent',
-//                            'time': date
-//                        }));
-//                    };
+                    var chatSocket1 = new WebSocket(
+                    'ws://' + window.location.host +
+                    '/ws/agent/agent+group_agent_Socket/');
+                    var message = '';
+                    message = 'load';
+            
+                    var date = formatAMPM(new Date());
+                    chatSocket1.onopen = function (event) {
+                        chatSocket1.send(JSON.stringify({
+                            'message' : message,
+                            'time' : date
+                        }));
+                    };
                 }
             });
         }
     });
 
     $('body').on('click', '.send_ticket', function(){
-        var id = $(this).attr('id');
+        var id = $(this).attr('id').split('!')[1];
+        var topic_name = $(this).attr('id').split('!')[0];
         var token = $("input[name=csrfmiddlewaretoken]").val();
-//        var mgs = 'Yêu cầu số ' +id+' được đóng bởi '+userName;
-//        var message = []
         if(confirm("Bạn có chắc không ?")){
             $.ajax({
                 type:'POST',
@@ -155,30 +163,19 @@ $(document).ready(function(){
                 data: {'tkid_send':id, 'csrfmiddlewaretoken':token},
                 success: function(){
                     // window.location.reload();
+                    var chatSocket1 = new WebSocket(
+                    'ws://' + window.location.host +
+                    '/ws/agent/agent+group_agent_Socket/');
+                    var message = '';
+                    message = 'Bạn có một yêu cầu mới!'+topic_name;
+                    var date = formatAMPM(new Date());
+                    chatSocket1.onopen = function (event) {
+                        chatSocket1.send(JSON.stringify({
+                            'message' : message,
+                            'time' : date
+                        }));
+                    };
                     $(".table").DataTable().ajax.reload();
-//                    countdowntime();
-//                    var array = $('#hd'+id).html().split("<br>");
-//                    for (i = 0; i < array.length-1; i++) {
-//                        var agentName = array[i].replace(/\s/g,'');
-//                        message.push(agentName);
-//                    }
-//
-//                    message.push(mgs);
-//                    var date = formatAMPM(new Date());
-//                    var chatSocket1 = new WebSocket(
-//                    'ws://' + window.location.host +
-//                    '/ws/agent/agent+group_agent_Socket/');
-//                    chatSocket1.onopen = function (event) {
-//                        chatSocket1.send(JSON.stringify({
-//                            'message' : message,
-//                            'time': date
-//                        }));
-//
-//                        chatSocket1.send(JSON.stringify({
-//                            'message' : 'reload_home_agent',
-//                            'time': date
-//                        }));
-//                    };
                 }
             });
         }
@@ -198,7 +195,6 @@ $(document).ready(function(){
                 success: function(){
                     // window.location.reload();
                     $("#list_tk_gui_di").DataTable().ajax.reload();
-                    countdowntime();
                     var array = $('#hd'+id).html().split("<br>");
                     for (i = 0; i < array.length-1; i++) {
                         var agentName = array[i].replace(/\s/g,'');
