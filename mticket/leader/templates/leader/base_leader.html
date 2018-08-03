@@ -231,13 +231,13 @@
                 // If the count down is over, write some text 
                 if (distance < 0) {
                     clearInterval(x);
-                    document.getElementById("downtime-"+tkid).innerHTML = "Hết hạn";
+                    document.getElementById("downtime-"+tkid).innerHTML = "Hết thời gian";
                 }else{
                     document.getElementById("downtime-"+tkid).innerHTML = days + "ngày " + hours + "giờ "
     + minutes + "phút " + seconds + "giây ";
                     if (distance < 0) {
                         clearInterval(x);
-                        document.getElementById("downtime-"+tkid).innerHTML = "Hết hạn";
+                        document.getElementById("downtime-"+tkid).innerHTML = "Hết thời gian";
                     }
                 }
             }, 1000);

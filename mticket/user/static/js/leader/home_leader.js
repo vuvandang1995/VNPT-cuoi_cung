@@ -23,7 +23,7 @@ $(document).ready(function(){
                 "complete": function(){
                     setTimeout(function(){
                         countdowntime();
-                    }, 2000);
+                    }, 4000);
                 }
             },
             "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
@@ -115,6 +115,7 @@ $(document).ready(function(){
                     }
                 }
             });
+            
         }
     });
 
