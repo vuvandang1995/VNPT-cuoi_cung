@@ -13,7 +13,7 @@ $(document).ready(function(){
         var phone = $("body #phone_user").html();
         $("body input[name=phone]").val(phone);
 
-        if ($('body #rc_email').html() == 'Yes'){
+        if ($('body #rc_email').html() == 'Có'){
             $('body #topicModal input:checkbox').prop('checked', true);
         }else{
             $('body #topicModal input:checkbox').prop('checked', false);

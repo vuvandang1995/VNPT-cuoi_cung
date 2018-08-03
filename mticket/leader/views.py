@@ -263,7 +263,10 @@ def home_leader_data(request, servicename):
                 elif tk.status == 2:
                     status = r'<span class ="label label-success" id="leader' + str(tk.id) + '">Hoàn thành</span>'
                 else:
-                    status = r'<span class ="label label-default" id="leader' + str(tk.id) + '">Đóng</span>'
+                    if tk.expired == 0:
+                        status = r'<span class ="label label-default" id="leader' + str(tk.id) + '">Đóng</span></br><span class ="label label-info">Đúng hạn</span>'
+                    else:
+                        status = r'<span class ="label label-default" id="leader' + str(tk.id) + '">Đóng</span></br><span class ="label label-warning">Quá hạn</span>'
                 handler = '<p hidden id="hd' + str(tk.id) + '">'
                 for t in TicketAgent.objects.filter(ticketid=tk.id):
                     handler += t.agentid.username + "<br>"
