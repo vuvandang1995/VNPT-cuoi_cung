@@ -251,6 +251,12 @@ def home_leader_data(request, servicename):
             if tk.status == 0:
                 status = r'<span class ="label label-danger" id="leader' + str(tk.id) + '">Chờ</span>'
                 handler = '<p id="hd' + str(tk.id) + '">Nobody</p>'
+                option = r'''<button type="button" class="btn btn-primary" id="''' + str(tk.id) + '''" data-toggle="tooltip" title="Mở / Đóng yêu cầu"><i class="fa fa-power-off"></i></button>
+                        <button type="button" class="btn btn-danger" id="''' + str(tk.id) + '''" data-toggle="tooltip" title="Xóa yêu cầu"><i class="fa fa-trash-o"></i></button>
+                        <button type="button" class="btn btn-info" data-title="forward" id="'''+str(tk.id)+'''"data-toggle="modal" data-target="#forward_modal"><i class="fa fa-share-square-o" data-toggle="tooltip" title="Chuyển tiếp" ></i></button>
+                        <button type="button" class="btn btn-success" data-title="change" id="''' + str(tk.id) + '''"data-toggle="modal" data-target="#change_modal"><i class="fa fa-arrow-right" data-toggle="tooltip" title="Chuyển đổi dịch vụ" ></i></button>
+                        <a type="button" target=_blank class="btn btn-warning" href="/agent/history/''' + str(tk.id) + '''" data-toggle="tooltip" title="Dòng thời gian"><i class="fa fa-history"></i></a>'''
+                
             else:
                 if tk.status == 1:
                     status = r'<span class ="label label-warning" id="leader' + str(tk.id) + '">Đang xử lý</span>'
@@ -265,6 +271,11 @@ def home_leader_data(request, servicename):
                 for t in TicketAgent.objects.filter(ticketid=tk.id):
                     handler += t.agentid.fullname + "<br>"
                 handler += '</p>'
+                option = r'''<button type="button" class="btn btn-primary" id="''' + str(tk.id) + '''" data-toggle="tooltip" title="Mở / Đóng yêu cầu"><i class="fa fa-power-off"></i></button>
+                        <button type="button" class="btn btn-danger" id="''' + str(tk.id) + '''" data-toggle="tooltip" title="Xóa yêu cầu"><i class="fa fa-trash-o"></i></button>
+                        <button type="button" class="btn btn-info" data-title="forward" id="'''+str(tk.id)+'''"data-toggle="modal" data-target="#forward_modal"><i class="fa fa-share-square-o" data-toggle="tooltip" title="Chuyển tiếp" ></i></button>
+                        <button disabled type="button" class="btn btn-success" data-title="change" id="''' + str(tk.id) + '''"data-toggle="modal" data-target="#change_modal"><i class="fa fa-arrow-right" data-toggle="tooltip" title="Chỉ có thể chuyển đổi dịch vụ khi yêu cầu đang chờ" ></i></button>
+                        <a type="button" target=_blank class="btn btn-warning" href="/agent/history/''' + str(tk.id) + '''" data-toggle="tooltip" title="Dòng thời gian"><i class="fa fa-history"></i></a>'''
             downtime = '''<span class="downtime label label-danger" id="downtime-'''+str(tk.id)+'''"></span>'''
             idtk = r'''<button type="button" class="btn" data-toggle="modal" data-target="#''' + str(
                 tk.id) + '''content">''' + str(tk.id) + '''</button>'''
@@ -276,11 +287,7 @@ def home_leader_data(request, servicename):
             else:
                 level = r'<span class ="label label-danger"> Cao </span>'
             sender = '<p hidden id="sender' + str(tk.id) + '">' + tk.sender.username + '</p><p>' + tk.sender.fullname + '</p>'
-            option = r'''<button type="button" class="btn btn-primary" id="''' + str(tk.id) + '''" data-toggle="tooltip" title="Mở / Đóng yêu cầu"><i class="fa fa-power-off"></i></button>
-                        <button type="button" class="btn btn-danger" id="''' + str(tk.id) + '''" data-toggle="tooltip" title="Xóa yêu cầu"><i class="fa fa-trash-o"></i></button>
-                        <button type="button" class="btn btn-info" data-title="forward" id="'''+str(tk.id)+'''"data-toggle="modal" data-target="#forward_modal"><i class="fa fa-share-square-o" data-toggle="tooltip" title="Chuyển tiếp" ></i></button>
-                        <button type="button" class="btn btn-success" data-title="change" id="''' + str(tk.id) + '''"data-toggle="modal" data-target="#change_modal"><i class="fa fa-arrow-right" data-toggle="tooltip" title="Đổi chủ đề" ></i></button>
-                        <a type="button" target=_blank class="btn btn-warning" href="/agent/history/''' + str(tk.id) + '''" data-toggle="tooltip" title="Dòng thời gian"><i class="fa fa-history"></i></a>'''
+            
             # if tk.expired == 1:
             #     status += r'<br><span class ="label label-danger"> Quá hạn </span>'
             dateend = tk.dateend + timezone.timedelta(hours=7)

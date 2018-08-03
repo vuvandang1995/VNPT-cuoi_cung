@@ -278,7 +278,7 @@ $(document).ready(function(){
                         'time' : date
                     }));
 
-                    message2 = 'Yêu cầu số  ' + id + ' đã được chuyển sang chủ đề  '+ topic_name + '!' +topic_old;
+                    message2 = 'Yêu cầu số  ' + id + ' đã được chuyển sang dịch vụ '+ topic_name + '!' +topic_old;
                     group_agent_Socket.send(JSON.stringify({
                         'message' : message2,
                         'time' : date
@@ -289,7 +289,7 @@ $(document).ready(function(){
                     'ws://' + window.location.host +
                     '/ws/user/' + sender + '/');
 
-                    message = 'Yêu cầu số  ' + id + ' đã được Quản trị viên chuyển sang chủ đề  '+ topic_name + '!';
+                    message = 'Yêu cầu số  ' + id + ' đã được Quản trị viên chuyển sang dịch vụ '+ topic_name + '!';
                     Socket1.onopen = function (event) {
                         setTimeout(function(){
                             Socket1.send(JSON.stringify({

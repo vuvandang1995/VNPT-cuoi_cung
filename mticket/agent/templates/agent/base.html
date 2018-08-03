@@ -290,13 +290,13 @@
     if (noti_noti != 0){
         var noti = '<span class="heartbit"></span> <span class="point">';
         $('body .noti_fy').prepend(noti);
-        $('body .noti_msg').html('You have '+noti_noti+' new notifications');
+        $('body .noti_msg').html('Bạn có '+noti_noti+' thông báo mới!');
     }
 
     if (noti_chat != 0){
         var noti = '<span class="heartbit"></span> <span class="point">';
         $('body .chat_noti').prepend(noti);
-        $('body .chat_msg').html('You have '+noti_chat+' new messages');
+        $('body .chat_msg').html('Bạn có '+noti_chat+' tin nhắn mới!');
     }
   
     
@@ -630,7 +630,7 @@
                 }
 
                 if (message[1].includes(agentName) && message.includes('admin_add_topic')) {
-                    var message1 = 'Leader đã thêm bạn vào xử lý chủ đề <b>'+message[0]+'</b>';
+                    var message1 = 'Leader đã thêm bạn vào xử lý dịch vụ <b>'+message[0]+'</b>';
                     var href = "{% url 'agent:profile' %}";
                     var noti = '<a href="'+href+'"><div class="btn btn-danger btn-circle m-r-10"><i class="fa fa-check"></i></div><div class="mail-contnet"><span class="mail-desc">'+message1+'</span> <span class="time">'+time+'</span></div></a>';
                     $('.noti_noti').prepend(noti);
@@ -670,7 +670,7 @@
                 }
 
                 if (message.includes(agentName) && message.includes('admin_delete_topic')) {
-                    var message1 = 'Leader đã xóa bạn khỏi dịch vụ<b>'+message[0]+'</b>';
+                    var message1 = 'Leader đã xóa bạn khỏi dịch vụ <b>'+message[0]+'</b>';
                     var href = "{% url 'agent:profile' %}";
                     var noti = '<a href="'+href+'"><div class="btn btn-danger btn-circle m-r-10"><i class="fa fa-check"></i></div><div class="mail-contnet"><span class="mail-desc">'+message1+'</span> <span class="time">'+time+'</span></div></a>';
                     $('.noti_noti').prepend(noti);
@@ -723,7 +723,7 @@
 
                 if (check_exits(agentName, message) && check_exits('new_chat', message)) {
                     var tkid = message[0];
-                    if ($('body .chat'+tkid).length){
+                    if ($('body #chat'+tkid).css('display') == 'block'){
                         if ($('body .chat'+tkid).css('display') == 'none'){
                             var href="javascript:register_popup_agent('chat"+message[0]+"', "+message[0]+", '"+message[2]+"', '"+message[1].split('_')[0]+"');"
                             var src = "{% static 'images/avatar.png' %}"; 

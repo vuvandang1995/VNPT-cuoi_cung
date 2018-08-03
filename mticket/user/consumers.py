@@ -284,7 +284,7 @@ class AgentConsumer(WebsocketConsumer):
         )
         self.accept()
         try:
-            if Agents.objects.get(username=agentName).position == 1 or Agents.objects.get(username=agentName).position == 2:
+            if Agents.objects.get(username=agentName).position == 1 or Agents.objects.get(username=agentName).position == 4:
                 try:
                     f = r'notification/agent/noti_'+agentName+'.txt'
                     file = open(f, 'r')
@@ -382,6 +382,7 @@ class AgentConsumer(WebsocketConsumer):
                 ag = Agents.objects.get(username=agent)
                 ag.noti_noti = ag.noti_noti + 1
                 ag.save()
+
                 
         if 'new_chat' in message:
             list_agent = message
@@ -575,21 +576,58 @@ class AgentConsumer(WebsocketConsumer):
                 ag.noti_noti = ag.noti_noti + 1
                 ag.save()
         
-        if 'admin_add_department' in message:
+        if 'admin_add_topic' in message:
             list_agent = message
-            dpm = message[0]
+            sv = message[0]
             del list_agent[0]
-            del list_agent[0]
-            for agent in list_agent:
+            del list_agent[-1]
+            for agent in list_agent[0]:
                 f = r'notification/agent/noti_'+agent+'.txt'
                 file = open(f,'a')
-                message1 = 'Leader just have added you to department <b>'+dpm+'</b>'
+                message1 = 'Leader đã thêm bạn vào xử lý dịch vụ <b>'+sv+'</b>'
                 noti = '<a href="/agent/profile"><div class="btn btn-danger btn-circle m-r-10"><i class="fa fa-minus-circle"></i></div><div class="mail-contnet"><span class="mail-desc">'+message1+'</span> <span class="time">'+time+'</span></div></a>'
                 file.write(noti + "\n")
                 file.close()
                 ag = Agents.objects.get(username=agent)
                 ag.noti_noti = ag.noti_noti + 1
                 ag.save()
+
+        if 'admin_uy_quyen' in message:
+            sv = message[0]
+            f = r'notification/agent/noti_'+message[1]+'.txt'
+            file = open(f,'a')
+            message1 = 'Leader đã ủy quyền quản trị cho bạn xử lý dịch vụ <b>'+sv+'</b>'
+            noti = '<a href="/agent/profile"><div class="btn btn-danger btn-circle m-r-10"><i class="fa fa-minus-circle"></i></div><div class="mail-contnet"><span class="mail-desc">'+message1+'</span> <span class="time">'+time+'</span></div></a>'
+            file.write(noti + "\n")
+            file.close()
+            ag = Agents.objects.get(username=message[1])
+            ag.noti_noti = ag.noti_noti + 1
+            ag.save()
+
+        if 'admin_bo_uy_quyen' in message:
+            sv = message[0]
+            f = r'notification/agent/noti_'+message[1]+'.txt'
+            file = open(f,'a')
+            message1 = 'Leader đã hủy quyền quản trị của bạn tại dịch vụ <b>'+sv+'</b>'
+            noti = '<a href="/agent/profile"><div class="btn btn-danger btn-circle m-r-10"><i class="fa fa-minus-circle"></i></div><div class="mail-contnet"><span class="mail-desc">'+message1+'</span> <span class="time">'+time+'</span></div></a>'
+            file.write(noti + "\n")
+            file.close()
+            ag = Agents.objects.get(username=message[1])
+            ag.noti_noti = ag.noti_noti + 1
+            ag.save()
+
+        
+        if 'admin_delete_topic' in message:
+            sv = message[0]
+            f = r'notification/agent/noti_'+message[1]+'.txt'
+            file = open(f,'a')
+            message1 = 'Leader đã xóa bạn khỏi dịch vụ <b>'+sv+'</b>'
+            noti = '<a href="/agent/profile"><div class="btn btn-danger btn-circle m-r-10"><i class="fa fa-minus-circle"></i></div><div class="mail-contnet"><span class="mail-desc">'+message1+'</span> <span class="time">'+time+'</span></div></a>'
+            file.write(noti + "\n")
+            file.close()
+            ag = Agents.objects.get(username=message[1])
+            ag.noti_noti = ag.noti_noti + 1
+            ag.save()
             
 
     # Receive message from room group
