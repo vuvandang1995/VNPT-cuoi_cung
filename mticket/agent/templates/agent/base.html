@@ -157,16 +157,16 @@
                         {% if admin == 4 %}
                             <li><a href="{% url 'agent:agent_to_leader' %}"><i class="fa fa-exchange"></i>&nbsp&nbsp&nbsp Chế độ Quản trị viên </a></li>
                         {% endif%}
-                        <li> <a aria-expanded="false" style="color: #607d8b;"><i class="fa fa-commenting-o"></i>&nbsp&nbsp&nbsp Trao đổi với Leader <span class="fa fa-chevron-down"></span></a>
-                            <ul class="nav child_menu">
-                              {% for leader in list_leader %}
-                                <li>
-                                    <a class="chat_leader" href='javascript:register_popup_leader("chat{{leader.id}}", {{leader.id}}, "{{leader.fullname}}", "{{leader.username}}");'>{{leader.fullname}}</a>
-                                    <input type="hidden" value="{{leader.id}}">
-                                </li>
-                              {% endfor%}
-                            </ul>
-                        </li>
+                        <!--<li> <a aria-expanded="false" style="color: #607d8b;"><i class="fa fa-commenting-o"></i>&nbsp&nbsp&nbsp Trao đổi với Leader <span class="fa fa-chevron-down"></span></a>-->
+                            <!--<ul class="nav child_menu">-->
+                              <!--{% for leader in list_leader %}-->
+                                <!--<li>-->
+                                    <!--<a class="chat_leader" href='javascript:register_popup_leader("chat{{leader.id}}", {{leader.id}}, "{{leader.fullname}}", "{{leader.username}}");'>{{leader.fullname}}</a>-->
+                                    <!--<input type="hidden" value="{{leader.id}}">-->
+                                <!--</li>-->
+                              <!--{% endfor%}-->
+                            <!--</ul>-->
+                        <!--</li>-->
                         
                     </ul>
                 </nav>

@@ -33,6 +33,12 @@ $(document).ready(function(){
         "order": [[ 0, "desc" ]],
         "displayLength": 25,
     });
+    $("#image").on('show.bs.modal', function(event){
+        var button = $(event.relatedTarget);
+        var path = button.data('title');
+        var img = '<img src="/media/'+ path +'" style="max-width:80%;max-height:600px;">'
+        $("#img").html(img);
+    });
     $('[data-toggle="tooltip"]').tooltip();
     $("body").on('click', '.assign_ticket', function(){
         var id = $(this).attr('id');

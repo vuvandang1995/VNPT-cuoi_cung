@@ -25,6 +25,12 @@ $(document).ready(function(){
         "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
         "order": [[ 0, "desc" ]],
     });
+    $("#image").on('show.bs.modal', function(event){
+        var button = $(event.relatedTarget);
+        var path = button.data('title');
+        var img = '<img src="/media/'+ path +'" style="max-width:80%;max-height:600px;">'
+        $("#img").html(img);
+    });
 
     $('body').on('click', '.fw_agent', function(){
         var tkid = $(this).attr('id');

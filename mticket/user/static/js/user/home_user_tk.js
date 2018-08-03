@@ -1,18 +1,31 @@
+$('#invalid-msg').html("");
+function validateSize(){
+    if(($("#attach"))[0].files[0].size > 10485760){
+        $('#invalid-msg').html("Kích thước tối đa là 10MB");
+        return false;
+    }else if ($.inArray(($("#attach"))[0].files[0].type,["image/gif", "image/jpeg", "image/png"]) < 0) {
+        $('#invalid-msg').html("Chỉ file ảnh");
+        return false;
+    }else{
+        return true;
+    }
+}
 $(document).ready(function(){
     var table = $('#list_tk_tu_xu_ly').DataTable({
         "columnDefs": [
-            { "width": "5%", "targets": 0 },
-            { "width": "10%", "targets": 1 },
+            { "width": "2%", "targets": 0 },
+            { "width": "12%", "targets": 1 },
             { "width": "10%", "targets": 2 },
             { "width": "10%", "targets": 3 },
             { "width": "10%", "targets": 4 },
             { "width": "5%", "targets": 5 },
-            { "width": "3%", "targets": 6 },
-            { "width": "10%", "targets": 7 },
-            { "width": "10%", "targets": 8 },
-            { "width": "7%", "targets": 9 },
-            { "width": "5%", "targets": 10 },
-            { "width": "15%", "targets": 11 },
+            { "width": "5%", "targets": 6 },
+            { "width": "3%", "targets": 7 },
+            { "width": "9%", "targets": 8 },
+            { "width": "9%", "targets": 9 },
+            { "width": "7%", "targets": 10 },
+            { "width": "5%", "targets": 11 },
+            { "width": "13%", "targets": 12 },
         ],
         "ajax": {
             "type": "GET",
@@ -34,19 +47,20 @@ $(document).ready(function(){
     });
     var table = $('#list_tk_gui_di').DataTable({
         "columnDefs": [
-                    { "width": "5%", "targets": 0 },
-                    { "width": "10%", "targets": 1 },
+                    { "width": "2%", "targets": 0 },
+                    { "width": "12%", "targets": 1 },
                     { "width": "5%", "targets": 2 },
                     { "width": "10%", "targets": 3 },
                     { "width": "10%", "targets": 4 },
                     { "width": "5%", "targets": 5 },
-                    { "width": "3%", "targets": 6 },
-                    { "width": "10%", "targets": 7 },
-                    { "width": "10%", "targets": 8 },
-                    { "width": "7%", "targets": 9 },
-                    { "width": "5%", "targets": 10 },
+                    { "width": "5%", "targets": 6 },
+                    { "width": "3%", "targets": 7 },
+                    { "width": "9%", "targets": 8 },
+                    { "width": "9%", "targets": 9 },
+                    { "width": "7%", "targets": 10 },
                     { "width": "5%", "targets": 11 },
-                    { "width": "15%", "targets": 12 },
+                    { "width": "5%", "targets": 12 },
+                    { "width": "13%", "targets": 13 },
                 ],
 
         "ajax": {
@@ -68,14 +82,7 @@ $(document).ready(function(){
         "displayLength": 25,
     });
 
-    $('#invalid-msg').html("");
-    function validateSize(){
-        if(($("#attach"))[0].files[0].size > 10485760){
-            $('#invalid-msg').html("maximum size is 10MB");
-            return false;
-        }
-        return true;
-    }
+
     $("#id02").on('show.bs.modal', function(event){
         var button = $(event.relatedTarget);
         var title = button.data('title');
