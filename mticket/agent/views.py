@@ -93,8 +93,8 @@ def home_agent_data(request):
         service = Services.objects.filter(id__in=svag)
         data = []
         for tk in Tickets.objects.filter(status=0, serviceid__in=service).order_by('-id'):
-            client = r'<a data-toggle="collapse" data-target="#client' + str(tk.id)+'">' + tk.client + '</a><br><div id="client' + str(tk.id)+'" class="collapse">' + tk.info_client+'</div>'
-            content = r'<a data-toggle="collapse" data-target="#content' + str(tk.id)+'">' + str(tk.content[:16])+ '...</a><br><div id="content' + str(tk.id)+'" class="collapse">' + tk.content+'</div>'
+            client = r'<a data-toggle="collapse" data-target="#client' + str(tk.id)+'">' + tk.client + '   <i class="fa fa-plus-circle"></i></a><br><div id="client' + str(tk.id)+'" class="collapse">' + tk.info_client+'</div>'
+            content = r'<a data-toggle="collapse" data-target="#content' + str(tk.id)+'">' + str(tk.content[:16])+ '   <i class="fa fa-plus-circle"></i></a><br><div id="content' + str(tk.id)+'" class="collapse">' + tk.content+'</div>'
             if tk.attach != '':
                 attach = r'<a class="fa fa-image" data-title="' + str(tk.attach) + '" data-toggle="modal" data-target="#image" id="' + str(tk.id)+'"></a>'
             else:
@@ -273,12 +273,12 @@ def processing_ticket_data(request):
         data = []
         for tk in tksdpr:
             # client = r'<a data-toggle="collapse" data-target="#client' + str(tk.id)+'">' + tk.client + '</a><br><div id="client' + str(tk.id)+'" class="collapse">' + tk.info_client+'</div>'
-            content = r'<a data-toggle="collapse" data-target="#content' + str(tk.id)+'">' + str(tk.content[:16])+ '...</a><br><div id="content' + str(tk.id)+'" class="collapse">' + tk.content+'</div>'
+            content = r'<a data-toggle="collapse" data-target="#content' + str(tk.id)+'">' + str(tk.content[:16])+ '   <i class="fa fa-plus-circle"></i></a><br><div id="content' + str(tk.id)+'" class="collapse">' + tk.content+'</div>'
             if tk.attach != '':
                 attach = r'<a class="fa fa-image" data-title="' + str(tk.attach) + '" data-toggle="modal" data-target="#image" id="' + str(tk.id)+'"></a>'
             else:
                 attach = ''
-            option = ''
+            option = '<div class="btn-group">'
             if tk.status == 1:
                 status = r'<span class ="label label-warning" > Đang xử lý</span>'
                 option += r'''<button id="''' + str(tk.id) + '''" type="button" class="btn btn-success handle_done" data-toggle="modal" data-title="done" data-target="#note"><i data-toggle="tooltip" title="Hoàn thành" class="fa fa-check"></i></button>'''
@@ -300,15 +300,18 @@ def processing_ticket_data(request):
             dateend = r'<p id="dateend' + str(tk.id) + '">' + str(tk.dateend + timezone.timedelta(hours=7))[:-16] + '</p>'
             option += r'''<input type="hidden" id="user''' + str(tk.id) + '''" value="'''+tk.sender.username+'''">
             <a href='javascript:register_popup_agent("chat''' + str(tk.id) + '''", ''' + str(tk.id) + ''', "'''+tk.sender.fullname+'''", "'''+tk.sender.username+'''");' type="button" class="btn btn-primary" data-toggle="tooltip" title="Trò chuyện" id="chat_with_user"><i class="fa fa-commenting"></i><input type="hidden" value="''' + str(tk.id) + '''"/></a>
-            <button id="''' + str(tk.id) + '''" type="button" class="btn btn-info fw_agent" data-toggle="modal" data-title="forward" data-target="#forward_add"><i class="fa fa-share-square-o" data-toggle="tooltip" title="Chuyển tiếp" ></i></button>
-            <button id="''' + str(tk.id) + '''" type="button" class="btn btn-info add_agent" data-toggle="modal" data-title="add" data-target="#forward_add"><i class="fa fa-user-plus" data-toggle="tooltip" title="Thêm nhân viên" ></i></button>'''
+            <button id="''' + str(tk.id) + '''" type="button" class="btn btn-info fw_agent" data-toggle="modal" data-title="forward" data-target="#forward_add"><i class="fa fa-share-square-o" data-toggle="tooltip" title="Chuyển tiếp" ></i></button></div><br><div class="btn-group">
+            <button id="''' + str(tk.id) + '''" type="button" class="btn btn-info add_agent" data-toggle="modal" data-title="add" data-target="#forward_add"><i class="fa fa-user-plus" data-toggle="tooltip" title="Thêm nhân viên" ></i></button></div>'''
             if tem == 1:
                 option += r'''<button id="''' + str(tk.id) + '''" disabled type="button" class="btn btn-danger give_up" data-toggle="tooltip" title="Từ bỏ" ><i class="fa fa-minus-circle"></i></button>'''
             else:
                 option += r'''<button id="''' + str(tk.id) + '''" type="button" class="btn btn-danger give_up" data-toggle="tooltip" title="Từ bỏ" ><i class="fa fa-minus-circle"></i></button>'''
             option +='''<a target="_blank" href="/agent/history/'''+str(tk.id)+ '''" type="button" class="btn btn-warning" data-toggle="tooltip" title="Dòng thời gian" ><span class="glyphicon glyphicon-floppy-disk" ></span><i class="fa fa-history"></i></a>'''
-
-            data.append([tk.id, tk.sender.fullname, service, tk.loai_su_co, content, tk.thong_so_kt,
+            if tk.note != '':
+                note = r'<a data-toggle="collapse" data-target="#note'+ str(tk.id)+'"><i class="fa fa-plus-circle"></i></a><br><div id="note' + str(tk.id)+'" class="collapse">' + tk.note+'</div>'
+            else:
+                note = ''
+            data.append([tk.id, tk.sender.fullname, service, tk.loai_su_co, content, tk.thong_so_kt,note,
                          attach, str(datestart)[:-16], dateend, downtime, status, handler, option])
         ticket = {"data": data}
         tickets = json.loads(json.dumps(ticket))

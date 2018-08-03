@@ -28,8 +28,8 @@
 
                         </div>
                         <div class="card-body">
-                            <div class="table-responsive">
-                                <table class="table table-hover " id="list_ticket_forward" width="100%">
+                            <div>
+                                <table class="table" id="list_ticket_forward" style="width:100%" >
                                     <thead>
                                         <tr>
                                             <th width="5%">ID</th>
@@ -91,7 +91,7 @@
                                                     <p>{{tk.ticketid.thong_so_kt}}</p>
                                                     {% if tk.ticketid.attach != '' %}
                                                     <b>Đính kèm:</b><br>
-                                                    <img src="/media/{{tk.attach}}" alt="none" style="max-width:80%;max-height:600px;display: block;margin-left: auto;margin-right: auto;">
+                                                    <img src="/media/{{tk.ticketid.attach}}" alt="none" style="max-width:80%;max-height:600px;display: block;margin-left: auto;margin-right: auto;">
                                                     {% endif %}
                                                     <b>Ghi chú:</b><br>
                                                     <p>{{tk.ticketid.note}}</p>
@@ -127,7 +127,7 @@
 
                         </div>
                         <div >
-                            <table class="table table-hover" id="list_ticket_add" width="100%">
+                            <table class="table" id="list_ticket_add" style="width:100%">
                                 <thead>
                                     <tr>
                                         <th width="5%">ID</th>
@@ -188,7 +188,7 @@
                                                     <p>{{tk.ticketid.thong_so_kt}}</p>
                                                     {% if tk.ticketid.attach != '' %}
                                                     <b>Đính kèm:</b><br>
-                                                    <img src="/media/{{tk.attach}}" alt="none" style="max-width:80%;max-height:600px;display: block;margin-left: auto;margin-right: auto;">
+                                                    <img src="/media/{{tk.ticketid.attach}}" alt="none" style="max-width:80%;max-height:600px;display: block;margin-left: auto;margin-right: auto;">
                                                     {% endif %}
                                                     <b>Ghi chú:</b><br>
                                                     <p id="note{{tk.ticketid.id}}">{{tk.ticketid.note}}</p>

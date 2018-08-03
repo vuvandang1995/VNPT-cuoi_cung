@@ -294,12 +294,16 @@ def homeuser_data_tu_xu_ly(request):
         tks_txl = TicketAgent.objects.filter(ticketid__in=tks, agentid=user)
         data = []
         for tk in tks_txl:
-            client = r'<a data-toggle="collapse" data-target="#client'+ str(tk.ticketid.id)+'">' + tk.ticketid.client + '</a><br><div id="client' + str(tk.ticketid.id)+'" class="collapse">' + tk.ticketid.info_client+'</div>'
-            content = r'<a data-toggle="collapse" data-target="#content'+ str(tk.ticketid.id)+'">' + str(tk.ticketid.content[:16])+ '...</a><br><div id="content' + str(tk.ticketid.id)+'" class="collapse">' + tk.ticketid.content+'</div>'
+            client = r'<a data-toggle="collapse" data-target="#client'+ str(tk.ticketid.id)+'">' + tk.ticketid.client + '   <i class="fa fa-plus-circle"></i></a><br><div id="client' + str(tk.ticketid.id)+'" class="collapse">' + tk.ticketid.info_client+'</div>'
+            content = r'<a data-toggle="collapse" data-target="#content'+ str(tk.ticketid.id)+'">' + str(tk.ticketid.content[:16])+ '   <i class="fa fa-plus-circle"></i></a><br><div id="content' + str(tk.ticketid.id)+'" class="collapse">' + tk.ticketid.content+'</div>'
             if tk.ticketid.attach != '':
                 attach = r'<a class="fa fa-image" data-title="' + str(tk.ticketid.attach) + '" data-toggle="modal" data-target="#image" id="' + str(tk.ticketid.id)+'"></a>'
             else:
                 attach = ''
+            if tk.ticketid.note != '':
+                note = r'<a data-toggle="collapse" data-target="#note'+ str(tk.ticketid.id)+'"><i class="fa fa-plus-circle"></i></a><br><div id="note' + str(tk.ticketid.id)+'" class="collapse">' + tk.ticketid.note+'</div>'
+            else:
+                note = ''
             option = '''<div class="btn-group"><button type="button" class="btn btn-danger close_ticket_txl" data-toggle="tooltip" title="đóng" id="''' + str(tk.ticketid.id) + '''" ><span class="glyphicon glyphicon-off"></span></button>'''
             option += '''<button type="button" class="btn btn-primary send_ticket" data-toggle="tooltip" title="gửi" id="''' + tk.ticketid.serviceid.name + '''!'''+  str(tk.ticketid.id) + '''" ><span class="glyphicon glyphicon-send"></span></button>'''
             option += '''<a type="button" target=_blank class="btn btn-warning" href="/user/history_'''+str(tk.ticketid.id)+ '''" data-toggle="tooltip" title="dòng thời gian"><i class="fa fa-history"></i></a></div>'''
@@ -308,7 +312,7 @@ def homeuser_data_tu_xu_ly(request):
             downtime = '''<p class="downtime" id="downtime-''' + str(tk.ticketid.id) + '''"></p>'''
             status = r'<span class ="label label-warning"> Đang xử lý </span>'
             data.append([tk.ticketid.id, client, tk.ticketid.serviceid.name, tk.ticketid.loai_su_co, content,
-                         tk.ticketid.thong_so_kt, attach, str(datestart)[:-16], dateend, downtime, status, option])
+                         tk.ticketid.thong_so_kt, note, attach, str(datestart)[:-16], dateend, downtime, status, option])
         ticket = {"data": data}
         tickets = json.loads(json.dumps(ticket))
         return JsonResponse(tickets, safe=False)
@@ -322,12 +326,16 @@ def homeuser_data_gui_di(request):
         tks = Tickets.objects.filter(id__in=tk_txl ,sender=user.id, status__in=[0, 1, 2]).order_by('-id')
         data = []
         for tk in tks:
-            client = r'<a data-toggle="collapse" data-target="#client'+ str(tk.id)+'">' + tk.client + '</a><br><div id="client' + str(tk.id)+'" class="collapse">' + tk.info_client+'</div>'
-            content = r'<a data-toggle="collapse" data-target="#content'+ str(tk.id)+'">' + str(tk.content[:16])+ '...</a><br><div id="content' + str(tk.id)+'" class="collapse">' + tk.content+'</div>'
+            client = r'<a data-toggle="collapse" data-target="#client'+ str(tk.id)+'">' + tk.client + '   <i class="fa fa-plus-circle"></i></a><br><div id="client' + str(tk.id)+'" class="collapse">' + tk.info_client+'</div>'
+            content = r'<a data-toggle="collapse" data-target="#content'+ str(tk.id)+'">' + str(tk.content[:16])+ '   <i class="fa fa-plus-circle"></i></a><br><div id="content' + str(tk.id)+'" class="collapse">' + tk.content+'</div>'
             if tk.attach != '':
                 attach = r'<a class="fa fa-image" data-title="' + str(tk.attach) + '" data-toggle="modal" data-target="#image" id="' + str(tk.id)+'"></a>'
             else:
                 attach = ''
+            if tk.note != '':
+                note = r'<a data-toggle="collapse" data-target="#note'+ str(tk.id)+'"><i class="fa fa-plus-circle"></i></a><br><div id="note' + str(tk.id)+'" class="collapse">' + tk.note+'</div>'
+            else:
+                note = ''
             datestart = tk.datestart + timezone.timedelta(hours=7)
             dateend = r'<p id="dateend' + str(tk.id) + '">'+ str(tk.dateend + timezone.timedelta(hours=7))[:-16] +'</p>'
             downtime = '''<p class="downtime" id="downtime-''' + str(tk.id) + '''"></p>'''
@@ -358,7 +366,7 @@ def homeuser_data_gui_di(request):
             else:
                 option += '''<a  type="button" disabled class="btn btn-primary not-active" data-toggle="tooltip" title="trò chuyện"><span class="glyphicon glyphicon-comment" ></span></a>'''
             option += '''<a type="button" target=_blank class="btn btn-warning" href="/user/history_'''+str(tk.id)+ '''" data-toggle="tooltip" title="dòng thời gian"><i class="fa fa-history"></i></a>'''
-            data.append([tk.id, client, tk.serviceid.name, tk.loai_su_co, content, tk.thong_so_kt,
+            data.append([tk.id, client, tk.serviceid.name, tk.loai_su_co, content, tk.thong_so_kt, note,
                          attach, str(datestart)[:-16], dateend, downtime, status, handler, option])
         ticket = {"data": data}
         tickets = json.loads(json.dumps(ticket))
