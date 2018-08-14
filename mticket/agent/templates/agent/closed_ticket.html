@@ -57,7 +57,7 @@
                                     <td>{{tk.ticketid.datestart|date:"d/m/Y h:m"}}</td>
                                     <td>{{tk.ticketid.date_close|date:"d/m/Y"}}</td>
                                     <td>
-                                        {% if tk.ticketid.expired == 0 %}
+                                        {% if tk.ticketid.expired == 1 %}
                                         <span class ="label label-danger"> Quá hạn </span>
                                         {% else %}
                                         <span class ="label label-success"> Đúng hạn </span>

@@ -1,0 +1,1 @@
+<a href="javascript:register_popup_agent('chat54', 54, 'Văn Phiếu', 'phieu');" class="noti_chat"><div class="user-img"> <img src="/static/images/avatar.png" alt="user" class="img-circle"> <span class="profile-status online pull-right"></span> </div><div class="mail-contnet"><span class="mail-desc">54-Văn Phiếu</span> <span class="time">11:10 AM 6/8/2018</span></div></a>*&*%^chat

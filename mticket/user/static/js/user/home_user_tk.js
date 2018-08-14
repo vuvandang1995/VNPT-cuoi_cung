@@ -1,7 +1,7 @@
 $('#invalid-msg').html("");
 function validateSize(){
-    if(($("#attach"))[0].files[0].size > 10485760){
-        $('#invalid-msg').html("Kích thước tối đa là 10MB");
+    if(($("#attach"))[0].files[0].size > 2097152){
+        $('#invalid-msg').html("Kích thước tối đa là 2MB");
         return false;
     }else if ($.inArray(($("#attach"))[0].files[0].type,["image/gif", "image/jpeg", "image/png"]) < 0) {
         $('#invalid-msg').html("Chỉ file ảnh");

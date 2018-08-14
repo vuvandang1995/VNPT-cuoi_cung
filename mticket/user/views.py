@@ -22,7 +22,7 @@ min_char = 8
 max_char = 12
 allchar = string.ascii_letters + string.digits
 
-MAX_UPLOAD_SIZE = 10485760
+MAX_UPLOAD_SIZE = 2097152
 
 
 class EmailThread(threading.Thread):
