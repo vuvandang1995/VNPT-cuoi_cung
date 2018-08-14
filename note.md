@@ -1,2 +1,7 @@
-Tich hop share screen, audio call vao Mtickets
-14/8/2018
+- Tich hop share screen, audio call vao Mtickets
+- File config trong ~/.ssh
+```
+Host github.com
+    User git
+    IdentityFile ~/.ssh/github.key
+```
