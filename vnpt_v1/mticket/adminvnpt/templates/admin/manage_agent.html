@@ -1,0 +1,58 @@
+{% extends 'admin/base_admin.html' %}
+{% load static %}
+{% block title %}Quản lý nhân viên{% endblock %}
+{% block js %}  
+{% endblock%}
+{% block content %}
+<div class="page-wrapper">
+    <!-- Bread crumb -->
+    <div class="row page-titles">
+        <div class="col-md-5 align-self-center">
+            <h3 class="text-primary">Quản lý nhân viên</h3> </div>
+        <div class="col-md-7 align-self-center">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="javascript:void(0)">Trang chủ</a></li>
+                <li class="breadcrumb-item active">Quản lý nhân viên</li>
+            </ol>
+        </div>
+    </div>
+    <div class="container-fluid">
+        <!-- Start Page Content -->
+        <div class="row">
+            
+            <!-- /# column -->
+            <div class="col-lg-12" id="info_user">
+                <div class="card">
+                    <div class="card-title">
+                        <h4>Quản lý nhân viên</h4>
+                    </div>
+                    {% csrf_token %}
+                    <div class="card-body">
+                        <table id="list_user" class="display nowrap table table-hover table-striped table-bordered" cellspacing="0" width="100%">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Họ và tên</th>
+                                    <th>Email</th>
+                                    <th>Tên đăng nhập</th>
+                                    <th>Trạng thái</th>
+                                    <th>Vị trí</th>
+                                    <th>Tùy chọn</th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+            </div>
+       </div>     
+    </div>
+<!-- End Container fluid  -->
+<!-- footer -->
+<!-- End footer -->
+</div>
+
+<script src="{% static 'js/lib/jquery/jquery.min.js' %}"></script>
+<script src="{% static 'js/lib/datatables/datatables.min.js' %}"></script>
+<script src="{% static 'js/admin/manage_agent.js' %}"></script>
+
+{% endblock%}

@@ -1,0 +1,172 @@
+{% extends 'admin/base_admin.html' %}
+{% block title %} Quản lý dịch vụ {% endblock %}
+{% load staticfiles %}
+{% block content %}
+    <div class="page-wrapper">
+        <!-- Bread crumb -->
+        <div class="row page-titles">
+            <div class="col-md-5 align-self-center">
+                <h3 class="text-primary">Quản lý dịch vụ</h3> </div>
+            <div class="col-md-7 align-self-center">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="javascript:void(0)">Trang chủ</a></li>
+                    <li class="breadcrumb-item active">Quản lý dịch vụ</li>
+                </ol>
+            </div>
+        </div>
+        <!-- End Bread crumb -->
+                {% csrf_token %}
+            <div class="container-fluid">
+                <!-- Start Page Content -->
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-title">
+                                <button type="button" class="btn btn-primary" data-toggle="modal" data-title="add" data-target="#topicModal" >
+                                    <i class="fa fa-plus"></i> Thêm dịch vụ mới
+                                </button>
+                            </div>
+                            <div class="card-body">
+                                <table  class="table display table-bordered table-striped" id="list_topic">
+                                    <thead>
+                                    <tr align="center">
+                                        <th width="10%">Tên</th>
+                                        <th width="10%">Nhóm dịch vụ</th>
+                                        <th width="5%">Trạng thái</th>
+                                        <th width="15%">Mô tả</th>
+                                        <th width="12%">Quản trị viên</th>
+                                        <th width="12%">Phó Quản trị viên</th>
+                                        <th width="12%">Nhân viên xử lý</th>
+                                        <th width="10%">Thời gian tối đa xử lý</th>
+                                        <th>Tùy chọn</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% csrf_token %}
+                                    {% for sv in service %}
+                                    <tr align="center">
+
+                                        <td>{{sv.name}}</td>
+                                        <td>{{sv.groupserviceid.name}}</td>
+                                        <input type="hidden" name="gpsv{{sv.id}}" value="{{sv.groupserviceid.id}}">
+                                        {% if sv.status == 1 %}
+                                        <td><span class="label label-success">Mở</span></td>
+                                        {% else %}
+                                        <td><span class="label label-danger">Đóng</span></td>
+                                        {% endif %}
+
+                                        <td id="description_topic{{sv.id}}">{{ sv.description}}</td>
+                                        <td id="leader_topic{{sv.id}}">
+                                            <p>{{ sv.leader.fullname}}</p>
+                                            <input type="hidden" name="{{sv.leader.username}}" value="{{sv.leader.username}}">
+                                        </td>
+                                        <td>
+                                            <p>{{ sv.leader_bk.fullname}}</p>
+                                            <input type="hidden" name="{{sv.leader_bk.username}}" value="{{sv.leader_bk.username}}">
+                                        </td>
+                                        <td>
+                                            {% for key,value in list_ag.items %}
+                                                {% if key == sv.name %}
+                                                <i data-toggle="collapse" data-toggle="collapse" data-target="#demo{{sv.id}}" class="fa fa-toggle-down"></i>
+                                                <div id="demo{{sv.id}}" class="collapse">
+                                                    {% for va in value %}
+                                                        <div class="listagent{{sv.id}}">
+                                                            {{va.fullname}} <br>
+                                                            <input type="hidden" name="{{va.username}}" value="{{va.username}}">
+                                                        </div>
+                                                    {% endfor %}
+                                                </div>
+                                                {% endif %}
+                                            {% endfor %}
+                                        </td>
+                                        <td>
+                                            <p hidden id="downtime{{sv.id}}">{{sv.downtime}}</p>
+                                            {% for key,value in downtime.items %}
+                                            {% if key == sv.id %}
+                                            {{ value }}
+                                            {% endif %}
+                                            {% endfor %}
+                                        </td>
+
+                                        <td>
+                                            <button type="button" class="btn btn-primary close_" id="{{sv.id}}" data-toggle="tooltip" title="mở / đóng">
+                                                <i class="fa fa-power-off"></i>
+                                            </button>
+
+                                            <button type="button" class="btn btn-danger" id="{{sv.id}}" data-toggle="tooltip" title="xóa">
+                                                <i class="fa fa-trash"></i>
+                                            </button>
+
+                                            <button type="button" class="btn btn-info" data-name="{{sv.name}}" data-title="edit" id="{{sv.id}}" data-toggle="modal" data-target="#topicModal">
+                                                <i class="fa fa-wrench" data-toggle="tooltip" title="Thay đổi"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    {% endfor%}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- End PAge Content -->
+            </div>
+            <div id="topicModal" class="modal">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h3 class="modal-title" id="title"></h3>
+                        </div>
+
+                        <div class="modal-body form-group">
+                            <label for="svname"><b>Tên dịch vụ</b></label>
+                            <input class="form-control" type="text" placeholder="Nhập chủ đề" name="svname" required>
+                            <font id="nameerr" color="red"></font><br>
+                            <label for="description"><b>Mô tả</b></label>
+                            <input class="form-control" type="text" placeholder="Mô tả" name="description" required>
+                            <font id="deserr" color="red"></font><br>
+                            <label for="gpsv"><b>Chọn nhóm dịch vụ</b></label>
+                            <select name="gpsv" class="form-control" id="mySelect">
+                                {% for gs in gpsv %}
+                                    <option value="{{gs.id}}" name="{{gs.name}}">{{gs.name}}</option>
+                                {% endfor %}
+                            </select>
+                            <font id="gpsverr" color="red"></font><br>
+
+                            <label for="agent"><b>Chọn quản trị viên dịch vụ</b></label></br>
+                            <input class="form-control" type="text" id="search" name="search" placeholder="Nhập tên quản trị viên">
+                            <input type="hidden" name="username_leader" value="">
+                            <font id="leadererr" color="red"></font><br>
+
+                            <label for="agent"><b>Chọn các nhân viên xử lý dịch vụ</b></label></br>
+                            <input class="form-control" type="text" id="search_agent" name="search" placeholder="Nhập tên nhân viên">
+                            <font id="agenterr" color="red"></font><br>
+
+                            <div>
+                                <ol id="list_agent">
+                                </ol> 
+                            </div>
+
+                            <label for="downtime"><b>Thời gian xử lý tối đa</b></label></br>
+                            <input type="number" name="ngay" min="0" max="100"> Ngày 
+                            <input type="number" name="gio" min="0" max="100"> Giờ 
+                            <input type="number" name="phut" min="0" max="100"> Phút 
+                            <br><font id="downtimeerr" color="red"></font><br>
+
+                            <input type="hidden" name="svid" value="">
+                        </div>
+
+                        <div class="modal-footer">
+                            <button type="button" id="addTopic" class="btn btn-primary">Lưu</button>
+                            <button type="button" class="btn btn-default" data-dismiss="modal" id = "add_topic_close">Đóng</button>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block js %}
+    <script src="{% static 'js/admin/manage_service.js' %}"></script>
+{% endblock %}

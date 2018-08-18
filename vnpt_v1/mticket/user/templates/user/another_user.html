@@ -1,0 +1,272 @@
+{% extends 'user/base.html' %}
+    {% load staticfiles %}
+{% block title %}Another{% endblock %}
+{% block content %}
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper">
+    <section class="content-header">
+      <h1>
+        Yêu cầu của bạn
+      </h1>
+      <ol class="breadcrumb">
+        <li><a ><i class="fa fa-home"></i> Trang chủ</a></li>
+        <li class="active">Yêu cầu</li>
+      </ol>
+    </section>
+
+    <!-- Main content -->
+    <section class="content">
+        {% csrf_token %}
+      <div class="row">
+        <div class="col-xs-12">
+            <div class="box">
+            <div class="box-header">
+                <h3 style="float:left " id="head_txl">Yêu cầu tự xử lý</h3>
+
+            </div>
+            <!-- /.box-header -->
+            <div class="box-body">
+              <table style="width:100%;" id="list_tk_tu_xu_ly" class="table table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Khách hàng</th>
+                        <th>Dịch vụ</th>
+                        <th>Loại sự cố</th>
+                        <th>Nội dung</th>
+                        <th>Thông số</th>
+                        <th>Ghi chú</th>
+                        <th>Đính kèm</th>
+                        <th>Ngày tạo</th>
+                        <th>Hạn xử lý</th>
+                        <th>Thời gian xử lý</th>
+                        <th>Trạng thái</th>
+                        <th>Tùy chọn</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                  </tbody>
+              </table>
+            </div>
+          </div>
+            <div class="box">
+            <div class="box-header">
+                <h3 style="float:left;" id="head_gd">Yêu cầu gửi đi</h3>
+
+            </div>
+            <!-- /.box-header -->
+            <div class="box-body">
+              <table style="width:100%;" id="list_tk_gui_di" class="table table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Khách hàng</th>
+                        <th>Dịch vụ</th>
+                        <th>Loại sự cố</th>
+                        <th>Nội dung</th>
+                        <th>Thông số</th>
+                        <th>Ghi chú</th>
+                        <th>Đính kèm</th>
+                        <th>Ngày tạo</th>
+                        <th>Hạn xử lý</th>
+                        <th>Thời gian xử lý</th>
+                        <th>Trạng thái</th>
+                        <th>Người xử lý</th>
+                        <th>Tùy chọn</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                  </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+        <div class="modal fade" id="id02" role="dialog" >
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content ">
+                    <form method="POST" enctype="multipart/form-data">
+                        <div class="modal-header">
+                            <h4 class="modal-title">Yêu cầu gửi đi</h4>
+                        </div>
+                         <div class="modal-body form-group">
+                             {% csrf_token %}
+                             {% for key, value in form.error.items %}
+                             {{value}}
+                             {% endfor%}
+                             <input type="hidden" name="kind">
+                             <label>Tên khách hàng</label>
+                             {{form.client}}
+                             <br>
+                             <label>Thông tin khách hàng</label>
+                             {{form.info_client}}
+                             <br>
+                             <label>Loại sự cố</label>
+                             {{form.loai_su_co}}
+                             <br>
+                             <label for="title"><b>Thông số kỹ thuật</b></label>
+                             {{form.thong_so_kt}}
+                             <br>
+
+                             <label for="topic"><b>Dịch vụ</b></label>
+                             <select name="service" class="form-control" id="mySelect">
+                                 {% for key, value in group.items %}
+                                    <optgroup label="{{key}}">
+                                        {% for sv in service %}
+                                        {% if key == sv.groupserviceid.name %}
+                                            <option value="{{sv.name}}" name="{{service}}">{{sv.name}} - {{sv.description}}</option>
+                                        {% endif %}
+                                        {% endfor %}
+                                    </optgroup>
+                                 {% endfor %}
+                            </select>
+                             <br>
+                             <label for="level"><b>Mức ưu tiên</b></label>
+                             <select name="lv_priority" class="form-control" id="lv_select">
+                                 <option value="0">Thấp</option>
+                                 <option value="1">Trung bình</option>
+                                 <option value="2">Cao</option>
+                             </select>
+                             <br>
+                             <label for="content"><b>Nội dung</b></label>
+                             {{form.content}}
+                             <br>
+                             <label for="attach"><b>Đính kèm</b></label><br />
+                             <input type="file" class="form-control" accept="image/*" name="attach" id="attach">
+                             <div><font id="invalid-msg" color="red" size="5"></font></div>
+
+                         </div>
+                        <div class="modal-footer">
+                             <button type="submit" class="btn btn-primary" value="OK" id="i_submit" onclick="return validateSize()">Gửi</button>
+                             <button type="button" class="btn btn-default" data-dismiss="modal">Đóng</button>
+                         </div>
+                  </form>
+                </div>
+            </div>
+        </div>
+        <div class="modal fade" id="image" role="dialog">
+            <div  class="modal-dialog modal-lg">
+              <!-- Modal content-->
+              <div class="modal-content">
+                  <div class="modal-header">
+                    <h4 class="modal-title">Ảnh đính kèm</h4>
+                </div>
+                <div class="modal-body" id="img">
+                </div>
+                  <div class="modal-footer">
+                     <button type="button" class="btn btn-default" data-dismiss="modal">Đóng</button>
+                 </div>
+              </div>
+            </div>
+          </div>
+        
+        <div class="modal modify" id="usercontent" role="dialog">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">Chỉnh sửa thông tin yêu cầu</h4>
+                    </div>
+                    <div class="modal-body form-group">
+                        <b>Người gửi:</b>
+                        <p> {{ user.fullname }}</p>
+
+                        <b>Dịch vụ:</b>
+                        <p id="service"></p>
+
+                        <b>Loại sự cố:</b>
+                        <input class="form-control" type="text" name="loai_su_co" v><br>
+
+                        <b>Nội dung:</b>
+                        <textarea class="form-control" rows="5" name="content"></textarea><br>
+
+                        <b>Thông số kỹ thuật:</b>
+                        <textarea class="form-control" rows="5" name="thong_so_kt"></textarea><br>
+
+                        <b>Ghi chú:</b><br>
+                        <p hidden id="notetk"></p>
+                        <textarea class="form-control" rows="5" name="note"></textarea><br>
+
+                        <b>Khách hàng:</b>
+                        <input class="form-control" name="client"><br>
+
+                        <b>Thông tin khách hàng:</b>
+                        <input class="form-control" type="text" name="info_client"><br>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary save_modify" id="save_modifytk">Lưu</button>
+                        <input type="hidden" name="tkid_">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Đóng</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="modal modify" id="ticketcontent" role="dialog">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title"></h4>
+                    </div>
+                    <div class="modal-body form-group">
+                        <b>Người gửi:</b>
+                        <p> {{ user.fullname }}</p>
+
+                        <b>Dịch vụ:</b>
+                        <p id="service"></p>
+
+                        <b>Loại sự cố:</b>
+                        <input disabled class="form-control" type="text" name="loai_su_co" v><br>
+
+                        <b>Nội dung:</b>
+                        <textarea disabled class="form-control" rows="5" name="content"></textarea><br>
+
+                        <b>Thông số kỹ thuật:</b>
+                        <textarea disabled class="form-control" rows="5" name="thong_so_kt"></textarea><br>
+
+                        <b>Ghi chú:</b><br>
+                        <p hidden id="notetk"></p>
+                        <textarea disabled class="form-control" rows="5" name="note"></textarea><br>
+
+                        <b>Khách hàng:</b>
+                        <input disabled class="form-control" name="client"><br>
+
+                        <b>Thông tin khách hàng:</b>
+                        <input disabled class="form-control" type="text" name="info_client"><br>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Đóng</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+  </div>
+<div class="modal fade" id="all_note" role="dialog">
+    <div  class="modal-dialog modal-lg">
+      <!-- Modal content-->
+      <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title">Ghi chú</h4>
+        </div>
+        <div class="modal-body" id="note_content">
+        </div>
+          <div class="modal-footer">
+             <button type="button" class="btn btn-default" data-dismiss="modal">Đóng</button>
+         </div>
+      </div>
+    </div>
+</div>
+{% endblock %}
+{% block js%}
+<script>
+    var fname = {{ fname }}
+    var uname = {{ uname }}
+    $("#head_txl").html("Yêu cầu tự xử lý của " + fname);
+    $("#head_gd").html("Yêu cầu gửi đi của " + fname);
+</script>
+<script src="{% static 'js/user/another_user.js' %}"></script>
+
+{% endblock %}

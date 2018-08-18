@@ -1,0 +1,165 @@
+{% extends 'agent/base.html' %}
+{% load static %}
+{% block title %}Agent{% endblock %}
+{% block js %}  
+{% endblock%}
+{% block content %}
+<div class="page-wrapper">
+    <!-- Bread crumb -->
+    <div class="row page-titles">
+        <div class="col-md-5 align-self-center">
+            <h3 class="text-primary">Thông tin cá nhân</h3> </div>
+        <div class="col-md-7 align-self-center">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="javascript:void(0)">Trang chủ</a></li>
+                <li class="breadcrumb-item active">Thông tin cá nhân</li>
+            </ol>
+        </div>
+    </div>
+    <div class="container-fluid">
+        <!-- Start Page Content -->
+        <div class="row">
+            <div class="col-md-12 toppad  pull-right col-md-offset-3 ">
+                <div class="panel panel-info" id="info-agent">
+                    <div class="panel-heading">
+                        <h3 class="panel-title" id="full_name">{{ agent.fullname }}</h3>
+                    </div>
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-md-3 col-lg-3 " align="center">
+                                <img alt="User Pic" src="{% static 'images/avatar.png' %}" class="img-circle img-responsive">
+                            </div>
+                            <div class=" col-md-9 col-lg-9 "> 
+                                <table class="table table-user-information">
+                                    <tbody>
+                                        <tr>
+                                            <td>Vị trí</td>
+                                            <td>Nhân viên xử lý</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Tên đăng nhập</td>
+                                            <td>{{ agent.username }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Email</td>
+                                            <td><a  id="email_user">{{ agent.email }}</a></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Số điện thoại</td>
+                                            <td id="phone_user">{{agent.phone}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Trạng thái </td>
+                                            {% if agent.status == 0 %}
+                                            <td><span class="label label-danger">Khóa</span></td>
+                                            {% else %}
+                                            <td><span class="label label-success">Kích hoạt</span></td>
+                                            {% endif %}
+                                        </tr>
+                                        <tr>
+                                            <td>Nhận email thông báo từ hệ thống</td>
+                                            {% if agent.receive_email == 1 %}
+                                                <td id="rc_email">Có</td>
+                                            {% else %}
+                                                <td id="rc_email">Không</td>
+                                            {% endif%}
+                                        </tr>
+                                        <tr>
+                                            <td>Xử lý chủ đề</td>
+                                            <td>
+                                                {% for tp in topic %}
+                                                    {{tp}}<br>
+                                                {% endfor %}
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            
+                                <button type="button" class="btn btn-primary info_agent" id="{{ agent.id }}" data-toggle="modal" data-title="change" data-target="#topicModal" >
+                                        <i class="fa fa-wrench"> Thay đổi thông tin</i>
+                                </button>
+                            
+                                <button type="button" class="btn btn-primary pwd_agent" id="{{ agent.id }}" data-toggle="modal" data-title="change_pwd" data-target="#topicModal" >
+                                        <i class="fa fa-wrench" id="{{agent.password}}" name='pwd_current'> Thay đổi mật khẩu</i>
+                                </button>
+                            </div>
+                            {% csrf_token %}
+                            <div id="topicModal" class="modal">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h3 class="modal-title" id="title"></h3>
+                                        </div>
+
+                                            <div class="modal-body form-group">
+                                                <div id="info">
+                                                    <label for="fullname"><b>Họ và tên </b></label>
+                                                    <input class="inputText form-control" type="text" placeholder="Nhập họ tên" name="fullname" >
+
+                                                    <label for="email"><b>Email</b></label>
+                                                    <input class="inputText form-control" type="text" placeholder="Nhập Email" name="email">
+
+                                                    <label for="phone"><b>Số điện thoại</b></label>
+                                                    <input class="inputText form-control" type="text" placeholder="Nhập số điện thoại" name="phone">
+                                                    <br/>
+                                                    <input class="inputText" style="transform: scale(2)" type="checkbox" name="receive_mail" > <b>   Nhận email thông báo từ hệ thống</b>
+                                                </div>
+
+                                                <div id="pwd">
+                                                    <label for="psw-current"><b>Mật khẩu hiện tại</b></label>
+                                                    <input class="inputText form-control" type="password" placeholder="Nhập mật khẩu hiện tại" name="current_password">
+
+                                                    <label for="psw"><b>Mật khẩu mới</b></label>
+                                                    <input class="inputText form-control" type="password" placeholder="Nhập mật khẩu mới" name="password">
+
+                                                    <label for="psw-repeat"><b>Nhắc lại mật khẩu</b></label>
+                                                    <input class="inputText form-control" type="password" placeholder="Nhập lại mật khẩu mới" name="password2">
+                                                </div>
+
+                                                <input type="hidden" name="agentid" value="">
+
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" id="changeuser" class="btn btn-primary">Lưu</button>
+                                                <button type="button" class="btn btn-default" data-dismiss="modal" id = "change_user_close">Đóng</button>
+                                            </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+<!-- End Container fluid  -->
+<!-- footer -->
+<!-- End footer -->
+</div>
+<!-- End Page wrapper  -->
+</div>
+<!-- End Wrapper -->
+
+<!-- All Jquery -->
+<script src="{% static 'js/lib/jquery/jquery.min.js' %}"></script>
+
+<!-- Bootstrap tether Core JavaScript -->
+<script src="{% static 'js/lib/bootstrap/js/popper.min.js' %}"></script>
+
+<script src="{% static 'js/lib/bootstrap/js/bootstrap.min.js' %}"></script>
+
+<!-- slimscrollbar scrollbar JavaScript -->
+<script src="{% static 'js/jquery.slimscroll.js' %}"></script>
+
+<!--Menu sidebar -->
+<script src="{% static 'js/sidebarmenu.js' %}"></script>
+
+<!--stickey kit -->
+<script src="{% static 'js/lib/sticky-kit-master/dist/sticky-kit.min.js' %}"></script>
+
+<!--Custom JavaScript -->
+<script src="{% static 'js/scripts.js' %}"></script>
+
+<script src="{% static 'js/agent/detail_agent.js' %}"></script>
+
+{% endblock%}

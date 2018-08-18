@@ -1,0 +1,120 @@
+{% extends 'admin/base_admin.html' %}
+{% block title %} Quản lý nhóm dịch vụ {% endblock %}
+{% load staticfiles %}
+{% block content %}
+    <div class="page-wrapper">
+        <!-- Bread crumb -->
+        <div class="row page-titles">
+            <div class="col-md-5 align-self-center">
+                <h3 class="text-primary">Quản lý nhóm dịch vụ</h3> </div>
+            <div class="col-md-7 align-self-center">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="javascript:void(0)">Trang chủ</a></li>
+                    <li class="breadcrumb-item active">Quản lý nhóm dịch vụ</li>
+                </ol>
+            </div>
+        </div>
+        <!-- End Bread crumb -->
+                {% csrf_token %}
+            <div class="container-fluid" id="list_gs">
+                <!-- Start Page Content -->
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-title">
+                                <button type="button" class="btn btn-primary" data-toggle="modal" data-title="add" data-target="#departmentModal" >
+                                    <i class="fa fa-plus"></i> Tạo nhóm dịch vụ
+                                </button>
+                            </div>
+                            <div class="card-body">
+                                <table  class="table display table-bordered table-striped">
+                                    <thead>
+                                    <tr>
+                                        <th width="5%">ID</th>
+                                        <th width="25%">Tên</th>
+                                        <th width="15%">Tùy chọn</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% csrf_token %}
+                                        {% for gs in groupservice %}
+                                        <tr>
+                                            <td scope="row">
+                                                <button type="button" class="btn" data-toggle="modal" id="gs{{gs.id}}" data-target="#{{gs.id}}content">{{gs.id}}</button>
+                                            </td>
+                                            <td id="name{{gs.id}}">{{gs.name}}</td>
+                                            <td>
+                                                <button type="button" class="btn btn-danger" id="{{gs.id}}" data-toggle="tooltip" title="delete">
+                                                    <i class="fa fa-trash"></i>
+                                                </button>
+                                                <button type="button" class="btn btn-info" data-name="{{gs.name}}" data-title="edit" id="{{gs.id}}" data-toggle="modal" data-target="#departmentModal">
+                                                    <i class="fa fa-wrench" data-toggle="tooltip" title="change"></i>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                        <div class="modal" id="{{gs.id}}content" role="dialog">
+                                            <div class="modal-dialog modal-lg">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h4 class="modal-title">Thông tin nhóm dịch vụ</h4>
+                                                    </div>
+                                                    <div class="modal-body form-group">
+                                                        <label for="content"><b>Tên:</b></label>
+                                                        <p>{{gs.name}}</p>
+                                                        
+                                                        <label for="listtopic"><b>Danh sách dịch vụ thuộc nhóm:</b></label>
+                                                        <p>
+                                                        {% for key,value in list_tp.items %}
+                                                            {% if key == gs.id %}
+                                                                {% for va in value %}
+                                                                    {{va}},
+                                                                {% endfor %}
+                                                            {% endif %}
+                                                        {% endfor %}
+                                                        </p>
+                                                    </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-default" data-dismiss="modal">Đóng</button>
+                                                        </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        {% endfor%}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- End PAge Content -->
+            </div>
+            <div id="departmentModal" class="modal">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h3 class="modal-title">Thêm nhóm dịch vụ mới</h3>
+                        </div>
+                        <div class="modal-body form-group">
+                            <label for="topicname"><b>Tên nhóm</b></label>
+                            <input class="form-control" type="text" placeholder="Nội dung" name="name" required>
+                            <font id="add_name_error" color="red"></font><br>
+                            
+                            <font id="add_des_error" color="red"></font><br>
+                            <input type="hidden" name="gsid">
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" id="addDepartment" class="btn btn-primary">Tạo</button>
+                            <button type="button" class="btn btn-default" data-dismiss="modal" id = "add_department_close">Đóng</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- End Container fluid  -->
+            <!-- footer -->
+            <!-- End footer -->
+        </div>
+    </div>
+{% endblock %}
+{% block js %}
+    <script src="{% static 'js/admin/manager_groupservice.js' %}"></script>
+{% endblock %}
