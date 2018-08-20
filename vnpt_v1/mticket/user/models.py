@@ -160,6 +160,17 @@ class TicketLog(models.Model):
         db_table = 'ticket_log'
 
 
+class CommentsLog(models.Model):
+    agentid = models.ForeignKey(Agents, models.CASCADE, null=True, db_column='agentid', related_name='agentcl')
+    ticketid = models.ForeignKey(Tickets, models.CASCADE, db_column='ticketid', related_name='ticketcl')
+    action = models.TextField()
+    date = models.DateTimeField()
+
+    class Meta:
+        managed = True
+        db_table = 'comments_log'
+
+
 def list_hd(ticketid):
     try:
         tkag = TicketAgent.objects.filter(ticketid=ticketid).values('agentid')

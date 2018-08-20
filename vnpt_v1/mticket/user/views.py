@@ -259,6 +259,12 @@ def homeuser(request):
                                          action='xử lý lại yêu cầu',
                                          date=timezone.now().date(),
                                          time=timezone.now().time())
+            elif 'tkid_comment' in request.POST:
+                ticket = Tickets.objects.get(id=request.POST['tkid_comment'])
+                CommentsLog.objects.create(date=timezone.now(),
+                                           ticketid=ticket,
+                                           agentid=user,
+                                           action=request.POST['comment'])
             elif 'noti_noti' in request.POST:
                 user.noti_noti = 0
                 user.save()
@@ -398,6 +404,12 @@ def another_user(request, username):
                                          action='xử lý lại yêu cầu',
                                          date=timezone.now().date(),
                                          time=timezone.now().time())
+            elif 'tkid_comment' in request.POST:
+                ticket = Tickets.objects.get(id=request.POST['tkid_comment'])
+                CommentsLog.objects.create(date=timezone.now(),
+                                           ticketid=ticket,
+                                           agentid=user,
+                                           action=request.POST['comment'])
             elif 'noti_noti' in request.POST:
                 user.noti_noti = 0
                 user.save()
@@ -764,3 +776,26 @@ def history(request, id):
         return render(request, 'user/history.html', {'tk': tk, 'id': str(id), 'ls_user': ls_user})
     else:
         return redirect("/")
+
+
+def comment_data(request, id):
+    if request.session.has_key('user') and (Agents.objects.get(username=request.session['user'])).status == 1:
+        data = []
+        if id > 0:
+            ticket = Tickets.objects.get(id=id)
+            cm_log = CommentsLog.objects.filter(ticketid=ticket)
+            for cm in cm_log:
+                date = str(cm.date.date())+'<br>' + str(cm.date.time())[:-7]
+                agent = cm.agentid.fullname + '<br>' + cm.agentid.phone
+                if cm.ticketid.status == 0:
+                    status = 'Chờ'
+                elif cm.ticketid.status == 1:
+                    status = "Đang xử lý"
+                elif cm.ticketid.status == 2:
+                    status = "Hoàn thành"
+                else:
+                    status = "Đóng"
+                data.append([date, cm.ticketid.id, status, agent, cm.action])
+        ticket = {"data": data}
+        tickets = json.loads(json.dumps(ticket))
+        return JsonResponse(tickets, safe=False)

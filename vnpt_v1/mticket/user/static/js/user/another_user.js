@@ -88,7 +88,7 @@ $(document).ready(function(){
                 url:location.href,
                 data: {'tkid':id, 'csrfmiddlewaretoken':token},
                 success: function(){
-                    $("#list_tk_tu_xu_ly").DataTable().ajax.reload();
+                    $("#list_tk_tu_xu_ly").DataTable().ajax.reload(null,false);
                     var chatSocket1 = new WebSocket(
                     'ws://' + window.location.host +
                     '/ws/agent/agent+group_agent_Socket/');
@@ -156,7 +156,7 @@ $(document).ready(function(){
                             'time' : date,
                         }));
                     };
-                    $(".table").DataTable().ajax.reload();
+                    $(".table").DataTable().ajax.reload(null,false);
                 }
             });
         }
@@ -276,7 +276,7 @@ $(document).ready(function(){
                         'time' : date,
                     }));
                 };
-                $(".table").DataTable().ajax.reload();
+                $(".table").DataTable().ajax.reload(null,false);
             }
         });
     });
@@ -293,7 +293,7 @@ $(document).ready(function(){
                 data: {'tkid':id, 'csrfmiddlewaretoken':token},
                 success: function(){
                     // window.location.reload();
-                    $("#list_tk_gui_di").DataTable().ajax.reload();
+                    $("#list_tk_gui_di").DataTable().ajax.reload(null,false);
                     var array = $('#hd'+id).html().split("<br>");
                     for (i = 0; i < array.length-1; i++) {
                         var agentName = array[i].replace(/\s/g,'');
@@ -470,7 +470,7 @@ $(document).ready(function(){
                         'time' : date,
                     }));
                 };
-                $(".table").DataTable().ajax.reload();
+                $(".table").DataTable().ajax.reload(null,false);
             }
         });
      });

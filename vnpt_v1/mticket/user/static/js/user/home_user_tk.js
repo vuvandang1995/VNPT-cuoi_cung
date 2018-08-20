@@ -164,7 +164,7 @@ $(document).ready(function(){
                 url:location.href,
                 data: {'tkid':id, 'csrfmiddlewaretoken':token},
                 success: function(){
-                    $("#list_tk_tu_xu_ly").DataTable().ajax.reload();
+                    $("#list_tk_tu_xu_ly").DataTable().ajax.reload(null,false);
                     var chatSocket1 = new WebSocket(
                     'ws://' + window.location.host +
                     '/ws/agent/agent+group_agent_Socket/');
@@ -206,7 +206,7 @@ $(document).ready(function(){
                             'time' : date
                         }));
                     };
-                    $(".table").DataTable().ajax.reload();
+                    $(".table").DataTable().ajax.reload(null,false);
                 }
             });
         }
@@ -314,7 +314,7 @@ $(document).ready(function(){
                             }));
                         };
                     }
-                $(".table").DataTable().ajax.reload();
+                $(".table").DataTable().ajax.reload(null,false);
             }
         });
     });
@@ -331,7 +331,7 @@ $(document).ready(function(){
                 data: {'tkid':id, 'csrfmiddlewaretoken':token},
                 success: function(){
                     // window.location.reload();
-                    $("#list_tk_gui_di").DataTable().ajax.reload();
+                    $("#list_tk_gui_di").DataTable().ajax.reload(null,false);
                     var array = $('#hd'+id).html().split("<br>");
                     for (i = 0; i < array.length-1; i++) {
                         var agentName = array[i].replace(/\s/g,'');
@@ -447,12 +447,6 @@ $(document).ready(function(){
         }
     });
 
-    $("#all_note").on('show.bs.modal', function(event){
-        var button = $(event.relatedTarget);
-        var note = button.data('title');
-        $("#note_content").html("<pre>"+note+"</pre>");
-    });
-
     $("body").on('click', '#send_note', function(){
         var id = $("#note input[name=ticketid]").val();
         var token = $("input[name=csrfmiddlewaretoken]").val();
@@ -481,7 +475,102 @@ $(document).ready(function(){
                         'time' : date
                     }));
                 };
-                $(".table").DataTable().ajax.reload();
+                $(".table").DataTable().ajax.reload(null,false);
+            }
+        });
+    });
+
+    var table_comment = $('#list_comment').DataTable({
+        "columnDefs": [
+                    { "width": "10%", "targets": 0 },
+                    { "width": "5%", "targets": 1 },
+                    { "width": "10%", "targets": 2 },
+                    { "width": "15%", "targets": 3 },
+                    { "width": "50%", "targets": 4 },
+                ],
+        "ajax": {
+            "type": "GET",
+            "url": "/user/comment_data_0",
+            "contentType": "application/json; charset=utf-8",
+            "data": function(result){
+                return JSON.stringify(result);
+            },
+            "complete": function(){
+                setTimeout(function(){
+                    countdowntime();
+                }, 1000);
+            }
+        },
+        'dom': 'Rlfrtip',
+        "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
+        "order": [[ 0, "asc" ]],
+        "displayLength": 25,
+    });
+    $("#all_note").on('show.bs.modal', function(event){
+        $("#new_comment").show();
+        $("#save_comment").hide();
+        $("#cancel_comment").hide();
+        $("#new_text").hide();
+        var button = $(event.relatedTarget);
+        var id = button.attr('id');
+        $("#title_comment").text("Ghi chú yêu cầu số "+id);
+        $("#comment_ticketid").val(id);
+        $('#list_comment').DataTable().ajax.url("/user/comment_data_"+id).load();
+        $('#list_comment').DataTable().ajax.reload(null,false);
+    });
+
+    $("body").on('click', '#new_comment', function(){
+        $("#new_comment").hide();
+        $("#save_comment").show();
+        $("#cancel_comment").show();
+        $("#new_text").show();
+        $("#new_text").val("");
+    });
+
+    $("body").on('click', '#cancel_comment', function(){
+        $("#new_comment").show();
+        $("#save_comment").hide();
+        $("#cancel_comment").hide();
+        $("#new_text").hide();
+        $("#new_text").val("");
+    });
+
+    $("body").on('click', '#save_comment', function(){
+        $("#new_comment").show();
+        $("#save_comment").hide();
+        $("#cancel_comment").hide();
+        $("#new_text").hide();
+        var token = $("input[name=csrfmiddlewaretoken]").val();
+        var comment = $("#new_text").val();
+        var id =$("#comment_ticketid").val()
+        var message = [];
+        $.ajax({
+            type:'POST',
+            url:location.href,
+            data: {'tkid_comment':id, 'csrfmiddlewaretoken':token, 'comment': escapeHtml(comment)},
+            success: function(){
+                $('#list_comment').DataTable().ajax.reload(null,false);
+
+                $("#new_text").val("");
+
+//                var chatSocket1 = new WebSocket(
+//                    'ws://' + window.location.host +
+//                    '/ws/agent/agent+group_agent_Socket/');
+//                mgs = userName + ' đã mở lại yêu cầu số '+id;
+//                var array = $('#hd'+id).html().split("<br>");
+//                for (i = 0; i < array.length-1; i++) {
+//                    var agentName = array[i].replace(/\s/g,'');
+//                    message.push(agentName);
+//                }
+//                message.push(mgs);
+//                var date = formatAMPM(new Date());
+//                chatSocket1.onopen = function (event) {
+//                    chatSocket1.send(JSON.stringify({
+//                        'message' : message,
+//                        'time' : date
+//                    }));
+//                };
+                $(".table").DataTable().ajax.reload(null,false);
             }
         });
     });

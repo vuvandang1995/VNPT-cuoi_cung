@@ -68,7 +68,7 @@ $(document).ready(function(){
                 url:location.href,
                 data: {'tkid':id, 'csrfmiddlewaretoken':token},
                 success: function(){
-                    $("#list_ticket_home").DataTable().ajax.reload();
+                    $("#list_ticket_home").DataTable().ajax.reload(null,false);
 //                    chatSocket1.close();
                 }
             });
