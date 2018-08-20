@@ -287,12 +287,32 @@
       <!-- Modal content-->
       <div class="modal-content">
           <div class="modal-header">
-            <h4 class="modal-title">Ghi chú</h4>
+            <h4 class="modal-title" id="title_comment">Ghi chú</h4>
         </div>
-        <div class="modal-body" id="note_content">
+        <div class="modal-body" >
+            <div id="note_content">
+                <input type="hidden" name="comment_ticketid" id="comment_ticketid">
+                <table style="width:100%;" id="list_comment" class="table table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th>Thòi gian</th>
+                        <th>Yêu cầu</th>
+                        <th>Trạng thái</th>
+                        <th>Nhân viên cập nhật</th>
+                        <th>Nội dung</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                  </tbody>
+              </table>
+            </div>
+            <textarea hidden class="form-comtrol" id="new_text" style="width:100%" rows="5"></textarea>
         </div>
           <div class="modal-footer">
-             <button type="button" class="btn btn-default" data-dismiss="modal">Đóng</button>
+              <button class="btn btn-primary" id="new_comment">Thêm mới</button>
+              <button type="button" class="btn btn-primary" id="save_comment">Cập nhật</button>
+              <button type="button" class="btn btn-danger" id="cancel_comment">Hủy</button>
+              <button type="button" class="btn btn-default" data-dismiss="modal">Đóng</button>
          </div>
       </div>
     </div>

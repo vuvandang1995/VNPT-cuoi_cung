@@ -339,7 +339,7 @@
                 switch(message) {
                     case 'ticket da duoc xu ly':
                         setTimeout(function(){
-                            $("#list_ticket_home").DataTable().ajax.reload();
+                            $("#list_ticket_home").DataTable().ajax.reload(null,false);
                             $("body #pending").load(location.href + " #pending");
                             $("body #processing").load(location.href + " #processing");
                         }, 2000);
@@ -357,7 +357,7 @@
                             $('body .noti_fy').prepend(noti1);
                             
                             setTimeout(function(){
-                                $("#list_ticket_home").DataTable().ajax.reload();
+                                $("#list_ticket_home").DataTable().ajax.reload(null,false);
                                 $("body #pending").load(location.href + " #pending");
                             }, 2000);
                             x.play();
@@ -370,7 +370,7 @@
                     for (i = 0; i <= list_tp.length-1; i++){
                         if (message1 == list_tp[i]){
                             setTimeout(function(){
-                                $("#list_ticket_home").DataTable().ajax.reload();
+                                $("#list_ticket_home").DataTable().ajax.reload(null,false);
                             }, 2000);
                         }
                     }
@@ -387,9 +387,9 @@
                             $('body .noti_fy').prepend(noti1);
                             
                             setTimeout(function(){
-                                $("#list_ticket_home").DataTable().ajax.reload();
+                                $("#list_ticket_home").DataTable().ajax.reload(null,false);
                                 $("body #pending").load(location.href + " #pending");
-                                $("#list_ticket_processing").DataTable().ajax.reload();
+                                $("#list_ticket_processing").DataTable().ajax.reload(null,false);
                                 
                             }, 2000);
                             x.play();
@@ -442,7 +442,7 @@
                     setTimeout(function(){
                         $("#list_ticket_forward_outbox").load(location.href + " #list_ticket_forward_outbox");
                         $("body #processing").load(location.href + " #processing");
-                        $("#list_ticket_processing").DataTable().ajax.reload();
+                        $("#list_ticket_processing").DataTable().ajax.reload(null,false);
                         
                     }, 2000);
                 }
@@ -474,7 +474,7 @@
                     
                     setTimeout(function(){
                         $("#list_ticket_add_outbox").load(location.href + " #list_ticket_add_outbox");
-                        $("#list_ticket_processing").DataTable().ajax.reload();
+                        $("#list_ticket_processing").DataTable().ajax.reload(null,false);
                         
                     }, 2000);
                     
@@ -507,10 +507,10 @@
 
                     
                     setTimeout(function(){
-                        $("#list_ticket_processing").DataTable().ajax.reload();
+                        $("#list_ticket_processing").DataTable().ajax.reload(null,false);
                         $("body #processing").load(location.href + " #processing");
                         $("body #pending").load(location.href + " #pending");
-                        $("#list_ticket_home").DataTable().ajax.reload();
+                        $("#list_ticket_home").DataTable().ajax.reload(null,false);
                     
                     }, 2000);
                 }
@@ -527,10 +527,10 @@
 
                     
                     setTimeout(function(){
-                        $("#list_ticket_processing").DataTable().ajax.reload();
+                        $("#list_ticket_processing").DataTable().ajax.reload(null,false);
                         $("body #done").load(location.href + " #done");
                         $("body #processing").load(location.href + " #processing");
-                        $("#list_ticket_home").DataTable().ajax.reload();
+                        $("#list_ticket_home").DataTable().ajax.reload(null,false);
                         
                     }, 2000);
                 }
@@ -548,10 +548,10 @@
 
                     
                     setTimeout(function(){
-                        $("#list_ticket_processing").DataTable().ajax.reload();
+                        $("#list_ticket_processing").DataTable().ajax.reload(null,false);
                         $("body #done").load(location.href + " #done");
                         $("body #processing").load(location.href + " #processing");
-                        $("#list_ticket_home").DataTable().ajax.reload();
+                        $("#list_ticket_home").DataTable().ajax.reload(null,false);
                         
                     }, 2000);
                     
@@ -573,10 +573,10 @@
                         $("#list_ticket_forward_outbox").load(location.href + " #list_ticket_forward_outbox");
                         $("body #list_ticket_forward").load(location.href + " #list_ticket_forward");
                         $("body #list_ticket_add").load(location.href + " #list_ticket_add");
-                        $("#list_ticket_processing").DataTable().ajax.reload();
+                        $("#list_ticket_processing").DataTable().ajax.reload(null,false);
                         $("body #done").load(location.href + " #done");
                         $("body #processing").load(location.href + " #processing");
-                        $("#list_ticket_home").DataTable().ajax.reload();
+                        $("#list_ticket_home").DataTable().ajax.reload(null,false);
                         
                     }, 2000);
                 }
@@ -608,10 +608,10 @@
                     
                     setTimeout(function(){
                         $("body #example23").load(location.href + " #example23");
-                        $("#list_ticket_home").DataTable().ajax.reload();
+                        $("#list_ticket_home").DataTable().ajax.reload(null,false);
                         $("body #done").load(location.href + " #done");
                         $("body #processing").load(location.href + " #processing");
-                        $("#list_ticket_processing").DataTable().ajax.reload();
+                        $("#list_ticket_processing").DataTable().ajax.reload(null,false);
                         
                     }, 2000);
                 }
@@ -628,7 +628,7 @@
                     x.play();
                     
                     setTimeout(function(){
-                        $("#list_ticket_processing").DataTable().ajax.reload();
+                        $("#list_ticket_processing").DataTable().ajax.reload(null,false);
                     }, 2000);
                 }
 
@@ -644,14 +644,14 @@
                     x.play();
                     
                     setTimeout(function(){
-                        $("#list_ticket_processing").DataTable().ajax.reload();
+                        $("#list_ticket_processing").DataTable().ajax.reload(null,false);
                     }, 2000);
                 }
 
 
                 if (message == 'reload_home_agent') {
                     setTimeout(function(){
-                        $("#list_ticket_home").DataTable().ajax.reload();
+                        $("#list_ticket_home").DataTable().ajax.reload(null,false);
                     }, 2000);
                 }
 
@@ -665,7 +665,7 @@
                     x.play();
 
                     setTimeout(function(){
-                        $("#list_ticket_processing").DataTable().ajax.reload();
+                        $("#list_ticket_processing").DataTable().ajax.reload(null,false);
                         
                     }, 2000);
                 }
@@ -732,7 +732,7 @@
                     x.play();
 
                     setTimeout(function(){
-                        $("#list_ticket_processing").DataTable().ajax.reload();
+                        $("#list_ticket_processing").DataTable().ajax.reload(null,false);
                         $("body #done").load(location.href + " #done");
                         $("body #processing").load(location.href + " #processing");
                         
@@ -749,7 +749,7 @@
                     x.play();
 
                     setTimeout(function(){
-                        $("#list_ticket_processing").DataTable().ajax.reload();
+                        $("#list_ticket_processing").DataTable().ajax.reload(null,false);
                         $("body #done").load(location.href + " #done");
                         $("body #processing").load(location.href + " #processing");
                         

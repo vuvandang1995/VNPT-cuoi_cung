@@ -249,7 +249,7 @@ $(document).ready(function(){
         var button = $(event.relatedTarget);
         var ticketid = button.attr('id');
         $("input[name=ticketid]").val(ticketid);
-        var topic = $("input[name=topicc"+ticketid+"]").val();
+        .ajax.reload(null,false);ut[name=topicc"+ticketid+"]").val();
         $("#mySelect").val(topic);
     });
 

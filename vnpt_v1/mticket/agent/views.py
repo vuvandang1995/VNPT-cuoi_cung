@@ -356,7 +356,7 @@ def processing_ticket_data(request):
             for t in tkag:
                 handler += t.agentid.fullname + '<br>'
             downtime = '''<span class="downtime label label-danger" id="downtime-'''+str(tk.id)+'''"></span>'''
-            datestart = tk.datestart + timezone.timedelta(hours=7)
+            datestart = r'<p>'+str(tk.datestart + timezone.timedelta(hours=7))[:-16]+'</p>'
             dateend = r'<p id="dateend' + str(tk.id) + '">' + str(tk.dateend + timezone.timedelta(hours=7))[:-16] + '</p>'
             option += r'''<input type="hidden" id="user''' + str(tk.id) + '''" value="'''+tk.sender.username+'''">
             <a href='javascript:register_popup_agent("chat''' + str(tk.id) + '''", ''' + str(tk.id) + ''', "'''+tk.sender.fullname+'''", "'''+tk.sender.username+'''");' type="button" class="btn btn-primary" data-toggle="tooltip" title="Trò chuyện" id="chat_with_user"><i class="fa fa-commenting"></i><input type="hidden" value="''' + str(tk.id) + '''"/></a>
@@ -372,7 +372,7 @@ def processing_ticket_data(request):
             else:
                 note = ''
             data.append([tk.id, tk.sender.fullname, service, loai_su_co, content, thong_so_kt, note,
-                         attach, str(datestart)[:-16], dateend, downtime, status, handler, option])
+                         attach, datestart, dateend, downtime, status, handler, option])
         ticket = {"data": data}
         tickets = json.loads(json.dumps(ticket))
         return JsonResponse(tickets, safe=False)
