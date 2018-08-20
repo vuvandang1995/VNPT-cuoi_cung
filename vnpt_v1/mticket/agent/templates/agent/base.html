@@ -1,0 +1,1134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+        {% load staticfiles %}
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <!-- Tell the browser to be responsive to screen width -->
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        {% block js %} {% endblock%}
+        <meta name="description" content="">
+        <meta name="author" content="">
+        <!-- Favicon icon -->
+        <link rel="icon" type="image/png" sizes="16x16" href="{% static 'images/favicon.png' %}">
+        <title>Agent</title>
+        <!-- Bootstrap Core CSS -->
+        <link rel="stylesheet" href="{% static 'css/lib/bootstrap/bootstrap.min.css' %}" type="text/css">
+        <!-- Custom CSS -->
+    
+        <link rel="stylesheet" href="{% static 'css/lib/calendar2/semantic.ui.min.css' %}" type="text/css">
+        
+        <link rel="stylesheet" href="{% static 'css/lib/calendar2/pignose.calendar.min.css' %}" type="text/css">
+        
+        <link rel="stylesheet" href="{% static 'css/lib/owl.carousel.min.css' %}" type="text/css">
+        
+        <link rel="stylesheet" href="{% static 'css/lib/owl.theme.default.min.css' %}" type="text/css">
+        
+        <link rel="stylesheet" href="{% static 'css/helper.css' %}" type="text/css">
+        
+        <link rel="stylesheet" href="{% static 'css/style.css' %}" type="text/css">
+
+
+        <script src="{% static 'js/agent/home_agent.js' %}"></script>
+        <link rel="stylesheet" href="{% static 'css/home_user.css' %}" type="text/css">
+        <link rel="stylesheet" href="{% static 'css/chat.css' %}" type="text/css">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Sans:400,700">
+
+        
+        <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+        <!-- WARNING: Respond.js doesn't work if you view the page via file:** -->
+        <!--[if lt IE 9]>
+        <script src="https:**oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https:**oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+<body class="fix-header fix-sidebar">
+    <!-- Preloader - style you can find in spinners.css -->
+    <div class="preloader">
+        <svg class="circular" viewBox="25 25 50 50">
+			<circle class="path" cx="50" cy="50" r="20" fill="none" stroke-width="2" stroke-miterlimit="10" /> </svg>
+    </div>
+    <!-- Main wrapper  -->
+    <div id="main-wrapper">
+        <!-- header header  -->
+        <div class="header">
+            <nav class="navbar top-navbar navbar-expand-md navbar-light">
+                <!-- Logo -->
+                <div class="navbar-header" >
+                    <a class="navbar-brand" href="{% url 'agent:index' %}">
+                        <span><img src="{% static 'images/meditech.png' %}" alt="homepage" style="width:260px;height:40px;"></span>
+                    </a>
+                </div>
+                <!-- End Logo -->
+                <div class="navbar-collapse">
+                    <!-- toggle and nav items -->
+                    <ul class="navbar-nav mr-auto mt-md-0">
+                        <!-- This is  -->
+                        <li class="nav-item"> <a class="nav-link nav-toggler hidden-md-up text-muted  " href="javascript:void(0)"><i class="mdi mdi-menu"></i></a> </li>
+                        <li class="nav-item m-l-10"> <a class="nav-link sidebartoggler hidden-sm-down text-muted  " href="javascript:void(0)"><i class="ti-menu"></i></a> </li>
+                        <!-- Messages -->
+                       
+                        <!-- End Messages -->
+                    </ul>
+                    <!-- User profile and search -->
+                    <ul class="navbar-nav my-lg-0">
+
+                        <!-- Comment -->
+                        <li class="nav-item dropdown notify_" >
+                            <a class="nav-link dropdown-toggle text-muted " onclick="notiFunction()"  data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <i class="fa fa-bell"></i>
+                                <div class="notify noti_fy"> </div>
+                            </a>
+                            
+                            <div class="dropdown-menu dropdown-menu-right mailbox animated zoomIn" >
+                                <ul>
+                                    <li>
+                                        <div class="drop-title noti_msg">
+
+                                        </div>
+                                    </li>
+
+                                    <li>
+                                        <div class="message-center noti_noti">
+                                            
+                                        </div>
+                                    </li>
+                                    
+                                    <li>
+                                        <a class="nav-link text-center" href="javascript:void(0);"> <strong>Xem tất cả</strong> <i class="fa fa-angle-right"></i> </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </li>
+                        <!-- End Comment -->
+                        <!-- Messages -->
+                        <li class="nav-item dropdown chat_">
+                            <a class="nav-link dropdown-toggle text-muted" onclick="chatFunction()"  id="2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <i class="fa fa-envelope"></i>
+								<div class="notify chat_noti"> </div>
+							</a>
+                            <div class="dropdown-menu dropdown-menu-right mailbox animated zoomIn" aria-labelledby="2">
+                                <ul>
+                                    <li>
+                                        <div class="drop-title chat_msg"></div>
+                                    </li>
+                                    <li>
+                                        <div class="message-center notification_chat">
+                                            <!-- Message -->
+                                            
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <a class="nav-link text-center" href="javascript:void(0);"> <strong>Xem tất cả</strong> <i class="fa fa-angle-right"></i> </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </li>
+                        <!-- End Messages -->
+                        <!-- Profile -->
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle text-muted"   data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><img src="{% static 'images/avatar.png' %}" alt="user" class="profile-pic" /></a>
+                            <div class="dropdown-menu dropdown-menu-right animated zoomIn">
+                                <ul class="dropdown-user">
+                                    <li><a href="{% url 'agent:profile' %}"><i class="ti-user"></i> Thông tin cá nhân</a></li>
+                                    <li><a href="{% url 'agent:logout' %}"><i class="fa fa-power-off"></i> Đăng xuất</a></li>
+                                </ul>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+        </div>
+        <!-- End header header -->
+        <!-- Left Sidebar  -->
+        <div class="left-sidebar">
+            <!-- Sidebar scroll-->
+            <div class="scroll-sidebar">
+                <!-- Sidebar navigation-->
+                <nav class="sidebar-nav">
+                    <ul id="sidebarnav">
+                        <li class="nav-devider"></li>
+                        <li class="nav-label">{{ agent.fullname}}</li>
+                        <li> <a href="{% url 'agent:index' %}" aria-expanded="false"><i class="fa fa-home"></i>&nbsp&nbsp&nbsp Trang chủ</a></li>
+                        <li> <a href="{% url 'agent:inbox' %}" aria-expanded="false"><i class="fa fa-envelope"></i>&nbsp&nbsp&nbspYêu cầu gửi đến</a></li>
+                        <li> <a href="{% url 'agent:outbox' %}" aria-expanded="false"><i class="fa fa-send-o"></i>&nbsp&nbsp&nbspYêu cầu gửi đi</a></li>
+                        <li> <a href="{% url 'agent:processing_ticket' %}" aria-expanded="false"><i class="fa fa-hourglass-2"></i>&nbsp&nbsp&nbspYêu cầu đang xử lý</a></li>
+                        <li> <a href="{% url 'agent:closed_ticket' %}" aria-expanded="false"><i class="fa fa-check-circle"></i>&nbsp&nbsp&nbspYêu cầu đã đóng</a></li>
+                        {% if admin == 4 %}
+                            <li><a href="{% url 'agent:agent_to_leader' %}"><i class="fa fa-exchange"></i>&nbsp&nbsp&nbsp Chế độ Quản trị viên </a></li>
+                        {% endif%}
+                        <!--<li> <a aria-expanded="false" style="color: #607d8b;"><i class="fa fa-commenting-o"></i>&nbsp&nbsp&nbsp Trao đổi với Leader <span class="fa fa-chevron-down"></span></a>-->
+                            <!--<ul class="nav child_menu">-->
+                              <!--{% for leader in list_leader %}-->
+                                <!--<li>-->
+                                    <!--<a class="chat_leader" href='javascript:register_popup_leader("chat{{leader.id}}", {{leader.id}}, "{{leader.fullname}}", "{{leader.username}}");'>{{leader.fullname}}</a>-->
+                                    <!--<input type="hidden" value="{{leader.id}}">-->
+                                <!--</li>-->
+                              <!--{% endfor%}-->
+                            <!--</ul>-->
+                        <!--</li>-->
+                        
+                    </ul>
+                </nav>
+                <!-- End Sidebar navigation -->
+            </div>
+            <!-- End Sidebar scroll-->
+        </div>
+
+        <div id="info_user">
+        {% csrf_token %}
+        {% block content %}
+        {% endblock %}
+        </div>
+    </div>
+<audio id="myAudio">
+    <source src="{% static 'ping.mp3' %}" type="audio/mpeg">
+</audio>
+<script src="{% static 'js/lib/datatables/datatables.min.js' %}"></script>
+<script>
+    function escapeHtml(text) {
+      return text
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
+
+    $(".sidebar-nav").hover(function(){
+        $(".left-sidebar").css("width", "260px");
+    }, function(){
+        $(".left-sidebar").css("width", "auto");
+    });
+    var x = document.getElementById("myAudio"); 
+    var fullname = {{ fullname }};
+    var agentName = {{ agent_name }};
+    var list_tp = {{list_tp}};
+    list_tp = list_tp.split('!');
+    /*var chatSocket = new WebSocket(
+        'ws://' + window.location.host +
+        '/ws/agent/' + agentName + '/');*/
+    
+    var group_agent_Socket = new WebSocket(
+        'ws://' + window.location.host +
+        '/ws/agent/'+agentName+'+group_agent_Socket/');
+        
+        
+    function formatAMPM(date) {
+        var hours = date.getHours();
+        var minutes = date.getMinutes();
+        var ampm = hours >= 12 ? 'PM' : 'AM';
+        hours = hours % 12;
+        hours = hours ? hours : 12; // the hour '0' should be '12'
+        minutes = minutes < 10 ? '0'+minutes : minutes;
+        var strTime = hours + ':' + minutes + ' ' + ampm + ' ' +date.getDate()+'/'+(date.getMonth()+1)+'/'+date.getFullYear();
+        return strTime;
+    }
+
+
+    var noti_noti = {{noti_noti}};
+    var noti_chat = {{noti_chat}};
+    
+    function notiFunction() {
+        if ($('body .noti_fy .point').length){
+            var token = $("input[name=csrfmiddlewaretoken]").val();
+            $.ajax({
+                type:'POST',
+                url:location.href,
+                data: {'noti_noti': 0, 'csrfmiddlewaretoken':token},
+                success: function(){
+                    $("body .noti_fy").load(location.href + " .noti_fy");
+                }
+            });
+        }
+    }
+
+    function chatFunction() {
+        if ($('body .chat_noti .point').length){
+            var token = $("input[name=csrfmiddlewaretoken]").val();
+            $.ajax({
+                type:'POST',
+                url:location.href,
+                data: {'noti_chat': 0, 'csrfmiddlewaretoken':token},
+                success: function(){
+                    $("body .chat_noti").load(location.href + " .chat_noti");
+                }
+            });
+        }
+    }
+
+    function countdowntime(){
+        $('body .downtime').each(function(){
+            var tkid = $(this).attr('id').split('-')[1];
+            var dateend = $('body #dateend'+tkid).text();
+            var countDownDate = new Date(dateend).getTime();
+            var x = setInterval(function() {
+
+                // Get todays date and time
+                var now = new Date().getTime();
+                
+                // Find the distance between now an the count down date
+                var distance = countDownDate - now;
+                
+                // Time calculations for days, hours, minutes and seconds
+                var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+                var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+                
+                // Output the result in an element with id="demo"
+                
+                
+                // If the count down is over, write some text 
+                if (distance < 0) {
+                    clearInterval(x);
+                    document.getElementById("downtime-"+tkid).innerHTML = "Hết thời gian";
+                }else{
+                    document.getElementById("downtime-"+tkid).innerHTML = days + "ngày " + hours + "giờ "
+    + minutes + "phút " + seconds + "giây ";
+                    if (distance < 0) {
+                        clearInterval(x);
+                        document.getElementById("downtime-"+tkid).innerHTML = "Hết thời gian";
+                    }
+                }
+            }, 1000);
+        });
+    }
+
+    
+    if (noti_noti != 0){
+        var noti = '<span class="heartbit"></span> <span class="point">';
+        $('body .noti_fy').prepend(noti);
+        $('body .noti_msg').html('Bạn có '+noti_noti+' thông báo mới!');
+    }
+
+    if (noti_chat != 0){
+        var noti = '<span class="heartbit"></span> <span class="point">';
+        $('body .chat_noti').prepend(noti);
+        $('body .chat_msg').html('Bạn có '+noti_chat+' tin nhắn mới!');
+    }
+  
+    
+    function check_exits(id, list){
+        var x = false;
+        for (var i = 0; i < list.length; i++)
+            if (list[i] == id){
+                x = true;
+                break;
+            }
+        return x;
+    }
+
+
+    group_agent_Socket.onmessage = function(e) {
+        var data = JSON.parse(e.data);
+        var message = data['message'];
+        var time = data['time'];
+        var type_save = data['type'];
+            if (typeof type_save !== 'undefined'){
+                if (type_save == 're-noti'){
+                    $('.noti_noti').prepend(message);
+                }else if (type_save == 're-noti-chat'){
+                    $('.notification_chat').prepend(message);
+                }else{
+                    $('body #list_tk_history').empty();
+                    $('body #list_tk_history').append(message)
+                }
+            }else{
+                // Thong bao va load lai table home_agent khi co new ticket hoac co 1 agent nhan xu ly ticket
+                switch(message) {
+                    case 'ticket da duoc xu ly':
+                        setTimeout(function(){
+                            $("#list_ticket_home").DataTable().ajax.reload();
+                            $("body #pending").load(location.href + " #pending");
+                            $("body #processing").load(location.href + " #processing");
+                        }, 2000);
+                        break;
+                }
+
+                if (message.includes('Bạn có một yêu cầu mới!')) {
+                    var message1 = message.split('!')[1];
+                    for (i = 0; i <= list_tp.length-1; i++){
+                        if (message1 == list_tp[i]){
+                            var href = "{% url 'agent:index' %}";
+                            var noti = '<a href="'+href+'"><div class="btn btn-danger btn-circle m-r-10"><i class="fa fa-link"></i></div><div class="mail-contnet"><span class="mail-desc">'+message.split('!')[0]+'</span> <span class="time">'+time+'</span></div></a>';
+                            $('.noti_noti').prepend(noti);
+                            var noti1 = '<span class="heartbit"></span> <span class="point">';
+                            $('body .noti_fy').prepend(noti1);
+                            
+                            setTimeout(function(){
+                                $("#list_ticket_home").DataTable().ajax.reload();
+                                $("body #pending").load(location.href + " #pending");
+                            }, 2000);
+                            x.play();
+                        }
+                    }
+                }
+
+                if (message.includes('tải lại trang đi!')) {
+                    var message1 = message.split('!')[1];
+                    for (i = 0; i <= list_tp.length-1; i++){
+                        if (message1 == list_tp[i]){
+                            setTimeout(function(){
+                                $("#list_ticket_home").DataTable().ajax.reload();
+                            }, 2000);
+                        }
+                    }
+                }
+
+                if (message.includes('đã được chuyển sang dịch vụ ')) {
+                    var message1 = message.split('!')[1];
+                    for (i = 0; i <= list_tp.length-1; i++){
+                        if (message1 == list_tp[i]){
+                            var href = "{% url 'agent:index' %}";
+                            var noti = '<a href="'+href+'"><div class="btn btn-danger btn-circle m-r-10"><i class="fa fa-link"></i></div><div class="mail-contnet"><span class="mail-desc">'+message.split('!')[0]+'</span> <span class="time">'+time+'</span></div></a>';
+                            $('.noti_noti').prepend(noti);
+                            var noti1 = '<span class="heartbit"></span> <span class="point">';
+                            $('body .noti_fy').prepend(noti1);
+                            
+                            setTimeout(function(){
+                                $("#list_ticket_home").DataTable().ajax.reload();
+                                $("body #pending").load(location.href + " #pending");
+                                $("#list_ticket_processing").DataTable().ajax.reload();
+                                
+                            }, 2000);
+                            x.play();
+                        }
+                    }
+                }
+
+                // Thong bao va load lai table processing khi ban duoc ai do forward hoac add ticket
+                if (check_exits(agentName, message) && check_exits('forward_new', message)) {
+                    var message = 'Bạn có một yêu cầu chuyển tiếp đến';
+                    var href="{% url 'agent:inbox' %}"
+                    var noti = '<a href="'+href+'"><div class="btn btn-info btn-circle m-r-10"><i class="fa fa-share-square-o"></i></div><div class="mail-contnet"><span class="mail-desc">'+message+'</span> <span class="time">'+time+'</span></div></a>';
+                    $('.noti_noti').prepend(noti);
+                    var noti1 = '<span class="heartbit"></span> <span class="point">';
+                    $('body .noti_fy').prepend(noti1);
+                    x.play();
+
+                    
+                    setTimeout(function(){
+                        $("body #list_ticket_forward").load(location.href + " #list_ticket_forward");
+                    }, 2000);
+                }
+
+                if (check_exits(agentName, message) && check_exits('add_new', message)) {
+                    var message = 'Bạn có một yêu cầu cùng xử lý';
+                    var href="{% url 'agent:inbox' %}"
+                    var noti = '<a href="'+href+'"><div class="btn btn-info btn-circle m-r-10"><i class="fa fa-user-plus"></i></div><div class="mail-contnet"><span class="mail-desc">'+message+'</span> <span class="time">'+time+'</span></div></a>';
+                    $('.noti_noti').prepend(noti);
+                    var noti1 = '<span class="heartbit"></span> <span class="point">';
+                    $('body .noti_fy').prepend(noti1);
+                    x.play();
+
+                    
+                    setTimeout(function(){
+                        $("body #list_ticket_add").load(location.href + " #list_ticket_add");
+                    }, 2000);
+                }
+
+                // Thong bao va load lai table inbox, processing khi co agent dong y ticket ban forward hoac add
+                if (message.includes('+'+agentName) && message.includes('đã đồng ý nhận yêu cầu bạn chuyển tiếp')) {
+                    var message1 = message.slice(0, (message.length - agentName.length - 1));
+                    var href="{% url 'agent:processing_ticket' %}"
+                    var noti = '<a href="'+href+'"><div class="btn btn-info btn-circle m-r-10"><i class="fa fa-share-square-o"></i></div><div class="mail-contnet"><span class="mail-desc">'+message1+'</span> <span class="time">'+time+'</span></div></a>';
+                    $('.noti_noti').prepend(noti);
+                    var noti1 = '<span class="heartbit"></span> <span class="point">';
+                    $('body .noti_fy').prepend(noti1);
+                    x.play();
+
+                    
+                    setTimeout(function(){
+                        $("#list_ticket_forward_outbox").load(location.href + " #list_ticket_forward_outbox");
+                        $("body #processing").load(location.href + " #processing");
+                        $("#list_ticket_processing").DataTable().ajax.reload();
+                        
+                    }, 2000);
+                }
+
+                if (message.includes('+'+agentName) && message.includes('Yêu cầu mà bạn chuyển tiếp bị từ chối bởi')) {
+                    var message1 = message.slice(0, (message.length - agentName.length - 1));
+                    var href="{% url 'agent:processing_ticket' %}"
+                    var noti = '<a href="'+href+'"><div class="btn btn-info btn-circle m-r-10"><i class="fa fa-share-square-o"></i></div><div class="mail-contnet"><span class="mail-desc">'+message1+'</span> <span class="time">'+time+'</span></div></a>';
+                    $('.noti_noti').prepend(noti);
+                    var noti1 = '<span class="heartbit"></span> <span class="point">';
+                    $('body .noti_fy').prepend(noti1);
+                    x.play();
+
+                    
+                    setTimeout(function(){
+                        $("body #list_ticket_forward_outbox").load(location.href + " #list_ticket_forward_outbox");
+                    }, 2000);
+                }
+
+                if (message.includes('+'+agentName) && message.includes('đã đồng cùng xử lý yêu cầu của bạn')) {
+                    var message1 = message.slice(0, (message.length - agentName.length - 1));
+                    var href="{% url 'agent:processing_ticket' %}"
+                    var noti = '<a href="'+href+'"><div class="btn btn-info btn-circle m-r-10"><i class="fa fa-user-plus"></i></div><div class="mail-contnet"><span class="mail-desc">'+message1+'</span> <span class="time">'+time+'</span></div></a>';
+                    $('.noti_noti').prepend(noti);
+                    var noti1 = '<span class="heartbit"></span> <span class="point">';
+                    $('body .noti_fy').prepend(noti1);
+                    x.play();
+
+                    
+                    setTimeout(function(){
+                        $("#list_ticket_add_outbox").load(location.href + " #list_ticket_add_outbox");
+                        $("#list_ticket_processing").DataTable().ajax.reload();
+                        
+                    }, 2000);
+                    
+                }
+
+                if (message.includes('+'+agentName) && message.includes('Yêu cầu của bạn bị từ chối bởi')) {
+                    var message1 = message.slice(0, (message.length - agentName.length - 1));
+                    var href="{% url 'agent:processing_ticket' %}"
+                    var noti = '<a href="'+href+'"><div class="btn btn-info btn-circle m-r-10"><i class="fa fa-user-plus"></i></div><div class="mail-contnet"><span class="mail-desc">'+message1+'</span> <span class="time">'+time+'</span></div></a>';
+                    $('.noti_noti').prepend(noti);
+                    var noti1 = '<span class="heartbit"></span> <span class="point">';
+                    $('body .noti_fy').prepend(noti1);
+                    x.play();
+
+                    
+                    setTimeout(function(){
+                        $("#list_ticket_add_outbox").load(location.href + " #list_ticket_add_outbox");
+                    }, 2000);
+                }
+                
+                
+                if (check_exits(agentName, message) && check_exits('leader_forward', message)) {
+                    var message1 = 'Leader vừa chuyển tiếp cho bạn yêu cầu số '+message[message.length-1];
+                    var href="{% url 'agent:processing_ticket' %}";
+                    var noti = '<a href="'+href+'"><div class="btn btn-info btn-circle m-r-10"><i class="fa fa-share-square-o"></i></div><div class="mail-contnet"><span class="mail-desc">'+message1+'</span> <span class="time">'+time+'</span></div></a>';
+                    $('.noti_noti').prepend(noti);
+                    var noti1 = '<span class="heartbit"></span> <span class="point">';
+                    $('body .noti_fy').prepend(noti1);
+                    x.play();
+
+                    
+                    setTimeout(function(){
+                        $("#list_ticket_processing").DataTable().ajax.reload();
+                        $("body #processing").load(location.href + " #processing");
+                        $("body #pending").load(location.href + " #pending");
+                        $("#list_ticket_home").DataTable().ajax.reload();
+                    
+                    }, 2000);
+                }
+                
+                if (check_exits(agentName, message) && check_exits('admin_close_ticket', message)) {
+                    var len = message.length;
+                    var message1 = 'Leader đã đóng yêu cầu số '+message[len-1];
+                    var href="{% url 'agent:closed_ticket' %}";
+                    var noti = '<a href="'+href+'"><div class="btn btn-success btn-circle m-r-10"><i class="fa fa-check"></i></div><div class="mail-contnet"><span class="mail-desc">'+message1+'</span> <span class="time">'+time+'</span></div></a>';
+                    $('.noti_noti').prepend(noti);
+                    var noti1 = '<span class="heartbit"></span> <span class="point">';
+                    $('body .noti_fy').prepend(noti1);
+                    x.play();
+
+                    
+                    setTimeout(function(){
+                        $("#list_ticket_processing").DataTable().ajax.reload();
+                        $("body #done").load(location.href + " #done");
+                        $("body #processing").load(location.href + " #processing");
+                        $("#list_ticket_home").DataTable().ajax.reload();
+                        
+                    }, 2000);
+                }
+
+                
+                if (check_exits(agentName, message) && check_exits('admin_open_ticket', message)) {
+                    var len = message.length;
+                    var href = "{% url 'agent:processing_ticket' %}";
+                    var message1 = 'Leader đã mở yêu cầu số '+message[len-1];
+                    var noti = '<a href="'+href+'"><div class="btn btn-warning btn-circle m-r-10"><i class="fa fa-folder-open"></i></div><div class="mail-contnet"><span class="mail-desc">'+message1+'</span> <span class="time">'+time+'</span></div></a>';
+                    $('.noti_noti').prepend(noti);
+                    var noti1 = '<span class="heartbit"></span> <span class="point">';
+                    $('body .noti_fy').prepend(noti1);
+                    x.play();
+
+                    
+                    setTimeout(function(){
+                        $("#list_ticket_processing").DataTable().ajax.reload();
+                        $("body #done").load(location.href + " #done");
+                        $("body #processing").load(location.href + " #processing");
+                        $("#list_ticket_home").DataTable().ajax.reload();
+                        
+                    }, 2000);
+                    
+                }
+
+                if (check_exits(agentName, message) && check_exits('admin_delete_ticket', message)) {
+                    var len = message.length;
+                    var message1 = 'Leader đã xóa yêu cầu số '+message[len-1];
+                    var noti = '<a ><div class="btn btn-danger btn-circle m-r-10"><i class="fa fa-remove"></i></div><div class="mail-contnet"><span class="mail-desc">'+message1+'</span> <span class="time">'+time+'</span></div></a>';
+                    $('.noti_noti').prepend(noti);
+                    var noti1 = '<span class="heartbit"></span> <span class="point">';
+                    $('body .noti_fy').prepend(noti1);
+                    x.play();
+
+                    
+                    setTimeout(function(){
+                        $("#example23").load(location.href + " #example23");
+                        $("#list_ticket_add_outbox").load(location.href + " #list_ticket_add_outbox");
+                        $("#list_ticket_forward_outbox").load(location.href + " #list_ticket_forward_outbox");
+                        $("body #list_ticket_forward").load(location.href + " #list_ticket_forward");
+                        $("body #list_ticket_add").load(location.href + " #list_ticket_add");
+                        $("#list_ticket_processing").DataTable().ajax.reload();
+                        $("body #done").load(location.href + " #done");
+                        $("body #processing").load(location.href + " #processing");
+                        $("#list_ticket_home").DataTable().ajax.reload();
+                        
+                    }, 2000);
+                }
+
+                if (check_exits(agentName, message) && check_exits('cancle_forward', message)) {
+                    setTimeout(function(){
+                        $("body #list_ticket_forward").load(location.href + " #list_ticket_forward");
+                        $("body #list_ticket_forward_outbox").load(location.href + " #list_ticket_forward_outbox");
+                    }, 2000);
+                }
+
+                if (check_exits(agentName, message) && check_exits('cancle_add', message)) {
+                    setTimeout(function(){
+                        $("body #list_ticket_add").load(location.href + " #list_ticket_add");
+                        $("body #list_ticket_add_outbox").load(location.href + " #list_ticket_add_outbox");
+                    }, 2000);
+                }
+
+                
+                if (message.includes(agentName) && message[1].includes('được đóng bởi')) {
+                    var len = message.length;
+                    var message1 = message[len-1];
+                    var href = "{% url 'agent:closed_ticket' %}";
+                    var noti = '<a href="'+href+'"><div class="btn btn-success btn-circle m-r-10"><i class="fa fa-check"></i></div><div class="mail-contnet"><span class="mail-desc">'+message1+'</span> <span class="time">'+time+'</span></div></a>';
+                    $('.noti_noti').prepend(noti);
+                    var noti1 = '<span class="heartbit"></span> <span class="point">';
+                    $('body .noti_fy').prepend(noti1);
+                    x.play();
+                    
+                    setTimeout(function(){
+                        $("body #example23").load(location.href + " #example23");
+                        $("#list_ticket_home").DataTable().ajax.reload();
+                        $("body #done").load(location.href + " #done");
+                        $("body #processing").load(location.href + " #processing");
+                        $("#list_ticket_processing").DataTable().ajax.reload();
+                        
+                    }, 2000);
+                }
+
+
+                if (message.includes(agentName) && message[1].includes(' được chỉnh sửa bởi ')) {
+                    var len = message.length;
+                    var message1 = message[len-1];
+                    var href = "{% url 'agent:processing_ticket' %}";
+                    var noti = '<a href="'+href+'"><div class="btn btn-success btn-circle m-r-10"><i class="fa fa-check"></i></div><div class="mail-contnet"><span class="mail-desc">'+message1+'</span> <span class="time">'+time+'</span></div></a>';
+                    $('.noti_noti').prepend(noti);
+                    var noti1 = '<span class="heartbit"></span> <span class="point">';
+                    $('body .noti_fy').prepend(noti1);
+                    x.play();
+                    
+                    setTimeout(function(){
+                        $("#list_ticket_processing").DataTable().ajax.reload();
+                    }, 2000);
+                }
+
+
+                if (message.includes(agentName) && message[1].includes('đã mở lại yêu cầu số ')) {
+                    var len = message.length;
+                    var message1 = message[len-1];
+                    var href = "{% url 'agent:processing_ticket' %}";
+                    var noti = '<a href="'+href+'"><div class="btn btn-success btn-circle m-r-10"><i class="fa fa-check"></i></div><div class="mail-contnet"><span class="mail-desc">'+message1+'</span> <span class="time">'+time+'</span></div></a>';
+                    $('.noti_noti').prepend(noti);
+                    var noti1 = '<span class="heartbit"></span> <span class="point">';
+                    $('body .noti_fy').prepend(noti1);
+                    x.play();
+                    
+                    setTimeout(function(){
+                        $("#list_ticket_processing").DataTable().ajax.reload();
+                    }, 2000);
+                }
+
+
+                if (message == 'reload_home_agent') {
+                    setTimeout(function(){
+                        $("#list_ticket_home").DataTable().ajax.reload();
+                    }, 2000);
+                }
+
+                if (message.includes(agentName+'+') && message.includes('give_up')) {
+                    var message1 = message[0]+' đã từ bỏ xử lý yêu cầu số '+message[1];
+                    var href = "{% url 'agent:processing_ticket' %}";
+                    var noti = '<a href="'+href+'"><div class="btn btn-danger btn-circle m-r-10"><i class="fa fa-minus-circle"></i></div><div class="mail-contnet"><span class="mail-desc">'+message1+'</span> <span class="time">'+time+'</span></div></a>';
+                    $('.noti_noti').prepend(noti);
+                    var noti1 = '<span class="heartbit"></span> <span class="point">';
+                    $('body .noti_fy').prepend(noti1);
+                    x.play();
+
+                    setTimeout(function(){
+                        $("#list_ticket_processing").DataTable().ajax.reload();
+                        
+                    }, 2000);
+                }
+
+                if (message[1].includes(agentName) && message.includes('admin_add_topic')) {
+                    var message1 = 'Leader đã thêm bạn vào xử lý dịch vụ <b>'+message[0]+'</b>';
+                    var href = "{% url 'agent:profile' %}";
+                    var noti = '<a href="'+href+'"><div class="btn btn-danger btn-circle m-r-10"><i class="fa fa-check"></i></div><div class="mail-contnet"><span class="mail-desc">'+message1+'</span> <span class="time">'+time+'</span></div></a>';
+                    $('.noti_noti').prepend(noti);
+                    var noti1 = '<span class="heartbit"></span> <span class="point">';
+                    $('body .noti_fy').prepend(noti1);
+                    x.play();
+
+                }
+
+
+                if (message.includes(agentName) && message.includes('admin_uy_quyen')) {
+                    var message1 = 'Leader đã ủy quyền quản trị cho bạn xử lý dịch vụ <b>'+message[0]+'</b>';
+                    var href = "{% url 'agent:index' %}";
+                    var noti = '<a href="'+href+'"><div class="btn btn-danger btn-circle m-r-10"><i class="fa fa-check"></i></div><div class="mail-contnet"><span class="mail-desc">'+message1+'</span> <span class="time">'+time+'</span></div></a>';
+                    $('.noti_noti').prepend(noti);
+                    var noti1 = '<span class="heartbit"></span> <span class="point">';
+                    $('body .noti_fy').prepend(noti1);
+                    x.play();
+
+                    setTimeout(function(){
+                        $("body #sidebarnav").load(location.href + " #sidebarnav");
+                    }, 2000);
+                }
+
+                if (message.includes(agentName) && message.includes('admin_bo_uy_quyen')) {
+                    var message1 = 'Leader đã hủy quyền quản trị của bạn tại dịch vụ <b>'+message[0]+'</b>';
+                    var href = "{% url 'agent:index' %}";
+                    var noti = '<a href="'+href+'"><div class="btn btn-danger btn-circle m-r-10"><i class="fa fa-check"></i></div><div class="mail-contnet"><span class="mail-desc">'+message1+'</span> <span class="time">'+time+'</span></div></a>';
+                    $('.noti_noti').prepend(noti);
+                    var noti1 = '<span class="heartbit"></span> <span class="point">';
+                    $('body .noti_fy').prepend(noti1);
+                    x.play();
+
+                    setTimeout(function(){
+                        $("body #sidebarnav").load(location.href + " #sidebarnav");
+                    }, 2000);
+                }
+
+                if (message.includes(agentName) && message.includes('admin_delete_topic')) {
+                    var message1 = 'Leader đã xóa bạn khỏi dịch vụ <b>'+message[0]+'</b>';
+                    var href = "{% url 'agent:profile' %}";
+                    var noti = '<a href="'+href+'"><div class="btn btn-danger btn-circle m-r-10"><i class="fa fa-check"></i></div><div class="mail-contnet"><span class="mail-desc">'+message1+'</span> <span class="time">'+time+'</span></div></a>';
+                    $('.noti_noti').prepend(noti);
+                    var noti1 = '<span class="heartbit"></span> <span class="point">';
+                    $('body .noti_fy').prepend(noti1);
+                    x.play();
+
+                }
+
+
+                if (message.includes(agentName+'+') && message[2].includes(' is done!')) {
+                    var message1 = message[0]+' đã hoàn thành yêu cầu số '+message[1];
+                    var href = "{% url 'agent:processing_ticket' %}";
+                    var noti = '<a href="'+href+'"><div class="btn btn-danger btn-circle m-r-10"><i class="fa fa-check"></i></div><div class="mail-contnet"><span class="mail-desc">'+message1+'</span> <span class="time">'+time+'</span></div></a>';
+                    $('.noti_noti').prepend(noti);
+                    var noti1 = '<span class="heartbit"></span> <span class="point">';
+                    $('body .noti_fy').prepend(noti1);
+                    x.play();
+
+                    setTimeout(function(){
+                        $("#list_ticket_processing").DataTable().ajax.reload();
+                        $("body #done").load(location.href + " #done");
+                        $("body #processing").load(location.href + " #processing");
+                        
+                    }, 2000);
+                }
+
+                if (message.includes(agentName+'+') && message[2].includes(' is re-process!')) {
+                    var message1 = message[0]+' tiếp tục xử lý yêu cầu số '+message[1];
+                    var href = "{% url 'agent:processing_ticket' %}";
+                    var noti = '<a href="'+href+'"><div class="btn btn-danger btn-circle m-r-10"><i class="fa fa-minus-circle"></i></div><div class="mail-contnet"><span class="mail-desc">'+message1+'</span> <span class="time">'+time+'</span></div></a>';
+                    $('.noti_noti').prepend(noti);
+                    var noti1 = '<span class="heartbit"></span> <span class="point">';
+                    $('body .noti_fy').prepend(noti1);
+                    x.play();
+
+                    setTimeout(function(){
+                        $("#list_ticket_processing").DataTable().ajax.reload();
+                        $("body #done").load(location.href + " #done");
+                        $("body #processing").load(location.href + " #processing");
+                        
+                    }, 2000);
+                }
+
+                if (message[2].includes('đã hoàn thành!')) {
+                    setTimeout(function(){
+                        $("body #ct"+message[1]).load(location.href + " #ct"+message[1]);
+                    }, 2000);
+                }
+
+                if (check_exits(agentName, message) && check_exits('new_chat', message)) {
+                    var tkid = message[0];
+                    if ($('body #chat'+tkid).css('display') == 'block'){
+                        if ($('body .chat'+tkid).css('display') == 'none'){
+                            var href="javascript:register_popup_agent('chat"+message[0]+"', "+message[0]+", '"+message[2]+"', '"+message[1].split('_')[0]+"');"
+                            var src = "{% static 'images/avatar.png' %}"; 
+                            var noti = '<a href="'+href+'" class="noti_chat"><div class="user-img"> <img src="'+src+'" alt="user" class="img-circle"> <span class="profile-status online pull-right"></span> </div><div class="mail-contnet"><span class="mail-desc">'+message[0]+'-'+message[2]+'</span> <span class="time">'+time+'</span></div></a>';
+                            $('body .notification_chat').children('a').each(function () {
+                                if ($(this).html().includes(message[0])){
+                                    $(this).remove();
+                                }
+                            });
+                            $('.notification_chat').prepend(noti);
+                            var noti1 = '<span class="heartbit"></span> <span class="point">';
+                            $('body .chat_noti').prepend(noti1);
+                            x.play();
+                            
+                            
+                            
+                        }
+                    }else{
+                        var href="javascript:register_popup_agent('chat"+message[0]+"', "+message[0]+", '"+message[2]+"', '"+message[1].split('_')[0]+"');"
+                        var src = "{% static 'images/avatar.png' %}";
+                        var noti = '<a href="'+href+'" class="noti_chat"><div class="user-img"> <img src="'+src+'" alt="user" class="img-circle"> <span class="profile-status online pull-right"></span> </div><div class="mail-contnet"><span class="mail-desc">'+message[0]+'-'+message[2]+'</span> <span class="time">'+time+'</span></div></a>';
+                        $('body .notification_chat').children('a').each(function () {
+                            if ($(this).html().includes(message[0])){
+                                $(this).remove();
+                            }
+                        });
+                        $('.notification_chat').prepend(noti);
+                        var noti1 = '<span class="heartbit"></span> <span class="point">';
+                        $('body .chat_noti').prepend(noti1);
+                        x.play();
+
+                    
+                        
+                    }
+                    
+                }
+            }
+        
+    };
+    
+
+    var me = {};
+    me.avatar = "https://cdn2.iconfinder.com/data/icons/perfect-flat-icons-2/512/User_man_male_profile_account_person_people.png";
+
+    var you = {};
+    you.avatar = "https://cdn2.iconfinder.com/data/icons/rcons-users-color/32/support_man-512.png";      
+
+    //-- No use time. It is a javaScript effect.
+    function insertChat1(who, text, time, tkid){
+        if (time === undefined){
+            time = 0;
+        }
+        var control = "";
+        var date = time;
+        
+        if (who == "me"){
+            control = '<li style="width:100%">' +
+                            '<div class="msj macro">' +
+                            '<div class="avatar"><img class="img-circle" style="width:100%;" src="'+ me.avatar +'" /></div>' +
+                                '<div class="text text-l">' +
+                                    '<p>'+ text +'</p>' +
+                                    '<p><small>'+date+'</small></p>' +
+                                '</div>' +
+                            '</div>' +
+                        '</li>';                    
+        }else{
+            control = '<li style="width:100%;">' +
+                            '<div class="msj-rta macro">' +
+                                '<div class="text text-r">' +
+                                    '<p>'+text+'</p>' +
+                                    '<p><small>'+date+'</small></p>' +
+                                '</div>' +
+                            '<div class="avatar" style="padding:0px 0px 0px 10px !important"><img class="img-circle" style="width:100%;" src="'+you.avatar+'" /></div>' +                                
+                    '</li>';
+        }
+        setTimeout(
+            function(){                        
+                $("body #chat"+tkid+" .frame > ul").append(control).scrollTop($("body #chat"+tkid+" .frame > ul").prop('scrollHeight'));
+            }, time);
+        
+    }
+
+    var dict_ws = {};
+    var listkeys = [];
+    listkeys =  Object.keys(sessionStorage);
+    if (sessionStorage.length) {
+        for (i=0; i < sessionStorage.length; i++){
+            if (listkeys[i] != 'id_chat_leader'){
+                var listchat = [];
+                listchat = sessionStorage.getItem(listkeys[i]).split(',');
+                register_popup_agent(listchat[0].replace(/"/g, ''), listchat[1], listchat[2].replace(/"/g, ''), listchat[3].replace(/"/g, ''));
+                var tkid = listchat[4];
+
+                if (dict_ws[tkid] == undefined){
+                    dict_ws[tkid] = new WebSocket(
+                    'ws://' + window.location.host +
+                    '/ws/' + tkid + '/');
+                }
+
+
+                dict_ws[tkid].onmessage = function(e) {
+                    var data = JSON.parse(e.data);
+                    var message = data['message'];
+                    var who = data['who'];
+                    var time = data['time'];
+                    insertChat1(who, message, time, tkid);
+                };
+                
+                break;
+            }
+        }
+        for (i=1; i <= sessionStorage.length; i++){
+            sessionStorage.removeItem(listkeys[i]);
+        }
+    }
+
+    
+
+    $("body").on('click', '.noti_chat', function(){
+        var tkid = $(this).children('.mail-contnet').children().html().split('-')[0].replace(/\s/g,'');
+        $("body .noti_chat"+tkid).hide();
+        $('body .chat'+tkid).show();
+        $("body .mytext").focus();
+        
+
+        if (dict_ws[tkid] == undefined){
+            dict_ws[tkid] = new WebSocket(
+            'ws://' + window.location.host +
+            '/ws/' + tkid + '/');
+        }
+
+        var me = {};
+        me.avatar = "https://cdn2.iconfinder.com/data/icons/perfect-flat-icons-2/512/User_man_male_profile_account_person_people.png";
+
+        var you = {};
+        you.avatar = "https://cdn2.iconfinder.com/data/icons/rcons-users-color/32/support_man-512.png";      
+
+        //-- No use time. It is a javaScript effect.
+        function insertChat(who, text, time){
+            if (time === undefined){
+                time = 0;
+            }
+            var control = "";
+            var date = time;
+            
+            if (who == "me"){
+                control = '<li style="width:100%">' +
+                                '<div class="msj macro">' +
+                                '<div class="avatar"><img class="img-circle" style="width:100%;" src="'+ me.avatar +'" /></div>' +
+                                    '<div class="text text-l">' +
+                                        '<p>'+ text +'</p>' +
+                                        '<p><small>'+date+'</small></p>' +
+                                    '</div>' +
+                                '</div>' +
+                            '</li>';                    
+            }else{
+                control = '<li style="width:100%;">' +
+                                '<div class="msj-rta macro">' +
+                                    '<div class="text text-r">' +
+                                        '<p>'+text+'</p>' +
+                                        '<p><small>'+date+'</small></p>' +
+                                    '</div>' +
+                                '<div class="avatar" style="padding:0px 0px 0px 10px !important"><img class="img-circle" style="width:100%;" src="'+you.avatar+'" /></div>' +                                
+                        '</li>';
+            }
+            setTimeout(
+                function(){                        
+                    $("body #chat"+tkid+" .frame > ul").append(control).scrollTop($("body #chat"+tkid+" .frame > ul").prop('scrollHeight'));
+                }, time);
+            
+        }
+
+
+        
+
+        
+        dict_ws[tkid].onmessage = function(e) {
+            var data = JSON.parse(e.data);
+            var message = data['message'];
+            var who = data['who'];
+            var time = data['time'];
+            insertChat(who, message, time);
+        };
+
+        
+    });
+
+
+    $("body").on('click', '.chat_leader', function(){
+        var tkid = $(this).next('input').val().replace(/\s/g,'');
+        var tkid = tkid * 34252435254 + tkid - 1;
+        if (typeof(Storage) !== "undefined") {
+            sessionStorage.setItem('id_chat_leader', tkid);
+        } else {
+            document.write('Trình duyệt của bạn không hỗ trợ local storage');
+        }
+        $("body .noti_chat"+tkid).hide();
+        $('body .chat'+tkid).show();
+        $("body .mytext").focus();
+        
+
+        if (dict_ws[tkid] == undefined){
+            dict_ws[tkid] = new WebSocket(
+            'ws://' + window.location.host +
+            '/ws/' + tkid + '/');
+        }
+
+        var me = {};
+        me.avatar = "https://cdn2.iconfinder.com/data/icons/perfect-flat-icons-2/512/User_man_male_profile_account_person_people.png";
+
+        var you = {};
+        you.avatar = "https://cdn2.iconfinder.com/data/icons/rcons-users-color/32/support_man-512.png";      
+
+        //-- No use time. It is a javaScript effect.
+        function insertChat(who, text, time){
+            if (time === undefined){
+                time = 0;
+            }
+            var control = "";
+            var date = time;
+            
+            if (who == "me"){
+                control = '<li style="width:100%">' +
+                                '<div class="msj macro">' +
+                                '<div class="avatar"><img class="img-circle" style="width:100%;" src="'+ me.avatar +'" /></div>' +
+                                    '<div class="text text-l">' +
+                                        '<p>'+ text +'</p>' +
+                                        '<p><small>'+date+'</small></p>' +
+                                    '</div>' +
+                                '</div>' +
+                            '</li>';                    
+            }else{
+                control = '<li style="width:100%;">' +
+                                '<div class="msj-rta macro">' +
+                                    '<div class="text text-r">' +
+                                        '<p>'+text+'</p>' +
+                                        '<p><small>'+date+'</small></p>' +
+                                    '</div>' +
+                                '<div class="avatar" style="padding:0px 0px 0px 10px !important"><img class="img-circle" style="width:100%;" src="'+you.avatar+'" /></div>' +                                
+                        '</li>';
+            }
+            setTimeout(
+                function(){                        
+                    $("body #chat"+tkid+" .frame > ul").append(control).scrollTop($("body #chat"+tkid+" .frame > ul").prop('scrollHeight'));
+                }, time);
+            
+        }
+
+
+        
+
+        
+        dict_ws[tkid].onmessage = function(e) {
+            var data = JSON.parse(e.data);
+            var message = data['message'];
+            var who = data['who'];
+            var time = data['time'];
+            insertChat(who, message, time);
+        };
+
+        
+    });
+
+    function headerFunction(id) {
+        $('#'+id).parent().parent().next().slideToggle(300, 'swing');
+    }
+
+    $('body').on('click', '.xxx', function(){
+        $("body .mytext").trigger({type: 'keydown', which: 13, keyCode: 13});
+    })
+
+    $('body').on('click', '.xxx1', function(){
+        $("body .mytext1").trigger({type: 'keydown', which: 13, keyCode: 13});
+    })
+
+    $("body .mytext").focus();
+    $('body').on('keyup', '.mytext', function(e){
+        if (e.keyCode === 13) {
+            $(this).parent().parent().next().children('span').click();
+        }
+    })
+
+    $("body .mytext1").focus();
+    $('body').on('keyup', '.mytext1', function(e){
+        if (e.keyCode === 13) {
+            $(this).parent().parent().next().children('span').click();
+        }
+    })
+
+    $('body').on('click', '.xxx', function(){
+        var message = $(this).parent().parent().children().children().children('input').val();
+        message = escapeHtml(message);
+        var tk_id = $(this).parent().parent().parent().parent().children().children('.popup-head-left').children('h4').html().split('-')[0].replace(/\s/g,'');
+        var date = formatAMPM(new Date());
+        if (message != ''){
+            dict_ws[tk_id].send(JSON.stringify({
+                'message' : message,
+                'who' : 'you',
+                'time' : date
+            }));
+        }
+        $(this).parent().parent().children().children().children('input').val('');
+///////////////////////////////////////////////////
+        var userName = $(this).parent().parent().parent().parent().children().children('.popup-head-left').children('input').val().replace(/\s/g,'');
+        var chatSocket = new WebSocket(
+            'ws://' + window.location.host +
+            '/ws/user/' + userName + '/');
+        message = [];
+        message.push('new+chat');
+        message.unshift(tk_id);
+        chatSocket.onopen = function (event) {
+            chatSocket.send(JSON.stringify({
+                'message' : message,
+                'time' : date
+            }));
+        };
+    })
+
+    $('body').on('click', '.xxx1', function(){
+        var message = $(this).parent().parent().children().children().children('input').val();
+        if (sessionStorage.length) {
+            for (i=0; i < sessionStorage.length; i++){
+                if (listkeys[i] == 'id_chat_leader'){
+                    var tk_id = sessionStorage.getItem('id_chat_leader');
+                    var date = formatAMPM(new Date());
+                    if (message != ''){
+                        dict_ws[tk_id].send(JSON.stringify({
+                            'message' : message,
+                            'who' : 'you',
+                            'time' : date
+                        }));
+                    }
+                    $(this).parent().parent().children().children().children('input').val('');
+                }
+            }
+        }
+        
+    })
+
+
+    $('body').on('click', '.chat-close', function(){
+        var tk_id = $(this).parent().next().children('h4').html().split('-')[0].replace(/\s/g,'');
+        dict_ws[tk_id].close();
+        delete dict_ws[tk_id];
+        sessionStorage.removeItem(tk_id);
+        $("body #chat"+tk_id+" .frame > ul").empty();
+    })
+
+    $('body').on('click', '.chat-close1', function(){
+        if (sessionStorage.length) {
+            for (i=0; i < sessionStorage.length; i++){
+                if (listkeys[i] == 'id_chat_leader'){
+                    var tk_id = sessionStorage.getItem('id_chat_leader');
+                    dict_ws[tk_id].close();
+                    delete dict_ws[tk_id];
+                    sessionStorage.removeItem(tk_id);
+                    $("body #chat"+tk_id+" .frame > ul").empty();
+                }
+            }
+        }
+        
+    })
+
+
+</script>
+</body>
+</html>

@@ -1,0 +1,123 @@
+{% extends 'user/base.html' %}
+    {% load staticfiles %}
+{% block title %}Profile{% endblock %}
+    {% block content %}
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper">
+    <section class="content-header">
+      <h1>
+        Thông tin của bạn
+      </h1>
+      <ol class="breadcrumb">
+        <li><a ><i class="fa fa-home"></i> Trang chủ</a></li>
+        <li class="active">Thông tin</li>
+      </ol>
+    </section>
+
+  <section class="content">
+      <div class="row">
+        <div class="col-xs-12">
+          <div class="box">
+            <!-- /.box-header -->
+            <div class="box-body">
+                <table class="table table-striped table-bordered" id="info-user">
+                  <tbody>
+                    <tr>
+                        <td>Họ và tên</td>
+                      <td id="full_name">{{ user.fullname }}</td>
+                    </tr>
+                    <tr>
+                        <td>Email</td>
+                      <td id="email_user">{{ user.email }}</td>
+                    </tr>
+                    <tr>
+                        <td>Tên đăng nhập</td>
+                      <td>{{ user.username }}</td>
+                    </tr>
+                    <tr>
+                        <td>Điện thoại</td>
+                      <td id="phone_user">{{user.phone}}</td>
+                    </tr>
+                    <tr>
+                        <td>Nhận email thông từ hệ thống</td>
+                      {% if user.receive_email == 1 %}
+                            <td id="rc_email">Có</td>
+                        {% else %}
+                            <td id="rc_email">Không</td>
+                      {% endif%}
+                    </tr>
+                    <tr>
+                        <td>Trạng thái</td>
+                      {% if user.status == 0 %}
+                        <td><span class="label label-danger">Chưa kích hoạt</span></td>
+                        {% else %}
+                        <td><span class="label label-success">Đã kích hoạt</span></td>
+                        {% endif %}
+                    </tr>
+                    <tr>
+                        <td>Ngày tạo</td>
+                      <td>{{ user.created|date:'d/m/Y' }}</td>
+                    </tr>
+                  </tbody>
+                </table>
+                <button type="button" class="btn btn-primary info_agent" id="{{ user.id }}" data-toggle="modal" data-title="change" data-target="#topicModal" >
+                        <span class="glyphicon glyphicon-wrench"></span> Thay đổi thông tin
+                </button>
+
+                <button type="button" class="btn btn-primary pwd_agent" id="{{ user.id }}" data-toggle="modal" data-title="change_pwd" data-target="#topicModal" >
+                        <span class="glyphicon glyphicon-wrench" id="{{user.password}}" name='pwd_current'></span> Thay đổi mật khẩu
+                </button>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+{% csrf_token %}
+<div id="topicModal" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="title"></h3>
+            </div>
+            <div class="modal-body form-group">
+                <div id="info">
+                    <label for="fullname"><b>Họ và tên</b></label>
+                    <input class="inputText form-control" type="text" placeholder="Full name" name="fullname" >
+
+                    <label for="email"><b>Email</b></label>
+                    <input class="inputText form-control" type="text" placeholder="Enter Email" name="email">
+
+                    <label for="phone"><b>Điện thoại</b></label>
+                    <input class="inputText form-control" type="text" placeholder="Enter your phone number" name="phone">
+                    <br/>
+                    <input class="inputText" style="transform: scale(1.2)" type="checkbox" name="receive_mail" > <b> Nhận email thông báo từ hệ thống</b>
+                </div>
+
+                <div id="pwd">
+                    <label for="psw-current"><b>Mật khẩu hiện tại</b></label>
+                    <input class="inputText form-control" type="password" placeholder="Nhập mật khẩu hiện tại" name="current_password">
+
+                    <label for="psw"><b>Mật khẩu mới</b></label>
+                    <input class="inputText form-control" type="password" placeholder="Nhập mật khẩu mới" name="password">
+
+                    <label for="psw-repeat"><b>Nhắc lại mặt khẩu</b></label>
+                    <input class="inputText form-control" type="password" placeholder="Mật khẩu nhắc lại" name="password2">
+                </div>
+
+                <input type="hidden" name="userid" value="">
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="changeuser" class="btn btn-primary">Lưu</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal" id = "change_user_close">Đóng</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block js %}
+    <script src="{% static 'js/user/detail_user.js' %}"></script>
+{% endblock %}
+

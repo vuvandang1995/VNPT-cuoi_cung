@@ -1,0 +1,167 @@
+{% extends 'leader/base_leader.html' %}
+{% block title %} Dashboard {% endblock %}
+{% load staticfiles %}
+{% block content %}
+    <div class="page-wrapper">
+            <!-- Bread crumb -->
+            <div class="row page-titles">
+                <div class="col-md-5 align-self-center">
+                    <h3 class="text-primary">Quản lý nhân viên</h3> </div>
+                <div class="col-md-7 align-self-center">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="javascript:void(0)">Trang chủ</a></li>
+                        <li class="breadcrumb-item active">Quản lý nhân viên</li>
+                    </ol>
+                </div>
+            </div>
+            <!-- End Bread crumb -->
+            <div class="container-fluid">
+                <!-- Start Page Content -->
+            <!-- Container fluid  -->
+                {% csrf_token %}
+                <div class="container-fluid" id="list_topic">
+                <!-- Start Page Content -->
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-title="add" data-target="#topicModal" >
+                    <i class="fa fa-plus"></i> Thêm nhân viên
+                </button>
+                {% for key,value in list_ag.items %}
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-title">
+                                Chủ đề {{ key.name }}
+                            </div>
+                            <div class="card-body tk_div" id="tabdiv_{{ forloop.counter }}">
+                                <table style="width:100%;"  class="display nowrap table table-hover table-striped table-bordered" id="list_agent_leader_{{key.name}}">
+                                    <thead>
+                                        <tr align="center">
+                                            <th>Họ và tên</th>
+                                            <th>Tên đăng nhập</th>
+                                            <th>Email</th>
+                                            <th>Số điện thoại</th>
+                                            <th>Trạng thái</th>
+                                            <th>Số yêu cầu đang xử lý</th>
+                                            <th>Ủy quyền Quản trị</th>
+                                            <th>Thao tác</th>
+                                        </tr>
+                                    {% for va in value %}
+                                        <tr align="center">
+                                            <p hidden class="btn" data-toggle="modal" data-target="#{{va.id}}content1">{{va.id}}</p>
+                                            <th>{{va.fullname}}</th>
+                                            <th id="tendangnhap{{va.id}}">{{va.username}}</th>
+                                            <th>{{va.email}}</th>
+                                            <th>{{va.phone}}</th>
+                                            <th>
+                                                {% if va.status == 0 %}
+                                                <span class="label label-danger">Khóa</span>
+                                                {% else %}
+                                                <span class="label label-success">Kích hoạt</span>
+                                                {% endif %}
+                                            </th>
+                                            {% for key, value in list_tk.items %}
+                                                {% if key == va.username %}
+                                                    <th>{{ value.1 }}</th>
+                                                {% endif %}
+                                            {% endfor %}
+                                            <th>
+                                                {% if key.leader_bk == None  %}
+                                                    <label class="switch" id="{{va.id}}-{{key.name}}">
+                                                        <input type="checkbox">
+                                                        <span class="slider round"></span>
+                                                    </label>
+                                                {% else %}
+                                                    {% if key.leader_bk.username == va.username%}
+                                                        <label class="switch" id="{{va.id}}-{{key.name}}">
+                                                            <input type="checkbox" checked>
+                                                            <span class="slider round"></span>
+                                                            <p hidden>ok</p>
+                                                        </label>
+                                                    {% endif%}
+                                                {% endif%}
+
+                                            </th>
+                                            <th>
+                                                <button type="button" class="btn btn-danger" id="del_{{key.id}}_{{va.id}}" data-toggle="tooltip" title="Xóa">
+                                                    <p hidden>{{key.name}}</p>
+                                                    <i class="fa fa-trash"></i>
+                                                </button>
+                                            </th>
+                                        </tr>
+                                        <div class="modal" id="{{va.id}}content1" role="dialog">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h4 class="modal-title">{{va.fullname}}</h4>
+                                                    </div>
+                                                    <div class="modal-body form-group" id="ct{{va.id}}">
+                                                        <label>Tên đăng nhập:</label>
+                                                        <p><b>{{va.username}}</b></p>
+                                                        <label>Email:</label>
+                                                        <p><b>{{va.email}}</b></p>
+                                                        <label>Số điện thoại:</label>
+                                                        <p><b>{{va.phone}}</b></p>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-default" data-dismiss="modal">Đóng</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    {% endfor %}
+                                    </thead>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {% endfor %}
+                <!-- End PAge Content -->
+            </div>
+                <div id="topicModal" class="modal">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h3 class="modal-title">Thêm nhân viên xử lý</h3>
+                            </div>
+
+                            <div class="modal-body form-group">
+                                <label for="topicname"><b>Chủ đề:</b></label>
+                                <select name="topic" class="form-control" id="mySelect">
+                                     {% for tp in topic %}
+                                        <option value="{{tp.id}}" name="{{tp.name}}">{{tp.name}} - {{tp.description}}</option>
+                                     {% endfor %}
+                                </select>
+                                <label for="agent"><b>Chọn nhân viên:</b></label></br>
+                                <input style="border-radius: 0px;width: 300px" type="text" id="search" name="search" class="input-large" placeholder="Nhập tên quản trị viên">
+                                <input type="hidden" name="username_leader" value="">
+
+                                <div>
+                                    <ol id="list_agent">
+                                    </ol> 
+                                </div>
+
+                                <font id="leadererr" color="red"></font><br>
+                            </div>
+
+                            <div class="modal-footer">
+                                <button type="button" id="addTopic" class="btn btn-primary">Thêm</button>
+                                <button type="button" class="btn btn-default" data-dismiss="modal" id = "add_topic_close">Đóng</button>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+             <!--End Container fluid  -->
+             <!--footer -->
+             <!--End footer -->
+        </div>
+    </div>
+{% endblock %}
+{% block js %}
+    <script src="{% static 'js/leader/leader_manage_agent.js' %}"></script>
+{% endblock %}
+
+{% block css %}
+    <link href="{% static 'css/leader/authorize.css' %}" rel="stylesheet">
+{% endblock %}

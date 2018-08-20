@@ -1,0 +1,7 @@
+{% autoescape off %}
+Xin chào {{ receiver.fullname }},
+{{sender.fullname}} vừa xử lý xong yêu cầu của bạn.
+Hãy kiểm tra
+http://{{ domain }}{% url 'user:homeuser'%}
+Cảm ơn!
+{% endautoescape %}

@@ -1,0 +1,246 @@
+{% extends 'agent/base.html' %}
+{% load static %}
+{% block title %}Agent{% endblock %}
+{% block js %}
+        
+{% endblock%}
+{% block content %}
+
+        <!-- End Left Sidebar  -->
+        <!-- Page wrapper  -->
+        <div class="page-wrapper">
+            <!-- Bread crumb -->
+            <div class="row page-titles">
+                <div class="col-md-5 align-self-center">
+                    <h3 class="text-primary">Trang chủ</h3> </div>
+                <div class="col-md-7 align-self-center">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item active">Trang chủ</li>
+                    </ol>
+                </div>
+            </div>
+            <!-- End Bread crumb -->
+            <!-- Container fluid  -->
+            <div class="container-fluid">
+                <!-- Start Page Content -->
+                <div class="row">
+
+                    <div class="col-md-3">
+                        <div class="card p-30">
+                            <div class="media">
+                                <div class="media-left meida media-middle">
+                                    <span><i class="fa fa-envelope f-s-35 color-primary"></i></span>
+                                    <p></p>
+                                    <a href="{% url 'agent:processing_ticket' %}"><p class="m-b-0">Yêu cầu chờ xử lý</p></a>
+                                </div>
+                                <div class="media-body media-text-right" id="pending">
+                                    <h2>{{ tk_open }}</h2>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    
+                    <div class="col-md-3">
+                        <div class="card p-30">
+                            <div class="media">
+                                <div class="media-left meida media-middle">
+                                    <span><i class="fa fa-envelope-open f-s-40 color-success"></i></span>
+                                    <p></p>
+                                    <a href="{% url 'agent:processing_ticket' %}"><p class="m-b-0">Yêu cầu đang xử lý</p></a>
+
+                                </div>
+                                <div class="media-body media-text-right" id="processing">
+                                    <h2>{{ tk_processing }}</h2>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    
+                    <div class="col-md-3">
+                        <div class="card p-30">
+                            <div class="media">
+                                <div class="media-left meida media-middle">
+                                    <span><i class="fa fa-check-square-o f-s-40 color-warning"></i></span>
+                                    <p></p>
+                                    <a href="{% url 'agent:closed_ticket' %}"><p class="m-b-0">Yêu cầu hoàn thành</p></a>
+
+                                </div>
+                                <div class="media-body media-text-right" id="done">
+                                    <h2>{{ tk_done}}</h2>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    
+                    <div class="col-md-3">
+                        <div class="card p-30">
+                            <div class="media">
+                                <div class="media-left meida media-middle">
+                                    <span><i class="fa fa-archive f-s-40 color-danger"></i></span>
+                                    <p></p>
+                                    <a href="{% url 'agent:profile' %}"><p class="m-b-0">Số lượng dịch vụ</p></a>
+
+                                </div>
+                                <div class="media-body media-text-right">
+                                    <h2>{{ service_total }}</h2>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                </div>
+
+                
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="card">
+                            <div class="card-title">
+                                <h4>Yêu cầu chờ xử lý </h4>
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="display nowrap table table-hover table-striped table-bordered" id="list_ticket_home" width="100%">
+                                        <thead>
+                                            <tr align="center">
+                                                <th>ID</th>
+                                                <th>Khách hàng</th>
+                                                <th>Dịch vụ</th>
+                                                <th>Loại sự cố</th>
+                                                <th>Nội dung</th>
+                                                <th>Thông số</th>
+                                                <th>Đính kèm</th>
+                                                <th>Ngày tạo</th>
+                                                <th>Hạn xử lý</th>
+                                                <th>Thời gian xử lý</th>
+                                                <th>Trạng thái</th>
+                                                <th>Người gửi</th>
+                                                <th>Tùy chọn</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody align="center">
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                        
+
+
+                <div class="row">
+					<div class="col-lg-4">
+							<div class="card">
+								<div class="card-body">
+									<div class="year-calendar"></div>
+								</div>
+							</div>
+					</div>
+
+				    <div class="col-lg-8">
+                        <div class="card">
+                            <div class="card-title">
+                                <h4>Lịch sử </h4>
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive m-t-40">
+                                    <table id="example23" class="display nowrap table table-hover table-striped table-bordered" cellspacing="0" width="100%">
+                                        <thead>
+                                            <tr>
+                                                <th width="10%">ID</th>
+                                                <th width="35%">Tiêu đề</th>
+                                                <th width="20%">Chủ đề</th>
+                                                <th width="10%">Người gửi</th>
+                                                <th width="10%">Trạng thái</th>
+                                                <th width="15%">Ngày hết hạn</th>
+                                            </tr>
+                                        </thead>
+
+                                        <tbody id="list_tk_h istory">
+
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+
+                <!-- End PAge Content -->
+            </div>
+            <!-- End Container fluid  -->
+            <!-- footer -->
+            <!-- End footer -->
+        </div>
+        <!-- End Page wrapper  -->
+    </div>
+    <div class="modal fade" id="image" role="dialog">
+            <div  class="modal-dialog modal-lg">
+              <!-- Modal content-->
+              <div class="modal-content">
+                  <div class="modal-header">
+                    <h4 class="modal-title">Ảnh đính kèm</h4>
+                </div>
+                <div class="modal-body" id="img">
+                </div>
+                  <div class="modal-footer">
+                     <button type="button" class="btn btn-default" data-dismiss="modal">Đóng</button>
+                 </div>
+              </div>
+            </div>
+          </div>
+    <!-- End Wrapper -->
+    <!-- All Jquery -->
+    <script src="{% static 'js/lib/jquery/jquery.min.js' %}"></script>
+    <!-- Bootstrap tether Core JavaScript -->
+    <script src="{% static 'js/lib/bootstrap/js/popper.min.js' %}"></script>
+
+    <script src="{% static 'js/lib/bootstrap/js/bootstrap.min.js' %}"></script>
+    <!-- slimscrollbar scrollbar JavaScript -->
+    <script src="{% static 'js/jquery.slimscroll.js' %}"></script>
+
+    <!--Menu sidebar -->
+    <script src="{% static 'js/sidebarmenu.js' %}"></script>
+
+    <!--stickey kit -->
+    <script src="{% static 'js/lib/sticky-kit-master/dist/sticky-kit.min.js' %}"></script>
+
+    <!--Custom JavaScript -->
+
+
+    <!-- Amchart -->
+
+
+
+    <script src="{% static 'js/lib/calendar-2/moment.latest.min.js' %}"></script>
+
+    <!-- scripit init-->
+    <script src="{% static 'js/lib/calendar-2/semantic.ui.min.js' %}"></script>
+
+    <!-- scripit init-->
+    <script src="{% static 'js/lib/calendar-2/prism.min.js' %}"></script>
+
+    <!-- scripit init-->
+    <script src="{% static 'js/lib/calendar-2/pignose.calendar.min.js' %}"></script>
+
+    <!-- scripit init-->
+    <script src="{% static 'js/lib/calendar-2/pignose.init.js' %}"></script>
+
+
+    <script src="{% static 'js/lib/owl-carousel/owl.carousel.min.js' %}"></script>
+
+    <script src="{% static 'js/lib/owl-carousel/owl.carousel-init.js' %}"></script>
+
+
+    <!-- scripit init-->
+
+    <script src="{% static 'js/scripts.js' %}"></script>
+
+    <script src="{% static 'js/agent/assign.js' %}"></script>
+
+{% endblock%}

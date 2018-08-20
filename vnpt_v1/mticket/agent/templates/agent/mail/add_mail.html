@@ -1,0 +1,6 @@
+{% autoescape off %}
+Xin chào {{ receiver.fullname }},
+{{sender.fullname}} vừa mới yêu cầu thêm bạn vào cùng xử lý một yêu cầu.
+Hãy kiểm tra.
+http://{{ domain }}{% url 'agent:inbox'%}
+{% endautoescape %}

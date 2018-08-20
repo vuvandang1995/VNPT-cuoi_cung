@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html>
+<head>
+    {% load staticfiles %}
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Home</title>
+  <!-- Tell the browser to be responsive to screen width -->
+  <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+  <!-- Bootstrap 3.3.7 -->
+  <link rel="stylesheet" href="{% static 'user_interface/bower_components/bootstrap/dist/css/bootstrap.min.css' %}">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="{% static 'user_interface/bower_components/font-awesome/css/font-awesome.min.css' %}">
+  <!-- Ionicons -->
+  <link rel="stylesheet" href="{% static 'user_interface/bower_components/Ionicons/css/ionicons.min.css' %}">
+  <!-- Theme style -->
+  <link rel="stylesheet" href="{% static 'user_interface/dist/css/AdminLTE.min.css' %}">
+  <!-- iCheck -->
+  <link rel="stylesheet" href="{% static 'user_interface/plugins/iCheck/square/blue.css' %}">
+
+  <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+  <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+  <!--[if lt IE 9]>
+  <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+  <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+  <![endif]-->
+
+  <!-- Google Font -->
+  {% comment %} <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic"> {% endcomment %}
+</head>
+<body class="hold-transition login-page">
+<div class="container" id="info_user">
+    <div class="login-box">
+      <div class="login-logo">
+        <a ><b>M</b>Tickets</a>
+      </div>
+      <!-- /.login-logo -->
+      <div class="login-box-body">
+        <ul class="nav nav-tabs">
+          <li class="active"><a data-toggle="tab" href="#home">Đăng nhập</a></li>
+          <li><a data-toggle="tab" href="#menu2">Đăng ký</a></li>
+        </ul>
+
+        <div class="tab-content">
+          <div id="home" class="tab-pane fade in active">
+            <br>
+            <form method="POST">
+                {% csrf_token %}
+                <div class="form-group has-feedback">
+                  <label for="uname"><b>Tên đăng nhập</b></label>
+                  <input class="form-control" type="text" autocomplete="on" placeholder="Nhập tên đăng nhập" name="agentname" required>
+                  <div class="invalid-msg"></div>
+                  <span class="glyphicon glyphicon-user form-control-feedback"></span>
+                </div>
+                <div class="form-group has-feedback">
+                  <label for="psw"><b>Mật khẩu</b></label>
+                  <input  class="form-control" type="password" autocomplete="on" placeholder="Nhập mật khẩu" name="agentpass" required>
+                  <div class="invalid-msg1"></div>
+                  <span class="glyphicon glyphicon-lock form-control-feedback"></span>
+                </div>
+
+                <button type="submit" class="btn btn-primary" value="OK" id="login">Đăng nhập</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal" data-toggle="modal" data-target="#id03">Quên mật khẩu ?</button>
+                <br>
+                <br>
+                <font color="red" size="4">{{ mess }}</font>
+                <font color="red" size="4">{{ error }}</font>
+            </form>
+
+          </div>
+          
+          <div id="menu2" class="tab-pane fade">
+            <br>
+            <form method="POST">
+              {% csrf_token %}
+              <div class="form-group has-feedback">
+                <label for="fullname"><b>Họ và tên</b></label>
+                <input class="form-control inputText" type="text" placeholder="Nhập họ tên" name="fullname" required>
+                <div class="invalid-msg"></div>
+                <span class="glyphicon glyphicon-font form-control-feedback"></span>
+              </div>
+              <div class="form-group has-feedback">
+                <label for="username"><b>Tên đăng nhập</b></label>
+                <input class="form-control inputText" type="text" autocomplete="on" placeholder="Nhập tên đăng nhập" name="username" id="username_" required>
+                <div class="invalid-msg"></div>
+                <span class="glyphicon glyphicon-user form-control-feedback"></span>
+              </div>
+              <div class="form-group has-feedback">
+                <label for="email"><b>Email</b></label></br>
+                <input class="form-control inputText" type="text" placeholder="Nhập email" name="email" id="email_" required>
+                <div class="invalid-msg"></div>
+                <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
+              </div>
+              <div class="form-group has-feedback">
+                <label for="phone"><b>Số điện thoại</b></label>
+                <input class="form-control inputText" type="text" placeholder="Nhập số điện thoại" name="phone" id="phone" required>
+                <div class="invalid-msg"></div>
+                <span class="glyphicon glyphicon-phone form-control-feedback"></span>
+              </div>
+              <div class="form-group has-feedback">
+                <label for="psw"><b>Mật khẩu</b></label>
+                <input class="form-control inputText" type="password" autocomplete="on" placeholder="Nhập mật khẩu" name="password" id="p1" required>
+                <div class="invalid-msg"></div>
+                <span class="glyphicon glyphicon-lock form-control-feedback"></span>
+              </div>
+              <div class="form-group has-feedback">
+                <label for="psw-repeat"><b>Nhắc lại mật khẩu</b></label>
+                <input class="form-control inputText" type="password" autocomplete="on" placeholder="Nhập lại mật khẩu" name="password2" id="p2" required>
+                <div class="invalid-msg"></div>
+                <span class="glyphicon glyphicon-repeat form-control-feedback"></span>
+              </div>
+                <button type="submit" class="btn btn-primary" value="OK" id="register">Đăng ký</button>
+                <br>
+                <br>
+                <font color="red" size="4">{{ mess }}</font>
+                <font color="red" size="4">{{ error }}</font>
+          </form>
+          </div>
+        </div>
+      </div>
+      <!-- /.login-box-body -->
+    </div>
+</div>
+<div class="modal fade" id="id03" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Quên mật khẩu</h4>
+            </div>
+            <div class="modal-body form-group">
+                <form method="POST">
+                    {% csrf_token %}
+                    <label for="uname"><b>Email của bạn</b></label><br/>
+                    <input class="form-control" type="text" name="uemail" placeholder="Nhập email" required><br/>
+                    <div class="invalid-msg"></div><br/>
+                    <button type="submit" class="btn btn-primary" value="OK" id="uemail" >Cập nhật</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Đóng</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<!-- jQuery 3 -->
+<script src="{% static 'user_interface/bower_components/jquery/dist/jquery.min.js' %}"></script>
+<!-- Bootstrap 3.3.7 -->
+<script src="{% static 'user_interface/bower_components/bootstrap/dist/js/bootstrap.min.js' %}"></script>
+<!-- iCheck -->
+<script src="{% static 'user_interface/plugins/iCheck/icheck.min.js' %}"></script>
+
+<script src="{% static 'js/validate.js' %}"></script>
+</body>
+</html>

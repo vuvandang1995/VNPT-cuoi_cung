@@ -1,0 +1,5 @@
+{% autoescape off %}
+Xin chào {{ user.username }},
+Click vào đường dẫn bên dưới để cập nhật lại mật khẩu,
+http://{{ domain }}{% url 'user:resetpassword' uidb64=uid token=token %}
+{% endautoescape %}

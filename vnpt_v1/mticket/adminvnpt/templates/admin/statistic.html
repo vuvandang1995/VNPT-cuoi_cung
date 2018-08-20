@@ -1,0 +1,173 @@
+{% extends 'admin/base_admin.html' %}
+{% block title %} Thống kê {% endblock %}
+{% load staticfiles %}
+{% block content %}
+    <div class="page-wrapper">
+            <!-- Bread crumb -->
+            <div class="row page-titles">
+                <div class="col-md-5 align-self-center">
+                    <h3 class="text-primary">Thống kê</h3> </div>
+                <div class="col-md-7 align-self-center">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="javascript:void(0)">Trang chủ</a></li>
+                        <li class="breadcrumb-item active">Thống kê</li>
+                    </ol>
+                </div>
+            </div>
+            <!-- Container fluid  -->
+
+            <div class="container-fluid">
+                <!-- Start Page Content -->
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-body">
+                                <h1 style="text-align:center;">Thống kê
+                                    {{month}}/{{year}}
+                                    <button class="btn btn-danger" data-toggle="modal" data-target="#filter">
+                                        <i class="fa fa-search"></i>
+                                    </button>
+                                </h1>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card" id="info-user">
+                            <div class="card-title">
+                                <h2>Nhân viên tiếp nhận</h2>
+                            </div>
+                            <div class="card-body">
+                                <table id="tb_call_center" class="display nowrap table table-hover table-striped table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>Nhân viên</th>
+                                            <th>Sự cố gửi đi</th>
+                                            <th>Sự cố tự xử lý đúng hạn</th>
+                                            <th>Sự cố tự xử lý chậm</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    <!--{% for key,value in list_ag.items %}-->
+                                        <!--<tr>-->
+                                            <!--<td>{{ key.username }}</td>-->
+                                            <!--<td>{{ value.0 }}</td>-->
+                                            <!--<td>{{ value.1 }}</td>-->
+                                        <!--</tr>-->
+                                    <!--{% endfor %}-->
+                                    </tbody>
+                                </table>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card" id="info-user-1">
+                            <div class="card-title">
+                                <h2>Nhân viên xử lý</h2>
+                            </div>
+                            <div class="card-body">
+                                <table id="tb_agent" class="display nowrap table table-hover table-striped table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>Nhân viên</th>
+                                            <th>Xử lý sự cố đúng hạn</th>
+                                            <th>Xử lý sự cố chậm</th>
+                                            <th>Xử lý sự cố quá hạn</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    <!--{% for key,value in list_ag.items %}-->
+                                        <!--<tr>-->
+                                            <!--<td>{{ key.username }}</td>-->
+                                            <!--<td>{{ value.0 }}</td>-->
+                                            <!--<td>{{ value.1 }}</td>-->
+                                        <!--</tr>-->
+                                    <!--{% endfor %}-->
+                                    </tbody>
+                                </table>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card" id="info-user-2">
+                            <div class="card-title">
+                                <h2>Dịch vụ</h2>
+                            </div>
+                            <div class="card-body">
+                                <table id="tb_service" class="display nowrap table table-hover table-striped table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>Nhóm dịch vụ</th>
+                                            <th>Dịch vụ</th>
+                                            <th>Xử lý sự cố đúng hạn</th>
+                                            <th>Xử lý sự cố chậm</th>
+                                            <th>Xử lý sự cố quá hạn</th>
+
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    <!--{% for key,value in list_ag.items %}-->
+                                        <!--<tr>-->
+                                            <!--<td>{{ key.username }}</td>-->
+                                            <!--<td>{{ value.0 }}</td>-->
+                                            <!--<td>{{ value.1 }}</td>-->
+                                        <!--</tr>-->
+                                    <!--{% endfor %}-->
+                                    </tbody>
+                                </table>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- End PAge Content -->
+            </div>
+            <!-- End Container fluid  -->
+            <!-- footer -->
+            <!-- End footer -->
+        </div>
+    </div>
+<div id="filter" class="modal" role="dialog">
+  <div class="modal-dialog modal-sm">
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Tùy chọn</h4>
+      </div>
+          <div class="modal-body">
+                {% csrf_token %}
+                  <label for="content">Tháng</label><br/>
+                <input id="date" class="form-control" type="number" name="month" value="{{month}}" min="1" max="12" ><br/>
+                <div id="invalid-date"><font color="red"></font></div>
+                <label for="content2">Năm</label>
+                <input id="date2" class="form-control" type="number" name="year" value="{{year}}" min="2018" max="2050"><br/>
+                <div id="invalid-date2"><font color="red"></font></div>
+                <input class="inputText" style="transform: scale(1.5)" type="checkbox" name="all" > Thống kê cả năm
+          </div>
+          <div class="modal-footer">
+             <button type="button" class="btn btn-primary" id="update">Cập nhật</button>
+            <button type="button" class="btn btn-default" data-dismiss="modal" id="close">Đóng</button>
+          </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+{% block js %}
+    <script src="{% static 'js/lib/datatables/datatables.min.js' %}"></script>
+    <script src="{% static 'js/lib/datatables/cdn.datatables.net/buttons/1.2.2/js/dataTables.buttons.min.js' %}"></script>
+    <script src="{% static 'js/lib/datatables/cdn.datatables.net/buttons/1.2.2/js/buttons.flash.min.js' %}"></script>
+    <script src="{% static 'js/lib/datatables/cdnjs.cloudflare.com/ajax/libs/jszip/2.5.0/jszip.min.js' %}"></script>
+    <script src="{% static 'js/lib/datatables/cdn.rawgit.com/bpampuch/pdfmake/0.1.18/build/pdfmake.min.js' %}"></script>
+    <script src="{% static 'js/lib/datatables/cdn.rawgit.com/bpampuch/pdfmake/0.1.18/build/vfs_fonts.js' %}"></script>
+    <script src="{% static 'js/lib/datatables/cdn.datatables.net/buttons/1.2.2/js/buttons.html5.min.js' %}"></script>
+    <script src="{% static 'js/lib/datatables/cdn.datatables.net/buttons/1.2.2/js/buttons.print.min.js' %}"></script>
+    <script src="{% static 'js/lib/datatables/datatables-init.js' %}"></script>
+    <script src="{% static 'js/admin/statistic.js' %}"></script>
+{% endblock %}
