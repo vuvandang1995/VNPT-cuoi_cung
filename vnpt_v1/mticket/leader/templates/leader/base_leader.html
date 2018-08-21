@@ -214,38 +214,50 @@
         return strTime;
     }
 
-    function countdowntime(){
-        $('body .downtime').each(function(){
+    function countdowntime(id){
+        $('#'+id+' .downtime').each(function(){
             var tkid = $(this).attr('id').split('-')[1];
             var dateend = $('body #dateend'+tkid).text();
             var countDownDate = new Date(dateend).getTime();
+            var expried = $('#leader'+tkid).next().next().text();
             var x = setInterval(function() {
-
-                // Get todays date and time
-                var now = new Date().getTime();
-
-                // Find the distance between now an the count down date
-                var distance = countDownDate - now;
-
-                // Time calculations for days, hours, minutes and seconds
-                var days = Math.floor(distance / (1000 * 60 * 60 * 24));
-                var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-                var seconds = Math.floor((distance % (1000 * 60)) / 1000);
-
-                // Output the result in an element with id="demo"
-
-
-                // If the count down is over, write some text
-                if (distance < 0) {
-                    clearInterval(x);
-                    document.getElementById("downtime-"+tkid).innerHTML = "Hết thời gian";
+                clearInterval(sessionStorage.getItem(tkid));
+                if (expried){
+                    document.getElementById("downtime-"+tkid).innerHTML = expried;
+                    $('#leader'+tkid).next().next().hide();
                 }else{
-                    document.getElementById("downtime-"+tkid).innerHTML = days + "ngày " + hours + "giờ "
-    + minutes + "phút " + seconds + "giây ";
+                    // Get todays date and time
+                    var now = new Date().getTime();
+                    
+                    // Find the distance between now an the count down date
+                    var distance = countDownDate - now;
+                    
+                    // Time calculations for days, hours, minutes and seconds
+                    var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+                    var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                    var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                    var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+                    
+                    // Output the result in an element with id="demo"
+                    
+                    
+                    // If the count down is over, write some text 
                     if (distance < 0) {
                         clearInterval(x);
                         document.getElementById("downtime-"+tkid).innerHTML = "Hết thời gian";
+                    }else{
+                        document.getElementById("downtime-"+tkid).innerHTML = days + "ngày " + hours + "giờ "
+        + minutes + "phút " + seconds + "giây ";
+                        if (distance < 0) {
+                            clearInterval(x);
+                            document.getElementById("downtime-"+tkid).innerHTML = "Hết thời gian";
+                        }
+                    }
+
+                    if (typeof(Storage) !== "undefined") {
+                        sessionStorage.setItem(tkid, x);
+                    } else {
+                        document.write('Trình duyệt của bạn không hỗ trợ local storage');
                     }
                 }
             }, 1000);
@@ -257,9 +269,11 @@
         var message = data['message'];
 
         // Thong bao va load lai table home_agent khi co new ticket hoac co 1 agent nhan xu ly ticket
-        setTimeout(function(){
-            $('.tk_table').DataTable().ajax.reload(null,false);
-        }, 2000);
+        if (message[0] != '<'){
+            setTimeout(function(){
+                $('.tk_table').DataTable().ajax.reload(null,false);
+            }, 2000);
+        }
     };
 </script>
 {% block js %}

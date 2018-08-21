@@ -26,10 +26,10 @@
                     <div class="col-12">
                         <div class="card">
                             <div class="card-title">
-                                Dịch vụ {{ key }}
+                                Dịch vụ {{ key.name }}
                             </div>
                             <div class="card-body tk_div" id="tabdiv_{{ forloop.counter }}">
-                                <table style="width:100%;"  class="display nowrap table table-hover table-striped table-bordered tk_table" id="list_ticket_leader__{{ key }}">
+                                <table style="width:100%;"  class="display nowrap table table-hover table-striped table-bordered tk_table" id="list_ticket_leader__{{ key.id }}" name="{{ key.name }}">
                                     <thead>
                                         <tr align="center">
                                             <th>ID</th>

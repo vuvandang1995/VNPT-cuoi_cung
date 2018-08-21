@@ -291,6 +291,7 @@ $(document).ready(function(){
         });
     });
 
+
     $("body").on('click', '#chat_with_agent', function(){
         var tkid = $(this).children('input').val();
         $('body .chat'+tkid).show();
