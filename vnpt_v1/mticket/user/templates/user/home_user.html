@@ -201,9 +201,6 @@
                             <b>Thông số kỹ thuật:</b>
                             <textarea class="form-control" rows="5" name="thong_so_kt"></textarea><br>
 
-                            <b>Ghi chú:</b><br>
-                            <p hidden id="notetk"></p>
-                            <textarea class="form-control" rows="5" name="note"></textarea><br>
 
                             <b>Khách hàng:</b>
                             <input class="form-control" name="client"><br>
@@ -244,9 +241,6 @@
                             <b>Thông số kỹ thuật:</b>
                             <textarea disabled class="form-control" rows="5" name="thong_so_kt"></textarea><br>
 
-                            <b>Ghi chú:</b><br>
-                            <p hidden id="notetk"></p>
-                            <textarea disabled class="form-control" rows="5" name="note"></textarea><br>
 
                             <b>Khách hàng:</b>
                             <input disabled class="form-control" name="client"><br>
@@ -264,24 +258,7 @@
 
     </section>
   </div>
-<div class="modal forward-add" id="note" >
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title" id="title"></h4>
-            </div>
-            <div class="modal-body form-group">
-                <label for="content"><b>Nội dung</b></label><br>
-                <textarea class="form-control" id="comment"></textarea>
-                <input type="hidden" name="ticketid" value="">
-            </div>
-            <div class="modal-footer">
-                <button type="submit" class="btn btn-info" value="OK" id="send_note"><span class="glyphicon glyphicon-share"></span>Gửi</button>
-                <button type="button" class="btn btn-default" data-dismiss="modal" id="close_note">Đóng</button>
-            </div>
-        </div>
-    </div>
-</div>
+
 <div class="modal fade" id="all_note" role="dialog">
     <div  class="modal-dialog modal-lg">
       <!-- Modal content-->
@@ -292,12 +269,11 @@
         <div class="modal-body" >
             <div id="note_content">
                 <input type="hidden" name="comment_ticketid" id="comment_ticketid">
+                <input type="hidden" name="type" id="type">
                 <table style="width:100%;" id="list_comment" class="table table-bordered table-striped">
                 <thead>
                     <tr>
                         <th>Thòi gian</th>
-                        <th>Yêu cầu</th>
-                        <th>Trạng thái</th>
                         <th>Nhân viên cập nhật</th>
                         <th>Nội dung</th>
                     </tr>

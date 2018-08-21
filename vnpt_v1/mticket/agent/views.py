@@ -194,6 +194,12 @@ def processing_ticket(request):
             elif 'noti_chat' in request.POST:
                 sender.noti_chat = 0
                 sender.save()
+            elif 'tkid_comment' in request.POST:
+                ticket = Tickets.objects.get(id=request.POST['tkid_comment'])
+                CommentsLog.objects.create(date=timezone.now(),
+                                           ticketid=ticket,
+                                           agentid=sender,
+                                           action=request.POST['comment'])
             elif 'type' in request.POST:
                 if request.POST['type'] == 'forward_agent':
                     list_agent = request.POST['list_agent[]']
@@ -262,8 +268,6 @@ def processing_ticket(request):
                         action += 'xử lý lại yêu cầu'
                     else:
                         action += 'xử lý xong yêu cầu'
-                        ticket.note = request.POST['comment']
-                        ticket.save()
                         user = Agents.objects.get(id=ticket.sender.id)
                         if user.receive_email == 1:
                             email = EmailMessage(
@@ -277,6 +281,10 @@ def processing_ticket(request):
                             )
                             thread = EmailThread(email)
                             thread.start()
+                    CommentsLog.objects.create(date=timezone.now(),
+                                               ticketid=ticket,
+                                               agentid=sender,
+                                               action=request.POST['comment'])
                     TicketLog.objects.create(agentid=sender, ticketid=ticket,
                                             action=action,
                                             date=timezone.now().date(),
@@ -341,10 +349,10 @@ def processing_ticket_data(request):
             option = '<div class="btn-group">'
             if tk.status == 1:
                 status = r'<span class ="label label-warning" > Đang xử lý</span>'
-                option += r'''<button id="''' + str(tk.id) + '''" type="button" class="btn btn-success handle_done" data-toggle="modal" data-title="done" data-target="#note"><i data-toggle="tooltip" title="Hoàn thành" class="fa fa-check"></i></button>'''
+                option += r'''<button id="''' + str(tk.id) + '''" type="button" class="btn btn-success handle_done" data-toggle="modal" data-target="#all_note" data-title="done"><i data-toggle="tooltip" title="Hoàn thành" class="fa fa-check"></i></button>'''
             else:
                 status = r'<span class ="label label-success" > Hoàn thành</span>'
-                option += r'''<button id="''' + str(tk.id) + '''" type="button" class="btn btn-success handle_processing"><i data-toggle="tooltip" title="Xử lý" class="fa fa-wrench"></i></button>'''
+                option += r'''<button id="''' + str(tk.id) + '''" type="button" class="btn btn-success handle_processing" data-toggle="modal" data-target="#all_note" data-title="re-process"><i data-toggle="tooltip" title="Xử lý" class="fa fa-wrench"></i></button>'''
             handler = '<p hidden id="hd' + str(tk.id) + '">'
             service = '<p id="tp' + str(tk.id) + '">' + tk.serviceid.name + '</p>'
             tem = 0
@@ -367,10 +375,7 @@ def processing_ticket_data(request):
             else:
                 option += r'''<button id="''' + str(tk.id) + '''" type="button" class="btn btn-danger give_up" data-toggle="tooltip" title="Từ bỏ" ><i class="fa fa-minus-circle"></i></button>'''
             option +='''<a target="_blank" href="/agent/history/'''+str(tk.id)+ '''" type="button" class="btn btn-warning" data-toggle="tooltip" title="Dòng thời gian" ><span class="glyphicon glyphicon-floppy-disk" ></span><i class="fa fa-history"></i></a>'''
-            if tk.note != '':
-                note = r'<a data-toggle="modal" data-target="#all_note" data-title="'+tk.note+'" id="' + str(tk.id)+'"><i class="fa fa-pencil-square-o"></i></a>'
-            else:
-                note = ''
+            note = r'<a data-toggle="modal" data-target="#all_note" data-title="new" id="' + str(tk.id)+'"><i class="fa fa-pencil-square-o"></i></a>'
             data.append([tk.id, tk.sender.fullname, service, loai_su_co, content, thong_so_kt, note,
                          attach, datestart, dateend, downtime, status, handler, option])
         ticket = {"data": data}
@@ -693,5 +698,35 @@ def agent_to_leader(request):
         request.session['leader'] = request.session['agent']
         del request.session['agent']
         return redirect('/leader')
+    else:
+        return redirect("/")
+
+
+def comment_log(request):
+    if request.session.has_key('agent') and (Agents.objects.get(username=request.session['agent'])).status == 1:
+        agent = Agents.objects.get(username=request.session['agent'])
+        admin = agent.position
+        tpag1 = ServiceAgent.objects.filter(agentid=agent).values('serviceid')
+        idleader = Services.objects.filter(id__in=tpag1).values('leader')
+        list_leader = Agents.objects.filter(id__in=idleader)
+        topicag = ServiceAgent.objects.filter(agentid=agent)
+        list_tp = ""
+        for tp1 in topicag:
+            list_tp += str(tp1.serviceid.name) + "!"
+        content = {'noti_noti': agent.noti_noti,
+                   'noti_chat': agent.noti_chat,
+                   'agent_name': mark_safe(json.dumps(agent.username)),
+                   'fullname': mark_safe(json.dumps(agent.fullname)),
+                   'list_tp': mark_safe(json.dumps(list_tp)),
+                   'list_leader': list_leader,
+                   'admin': admin}
+        if request.method == 'POST':
+            if 'noti_noti' in request.POST:
+                agent.noti_noti = 0
+                agent.save()
+            elif 'noti_chat' in request.POST:
+                agent.noti_chat = 0
+                agent.save()
+        return render(request, 'agent/comment_log.html', content)
     else:
         return redirect("/")

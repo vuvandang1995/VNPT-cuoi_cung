@@ -240,7 +240,6 @@ def homeuser(request):
                 ticket.loai_su_co = request.POST['loai_su_co']
                 ticket.content = request.POST['content']
                 ticket.thong_so_kt = request.POST['thong_so_kt']
-                ticket.note = request.POST['note']
                 ticket.client = request.POST['client']
                 ticket.info_client = request.POST['info_client']
                 ticket.save()
@@ -252,8 +251,11 @@ def homeuser(request):
             elif 'tkid_reprocess' in request.POST:
                 ticket = Tickets.objects.get(id=request.POST['tkid_reprocess'])
                 ticket.status = 1
-                ticket.note = request.POST['comment']
                 ticket.save()
+                CommentsLog.objects.create(date=timezone.now(),
+                                           ticketid=ticket,
+                                           agentid=user,
+                                           action=request.POST['comment'])
                 TicketLog.objects.create(agentid=user,
                                          ticketid=ticket,
                                          action='xử lý lại yêu cầu',
@@ -330,7 +332,7 @@ def another_user(request, username):
         ls_user = Agents.objects.exclude(Q(username=request.session['user'])|Q(position__in=[1,2,3,4]))
         content = {'ticket': ticket,
                    'form': form,
-                   'user': user,
+                   'user': user_this,
                    'group': ls_group,
                    'handler': handler,
                    'service': service,
@@ -349,7 +351,7 @@ def another_user(request, username):
                 ticket.status = 3
                 ticket.date_close = timezone.now()
                 ticket.save()
-                TicketLog.objects.create(agentid=user,
+                TicketLog.objects.create(agentid=user_this,
                                          ticketid=ticket,
                                          action='đóng yêu cầu',
                                          date=timezone.now().date(),
@@ -372,7 +374,7 @@ def another_user(request, username):
                 ticket = Tickets.objects.get(id=request.POST['tkid_send'])
                 ticket.status = 0
                 ticket.save()
-                TicketLog.objects.create(agentid=user,
+                TicketLog.objects.create(agentid=user_this,
                                          ticketid=ticket,
                                          action='gửi yêu cầu',
                                          date=timezone.now().date(),
@@ -384,11 +386,10 @@ def another_user(request, username):
                 ticket.loai_su_co = request.POST['loai_su_co']
                 ticket.content = request.POST['content']
                 ticket.thong_so_kt = request.POST['thong_so_kt']
-                ticket.note = request.POST['note']
                 ticket.client = request.POST['client']
                 ticket.info_client = request.POST['info_client']
                 ticket.save()
-                TicketLog.objects.create(agentid=user,
+                TicketLog.objects.create(agentid=user_this,
                                          ticketid=ticket,
                                          action='chỉnh sửa yêu cầu',
                                          date=timezone.now().date(),
@@ -399,7 +400,7 @@ def another_user(request, username):
 
                 ticket.note = request.POST['comment']
                 ticket.save()
-                TicketLog.objects.create(agentid=user,
+                TicketLog.objects.create(agentid=user_this,
                                          ticketid=ticket,
                                          action='xử lý lại yêu cầu',
                                          date=timezone.now().date(),
@@ -408,14 +409,14 @@ def another_user(request, username):
                 ticket = Tickets.objects.get(id=request.POST['tkid_comment'])
                 CommentsLog.objects.create(date=timezone.now(),
                                            ticketid=ticket,
-                                           agentid=user,
+                                           agentid=user_this,
                                            action=request.POST['comment'])
             elif 'noti_noti' in request.POST:
-                user.noti_noti = 0
-                user.save()
+                user_this.noti_noti = 0
+                user_this.save()
             elif 'noti_chat' in request.POST:
-                user.noti_chat = 0
-                user.save()
+                user_this.noti_chat = 0
+                user_this.save()
             else:
                 form = CreateNewTicketForm(request.POST, request.FILES)
                 if form.is_valid():
@@ -502,11 +503,8 @@ def homeuser_data_tu_xu_ly(request, username):
                 attach = r'<a class="fa fa-image" data-title="' + str(tk.ticketid.attach) + '" data-toggle="modal" data-target="#image" id="' + str(tk.ticketid.id)+'"></a>'
             else:
                 attach = ''
-            if tk.ticketid.note != '':
-                note = r'<a data-toggle="modal" data-target="#all_note" data-title="'+tk.ticketid.note+'" id="' + str(tk.ticketid.id)+'"><i class="fa fa-pencil-square-o"></i></a>'
-            else:
-                note = ''
-            option = '''<div class="btn-group"><button type="button" class="btn btn-danger close_ticket_txl" data-toggle="tooltip" title="đóng" id="''' + str(tk.ticketid.id) + '''" ><span class="glyphicon glyphicon-off"></span></button>'''
+            note = r'<a data-toggle="modal" data-target="#all_note" data-title="new" id="' + str(tk.ticketid.id)+'"><i class="fa fa-pencil-square-o"></i></a>'
+            option = '''<div class="btn-group"><button type="button" class="btn btn-danger close_ticket_txl" data-toggle="modal" data-target="#all_note" data-title="close_txl" id="''' + str(tk.ticketid.id) + '''" ><span class="glyphicon glyphicon-off"></span></button>'''
             option += '''<button type="button" class="btn btn-primary send_ticket" data-toggle="tooltip" title="gửi" id="''' + tk.ticketid.serviceid.name + '''!'''+  str(tk.ticketid.id) + '''" ><span class="glyphicon glyphicon-send"></span></button>'''
             option += '''<button type="button" class="btn btn-success modify_ticket" data-toggle="tooltip" title="chỉnh sửa" id="'''+  str(tk.ticketid.id) + '''" ><i class="fa fa-wrench"></i></button>'''
             option += '''<a type="button" target=_blank class="btn btn-warning" href="/user/history_'''+str(tk.ticketid.id)+ '''" data-toggle="tooltip" title="dòng thời gian"><i class="fa fa-history"></i></a></div>'''
@@ -564,10 +562,7 @@ def homeuser_data_gui_di(request, username):
                 attach = r'<a class="fa fa-image" data-title="' + str(tk.attach) + '" data-toggle="modal" data-target="#image" id="' + str(tk.id)+'"></a>'
             else:
                 attach = ''
-            if tk.note != '':
-                note = r'<a data-toggle="modal" data-target="#all_note" data-title="'+tk.note+'" id="' + str(tk.id)+'"><i class="fa fa-pencil-square-o"></i></a>'
-            else:
-                note = ''
+            note = r'<a data-toggle="modal" data-target="#all_note" data-title="new" id="' + str(tk.id)+'"><i class="fa fa-pencil-square-o"></i></a>'
             datestart = tk.datestart + timezone.timedelta(hours=7)
             dateend = r'<p id="dateend' + str(tk.id) + '">'+ str(tk.dateend + timezone.timedelta(hours=7))[:-16] +'</p>'
             downtime = '''<p class="downtime" id="downtime-''' + str(tk.id) + '''"></p>'''
@@ -582,7 +577,7 @@ def homeuser_data_gui_di(request, username):
                     option += r'''<button disabled id="''' + str(tk.id) + '''" type="button" class="btn handle_processing"><i data-toggle="tooltip" title="Xử lý lại" class="glyphicon glyphicon-repeat"></i></button>'''
                 elif tk.status == 2:
                     status = r'<span class ="label label-success" id="stt' + str(tk.id) + '">Hoàn thành</span>'
-                    option += r'''<button id="''' + str(tk.id) + '''" type="button" class="btn handle_processing" data-toggle="modal" data-title="done" data-target="#note"><i data-toggle="tooltip" title="Xử lý lại" class="glyphicon glyphicon-repeat"></i></button>'''
+                    option += r'''<button id="''' + str(tk.id) + '''" type="button" class="btn handle_processing" data-toggle="modal" data-target="#all_note" data-title="re_process"><i data-toggle="tooltip" title="Xử lý lại" class="glyphicon glyphicon-repeat"></i></button>'''
                 else:
                     status = r'<span class ="label label-default" id="stt' + str(tk.id) + '">Đóng</span>'
                 handler = '<p>'
@@ -593,7 +588,7 @@ def homeuser_data_gui_di(request, username):
                     handler += t.agentid.username + "<br>"
                 handler += '</p>'
             if tk.status < 3:
-                option += '''<button type="button" class="btn btn-danger close_ticket_gui_di" data-toggle="tooltip" title="đóng" id="'''+str(tk.id)+'''" ><span class="glyphicon glyphicon-off"></span></button>'''
+                option += '''<button type="button" class="btn btn-danger close_ticket_gui_di" data-toggle="modal" data-target="#all_note" data-title="close_gd" id="'''+str(tk.id)+'''" ><span class="glyphicon glyphicon-off"></span></button>'''
             else:
                 option += '''<button disabled type="button" class="btn btn-danger close_ticket_gui_di" data-toggle="tooltip" title="đóng" id="'''+str(tk.id)+'''"><span class="glyphicon glyphicon-off"></span></button>'''
             if 1 == tk.status or tk.status == 2:
@@ -779,23 +774,37 @@ def history(request, id):
 
 
 def comment_data(request, id):
-    if request.session.has_key('user') and (Agents.objects.get(username=request.session['user'])).status == 1:
+    if (request.session.has_key('user') and (Agents.objects.get(username=request.session['user'])).status == 1) or ((request.session.has_key('agent')and(Agents.objects.get(username=request.session['agent'])).status == 1)):
         data = []
-        if id > 0:
-            ticket = Tickets.objects.get(id=id)
+        if id == '0':
+            pass
+        elif id == 'all':
+            cm_log = CommentsLog.objects.all()
+            for cm in cm_log:
+                agent = cm.agentid.fullname + '<br>' + cm.agentid.phone
+                data.append(
+                    [str(cm.date + timezone.timedelta(hours=7))[:-16], cm.ticketid.id, agent, cm.action])
+        else:
+            ticket = Tickets.objects.get(id=int(id))
             cm_log = CommentsLog.objects.filter(ticketid=ticket)
             for cm in cm_log:
-                date = str(cm.date.date())+'<br>' + str(cm.date.time())[:-7]
                 agent = cm.agentid.fullname + '<br>' + cm.agentid.phone
-                if cm.ticketid.status == 0:
-                    status = 'Chờ'
-                elif cm.ticketid.status == 1:
-                    status = "Đang xử lý"
-                elif cm.ticketid.status == 2:
-                    status = "Hoàn thành"
-                else:
-                    status = "Đóng"
-                data.append([date, cm.ticketid.id, status, agent, cm.action])
+                data.append(
+                    [str(cm.date + timezone.timedelta(hours=7))[:-16], agent, cm.action])
         ticket = {"data": data}
         tickets = json.loads(json.dumps(ticket))
         return JsonResponse(tickets, safe=False)
+
+
+def comment_log(request):
+    if request.session.has_key('user')and (Agents.objects.get(username=request.session['user'])).status == 1:
+        user = Agents.objects.get(username=request.session['user'])
+        ls_user = Agents.objects.exclude(Q(username=request.session['user'])|Q(position__in=[1,2,3,4]))
+        return render(request, 'user/comment_log.html', {'user': user,
+                                                           'username': mark_safe(json.dumps(user.username)),
+                                                           'fullname': mark_safe(json.dumps(user.fullname)),
+                                                           'noti_noti': user.noti_noti,
+                                                           'noti_chat': user.noti_chat,
+                                                           'ls_user': ls_user})
+    else:
+        return redirect("/")

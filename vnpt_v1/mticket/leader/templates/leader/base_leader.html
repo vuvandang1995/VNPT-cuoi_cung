@@ -183,7 +183,7 @@
                 description: "username"
             }
         },
-        
+
         list: {
             match: {
                 enabled: true
@@ -267,7 +267,7 @@
     group_agent_Socket.onmessage = function(e) {
         var data = JSON.parse(e.data);
         var message = data['message'];
-    
+
         // Thong bao va load lai table home_agent khi co new ticket hoac co 1 agent nhan xu ly ticket
         if (message[0] != '<'){
             setTimeout(function(){

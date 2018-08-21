@@ -143,6 +143,7 @@
                                   {% endfor%}
                                 </ul>
                             </li> -->
+                            <li> <a href="{% url 'agent:comment_log' %}" aria-expanded="false"><i class="fa fa-history"></i>&nbsp&nbsp&nbspLịch sử cập nhật</a></li>
                             {% if admin == 2 %}
                                 <li><a href="{% url 'agent:agent_to_leader' %}"><i class="fa fa-exchange"></i> Chế độ Quản trị viên </a></li>
                             {% endif%}

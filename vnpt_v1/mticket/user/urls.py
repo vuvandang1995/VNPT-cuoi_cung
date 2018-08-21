@@ -17,6 +17,7 @@ urlpatterns = [
     path('closed_ticket', views.closed_ticket, name='closed_ticket'),
     path('closed_ticket_data', views.closed_ticket_data, name='closed_ticket_data'),
     path('user/history_<int:id>', views.history, name='history'),
-    path('user/comment_data_<int:id>', views.comment_data, name='comment_data')
+    path('user/comment_data_<str:id>', views.comment_data, name='comment_data'),
+    path('user/comment_log', views.comment_log, name='comment_log')
 
 ]
