@@ -2,10 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="269ce17f-5733-4032-b491-d9716cf9a3b3" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/agent/templates/agent/comment_log.html" beforeDir="false" afterPath="$PROJECT_DIR$/agent/templates/agent/comment_log.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/user/static/js/user/comment_log.js" beforeDir="false" afterPath="$PROJECT_DIR$/user/static/js/user/comment_log.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/user/templates/user/comment_log.html" beforeDir="false" afterPath="$PROJECT_DIR$/user/templates/user/comment_log.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/user/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/user/views.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -49,7 +46,7 @@
       <file leaf-file-name="comment_log.html" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/agent/templates/agent/comment_log.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="327">
+            <state relative-caret-position="129">
               <caret line="33" column="51" selection-start-line="33" selection-start-column="51" selection-end-line="33" selection-end-column="51" />
               <folding>
                 <element signature="n#style#0;n#table#0;n#div#1;n#div#0;n#div#0;n#div#0;n#div#1;n#div#0;n#!!top" expanded="true" />
@@ -58,11 +55,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="views.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="views.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/user/views.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="665">
-              <caret line="798" column="25" selection-start-line="798" selection-start-column="25" selection-end-line="798" selection-end-column="25" />
+            <state relative-caret-position="247">
+              <caret line="779" column="16" lean-forward="true" selection-start-line="779" selection-start-column="16" selection-end-line="779" selection-end-column="16" />
               <folding>
                 <element signature="e#0#45#0" expanded="true" />
                 <element signature="e#24017#24200#0" />
@@ -72,6 +69,15 @@
                 <element signature="e#38700#41407#0" />
                 <element signature="e#41440#45017#0" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="home_leader.js" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/user/static/js/leader/home_leader.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="5544">
+              <caret line="291" column="55" selection-start-line="291" selection-start-column="55" selection-end-line="291" selection-end-column="55" />
             </state>
           </provider>
         </entry>
@@ -173,7 +179,7 @@
       </list>
     </option>
   </component>
-  <component name="ProjectFrameBounds" extendedState="6">
+  <component name="ProjectFrameBounds" extendedState="7">
     <option name="x" value="1455" />
     <option name="y" value="156" />
     <option name="width" value="1366" />
@@ -334,9 +340,10 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="1361" y="-5" width="1930" height="1090" extended-state="6" />
+    <frame x="1361" y="-5" width="1930" height="1090" extended-state="7" />
+    <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.16122234" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.16122234" />
       <window_info anchor="bottom" id="TODO" order="6" weight="0.32978722" />
       <window_info anchor="bottom" id="Event Log" order="7" side_tool="true" />
       <window_info anchor="bottom" id="Find" order="1" />
@@ -344,7 +351,7 @@
       <window_info anchor="bottom" id="Python Console" order="7" weight="0.32978722" />
       <window_info anchor="bottom" id="Run" order="2" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
-      <window_info active="true" anchor="bottom" id="Terminal" order="7" visible="true" weight="0.20212767" />
+      <window_info anchor="bottom" id="Terminal" order="7" visible="true" weight="0.20212767" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
@@ -596,13 +603,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/user/static/js/leader/home_leader.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="6402">
-          <caret line="291" column="55" selection-start-line="291" selection-start-column="55" selection-end-line="291" selection-end-column="55" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/user/static/js/user/home_user_tk.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="310">
@@ -723,13 +723,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/user/static/js/user/comment_log.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="88">
-          <caret line="4" column="53" lean-forward="true" selection-start-line="4" selection-start-column="53" selection-end-line="4" selection-end-column="53" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/user/templates/user/comment_log.html">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="261">
@@ -742,7 +735,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/agent/templates/agent/comment_log.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="327">
+        <state relative-caret-position="129">
           <caret line="33" column="51" selection-start-line="33" selection-start-column="51" selection-end-line="33" selection-end-column="51" />
           <folding>
             <element signature="n#style#0;n#table#0;n#div#1;n#div#0;n#div#0;n#div#0;n#div#1;n#div#0;n#!!top" expanded="true" />
@@ -750,10 +743,17 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/user/static/js/user/comment_log.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="88">
+          <caret line="4" column="53" lean-forward="true" selection-start-line="4" selection-start-column="53" selection-end-line="4" selection-end-column="53" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/user/views.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="665">
-          <caret line="798" column="25" selection-start-line="798" selection-start-column="25" selection-end-line="798" selection-end-column="25" />
+        <state relative-caret-position="247">
+          <caret line="779" column="16" lean-forward="true" selection-start-line="779" selection-start-column="16" selection-end-line="779" selection-end-column="16" />
           <folding>
             <element signature="e#0#45#0" expanded="true" />
             <element signature="e#24017#24200#0" />
@@ -763,6 +763,13 @@
             <element signature="e#38700#41407#0" />
             <element signature="e#41440#45017#0" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/user/static/js/leader/home_leader.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="5544">
+          <caret line="291" column="55" selection-start-line="291" selection-start-column="55" selection-end-line="291" selection-end-column="55" />
         </state>
       </provider>
     </entry>
