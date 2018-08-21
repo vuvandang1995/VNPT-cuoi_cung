@@ -4,6 +4,11 @@
     <list default="true" id="269ce17f-5733-4032-b491-d9716cf9a3b3" name="Default" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/leader/templates/leader/base_leader.html" beforeDir="false" afterPath="$PROJECT_DIR$/leader/templates/leader/base_leader.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/notification/agent/noti_dungnv.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/notification/chat/chat_54.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/notification/chat/chat_56.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/notification/user/noti_phieu.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/notification/user/noti_yeucau.txt" beforeDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -114,16 +119,16 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="base_leader.html" pinned="false" current-in-tab="false">
+      <file leaf-file-name="base_leader.html" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/leader/templates/leader/base_leader.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="438">
-              <caret line="257" lean-forward="true" selection-start-line="257" selection-end-line="257" />
+            <state relative-caret-position="-442">
+              <caret line="226" column="71" lean-forward="true" selection-start-line="226" selection-start-column="71" selection-end-line="226" selection-end-column="71" />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="consumers.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="consumers.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/user/consumers.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="88">
@@ -273,6 +278,29 @@
             <path>
               <item name="mticket" type="b2602c69:ProjectViewProjectNode" />
               <item name="mticket" type="462c0819:PsiDirectoryNode" />
+              <item name="notification" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="mticket" type="b2602c69:ProjectViewProjectNode" />
+              <item name="mticket" type="462c0819:PsiDirectoryNode" />
+              <item name="notification" type="462c0819:PsiDirectoryNode" />
+              <item name="agent" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="mticket" type="b2602c69:ProjectViewProjectNode" />
+              <item name="mticket" type="462c0819:PsiDirectoryNode" />
+              <item name="notification" type="462c0819:PsiDirectoryNode" />
+              <item name="chat" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="mticket" type="b2602c69:ProjectViewProjectNode" />
+              <item name="mticket" type="462c0819:PsiDirectoryNode" />
+              <item name="notification" type="462c0819:PsiDirectoryNode" />
+              <item name="user" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="mticket" type="b2602c69:ProjectViewProjectNode" />
+              <item name="mticket" type="462c0819:PsiDirectoryNode" />
               <item name="user" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
@@ -395,9 +423,8 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="1361" y="-5" width="1930" height="1090" extended-state="6" />
-    <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.16122234" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.16122234" />
       <window_info anchor="bottom" id="TODO" order="6" weight="0.32978722" />
       <window_info anchor="bottom" id="Event Log" order="7" side_tool="true" />
       <window_info anchor="bottom" id="Find" order="1" />
@@ -405,7 +432,7 @@
       <window_info anchor="bottom" id="Python Console" order="7" weight="0.32978722" />
       <window_info anchor="bottom" id="Run" order="2" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
-      <window_info anchor="bottom" id="Terminal" order="7" visible="true" weight="0.30638298" />
+      <window_info active="true" anchor="bottom" id="Terminal" order="7" visible="true" weight="0.3180851" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
@@ -826,13 +853,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/leader/templates/leader/base_leader.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="438">
-          <caret line="257" lean-forward="true" selection-start-line="257" selection-end-line="257" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/user/consumers.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="88">
@@ -841,6 +861,13 @@
             <element signature="e#322#2450#0" />
             <element signature="e#2495#12094#0" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/leader/templates/leader/base_leader.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-442">
+          <caret line="226" column="71" lean-forward="true" selection-start-line="226" selection-start-column="71" selection-end-line="226" selection-end-column="71" />
         </state>
       </provider>
     </entry>
