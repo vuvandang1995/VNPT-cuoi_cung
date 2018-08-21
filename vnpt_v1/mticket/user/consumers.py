@@ -173,6 +173,15 @@ class UserConsumer(WebsocketConsumer):
             u.noti_noti = u.noti_noti + 1
             u.save()
 
+        if 'vừa được nhật ghi chú!' in message:
+            f = r'notification/user/'+self.room_group_name+'.txt'
+            file = open(f,'a')
+            noti = '<a href="/user/"><div style="float:left;width:15%" class="btn btn-warning btn-circle m-r-10"><i class="fa fa-folder-open"></i></div><div style="float:right; width:80%"><p>'+message+'</p><small><i class="fa fa-clock-o"></i>'+time+'</small></div></a>'
+            file.write(noti + "\n")
+            file.close()
+            u.noti_noti = u.noti_noti + 1
+            u.save()
+
 
         if 'được chỉnh sửa bởi' in message:
             f = r'notification/user/'+self.room_group_name+'.txt'
@@ -390,6 +399,21 @@ class AgentConsumer(WebsocketConsumer):
             )
         
         if 'được đóng bởi' in message[-1] and len(message) > 1:
+            notifi = message[-1]
+            list_agent = message
+            del list_agent[-1]
+            for agent in list_agent:
+                f = r'notification/agent/noti_'+agent+'.txt'
+                file = open(f,'a')
+                noti = r'<a href="/agent/closed_ticket"><div class="btn btn-success btn-circle m-r-10"><i class="fa fa-check"></i></div><div class="mail-contnet"><span class="mail-desc">'+notifi+r'</span> <span class="time">'+time+r'</span></div></a>'
+                file.write(noti + "\n")
+                file.close()
+                ag = Agents.objects.get(username=agent)
+                ag.noti_noti = ag.noti_noti + 1
+                ag.save()
+
+
+        if 'vừa được nhật ghi chú!' in message[-1] and len(message) > 1:
             notifi = message[-1]
             list_agent = message
             del list_agent[-1]

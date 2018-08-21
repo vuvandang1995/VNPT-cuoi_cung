@@ -223,8 +223,16 @@
             var x = setInterval(function() {
                 clearInterval(sessionStorage.getItem(tkid));
                 if (expried){
-                    document.getElementById("downtime-"+tkid).innerHTML = expried;
                     $('#leader'+tkid).next().next().hide();
+                    document.getElementById("downtime-"+tkid).innerHTML = expried;
+                    if (expried == 'Đúng hạn'){
+                        document.getElementById("downtime-"+tkid).classList.remove("label-warning");
+                        document.getElementById("downtime-"+tkid).classList.add("label-success");
+                    }else{
+                        document.getElementById("downtime-"+tkid).classList.remove("label-warning");
+                        document.getElementById("downtime-"+tkid).classList.add("label-danger");
+                    }
+                    
                 }else{
                     // Get todays date and time
                     var now = new Date().getTime();

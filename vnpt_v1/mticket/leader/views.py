@@ -277,25 +277,19 @@ def home_leader_data(request, servicename):
                 option = r'''<button type="button" class="btn btn-primary" id="''' + str(tk.id) + '''" data-toggle="tooltip" title="Mở / Đóng yêu cầu"><i class="fa fa-power-off"></i></button>
                         <button type="button" class="btn btn-danger" id="''' + str(tk.id) + '''" data-toggle="tooltip" title="Xóa yêu cầu"><i class="fa fa-trash-o"></i></button>
                         <button type="button" class="btn btn-info" data-title="forward" id="'''+str(tk.id)+'''"data-toggle="modal" data-target="#forward_modal"><i class="fa fa-share-square-o" data-toggle="tooltip" title="Chuyển tiếp" ></i></button>
-                        <button disabled type="button" class="btn btn-success" data-title="change" id="''' + str(tk.id) + '''"data-toggle="modal" data-target="#change_modal"><i class="fa fa-arrow-right" data-toggle="tooltip" title="Chỉ có thể chuyển đổi dịch vụ khi yêu cầu đang chờ" ></i></button>
-                        <a type="button" target=_blank class="btn btn-warning" href="/agent/history/''' + str(tk.id) + '''" data-toggle="tooltip" title="Dòng thời gian"><i class="fa fa-history"></i></a>'''
-            downtime = '''<span class="downtime label label-danger" id="downtime-'''+str(tk.id)+'''"></span>'''
+                        <button disabled type="button" class="btn btn-success" data-title="change" id="''' + str(tk.id) + '''"data-toggle="modal" data-target="#change_modal"><i class="fa fa-arrow-right" data-toggle="tooltip" title="Chỉ có thể chuyển đổi dịch vụ khi yêu cầu đang chờ" ></i></button>'''
+            downtime = '''<span class="downtime label label-warning" id="downtime-'''+str(tk.id)+'''"></span>'''
             idtk = r'''<button type="button" class="btn" data-toggle="modal" data-target="#''' + str(
                 tk.id) + '''content">''' + str(tk.id) + '''</button>'''
             service = '<p id="tp' + str(tk.id) + '">' + tk.serviceid.name + '</p>' + '<input type="hidden" name="topicc'+str(tk.id)+'" value="'+str(tk.serviceid.id)+'">'
-            if tk.lv_priority == 0:
-                level = r'<span class ="label label-success"> Thấp </span>'
-            elif tk.lv_priority == 1:
-                level = r'<span class ="label label-warning"> Trung bình </span>'
-            else:
-                level = r'<span class ="label label-danger"> Cao </span>'
-            sender = '<p hidden id="sender' + str(tk.id) + '">' + tk.sender.username + '</p><p>' + tk.sender.fullname + '</p>'
             
+            sender = '<p hidden id="sender' + str(tk.id) + '">' + tk.sender.username + '</p><p>' + tk.sender.fullname + '</p>'
+            note = r'<a data-toggle="modal" data-target="#all_note" data-title="new" id="' + str(tk.id)+'"><i class="fa fa-pencil-square-o"></i></a>'
             # if tk.expired == 1:
             #     status += r'<br><span class ="label label-danger"> Quá hạn </span>'
             dateend = tk.dateend + timezone.timedelta(hours=7)
             dateend = r'<p id="dateend' + str(tk.id) + '">'+ str(tk.dateend + timezone.timedelta(hours=7))[:-16] +'</p>'
-            data.append([idtk, tk.loai_su_co, service, status, level, downtime, sender, handler, dateend, option])
+            data.append([idtk, tk.loai_su_co, service, status, note, downtime, sender, handler, dateend, option])
         ticket = {"data": data}
         tickets = json.loads(json.dumps(ticket))
         return JsonResponse(tickets, safe=False)

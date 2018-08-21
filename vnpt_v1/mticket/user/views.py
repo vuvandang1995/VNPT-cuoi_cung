@@ -774,7 +774,7 @@ def history(request, id):
 
 
 def comment_data(request, id):
-    if (request.session.has_key('user') and (Agents.objects.get(username=request.session['user'])).status == 1) or ((request.session.has_key('agent')and(Agents.objects.get(username=request.session['agent'])).status == 1)):
+    if (request.session.has_key('user') and (Agents.objects.get(username=request.session['user'])).status == 1) or ((request.session.has_key('agent')and(Agents.objects.get(username=request.session['agent'])).status == 1)) or request.session.has_key('leader')and(Agents.objects.get(username=request.session['leader'])).status == 1:
         data = []
         if id == '0':
             pass

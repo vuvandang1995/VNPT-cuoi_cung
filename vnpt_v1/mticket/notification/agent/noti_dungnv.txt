@@ -1,0 +1,2 @@
+<a href="/agent/closed_ticket"><div class="btn btn-success btn-circle m-r-10"><i class="fa fa-check"></i></div><div class="mail-contnet"><span class="mail-desc">Yêu cầu số 88 vừa được nhật ghi chú!</span> <span class="time">5:32 PM 21/8/2018</span></div></a>
+<a href="/agent/closed_ticket"><div class="btn btn-success btn-circle m-r-10"><i class="fa fa-check"></i></div><div class="mail-contnet"><span class="mail-desc">Yêu cầu số 88 được đóng bởi phieu</span> <span class="time">5:36 PM 21/8/2018</span></div></a>
