@@ -33,12 +33,12 @@ def logout_leader(request):
 def home_leader(request):
     if request.session.has_key('leader')and(Agents.objects.get(username=request.session['leader'])).status == 1:
         if Agents.objects.get(username=request.session['leader']).position == 2:
-            leader = Agents.objects.get(username=request.session.get('leader'))
+            leader = Agents.objects.get(username=request.session['leader'])
             list_topic = Services.objects.filter(leader=leader)
             list_ticket = {}
             list_ag = {}
             for tp in list_topic:
-                list_ticket[tp.name] = Tickets.objects.filter(serviceid=tp)
+                list_ticket[tp] = Tickets.objects.filter(serviceid=tp)
                 ag = ServiceAgent.objects.filter(serviceid=tp)
                 list_ag[tp.name] = [a.agentid for a in ag]
             content = {'tickets': list_ticket,
@@ -134,12 +134,12 @@ def home_leader(request):
                     tk.save()
             return render(request, 'leader/home_leader.html', content)
         else:
-            leader = Agents.objects.get(username=request.session.get('leader'))
+            leader = Agents.objects.get(username=request.session['leader'])
             list_topic = Services.objects.filter(leader_bk=leader)
             list_ticket = {}
             list_ag = {}
             for tp in list_topic:
-                list_ticket[tp.name] = Tickets.objects.filter(serviceid=tp)
+                list_ticket[tp] = Tickets.objects.filter(serviceid=tp)
                 ag = ServiceAgent.objects.filter(serviceid=tp)
                 list_ag[tp.name] = [a.agentid for a in ag]
             content = {'tickets': list_ticket,
@@ -303,7 +303,7 @@ def home_leader_data(request, servicename):
 
 def home_chart(request):
     if request.session.has_key('leader')and(Agents.objects.get(username=request.session['leader'])).status == 1:
-        leader = Agents.objects.get(username=request.session.get('leader'))
+        leader = Agents.objects.get(username=request.session['leader'])
         content = {
             'today': timezone.now().date(),
             'agent_name': mark_safe(json.dumps(leader.username)),
@@ -620,7 +620,7 @@ def leader_manage_agent(request):
                     except:
                         pass
 
-            leader = Agents.objects.get(username=request.session.get('leader'))
+            leader = Agents.objects.get(username=request.session['leader'])
             list_topic = Services.objects.filter(leader=leader)
             list_ag = {}
             list_tk = {}
@@ -675,7 +675,7 @@ def leader_manage_agent(request):
                     except:
                         pass
 
-            leader = Agents.objects.get(username=request.session.get('leader'))
+            leader = Agents.objects.get(username=request.session['leader'])
             list_topic = Services.objects.filter(leader_bk=leader)
             list_ag = {}
             list_tk = {}

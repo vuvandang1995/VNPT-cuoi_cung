@@ -332,10 +332,12 @@ $(document).ready(function(){
                 success: function(){
                     // window.location.reload();
                     $("#list_tk_gui_di").DataTable().ajax.reload(null,false);
-                    var array = $('#hd'+id).html().split("<br>");
-                    for (i = 0; i < array.length-1; i++) {
-                        var agentName = array[i].replace(/\s/g,'');
-                        message.push(agentName);
+                    if ($('#hd'+id).html() != 'Không có ai'){
+                        var array = $('#hd'+id).html().split("<br>");
+                        for (i = 0; i < array.length-1; i++) {
+                            var agentName = array[i].replace(/\s/g,'');
+                            message.push(agentName);
+                        }
                     }
 
                     message.push(mgs);
@@ -346,11 +348,6 @@ $(document).ready(function(){
                     chatSocket1.onopen = function (event) {
                         chatSocket1.send(JSON.stringify({
                             'message' : message,
-                            'time': date
-                        }));
-
-                        chatSocket1.send(JSON.stringify({
-                            'message' : 'reload_home_agent',
                             'time': date
                         }));
                     };

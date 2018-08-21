@@ -648,13 +648,6 @@
                     }, 2000);
                 }
 
-
-                if (message == 'reload_home_agent') {
-                    setTimeout(function(){
-                        $("#list_ticket_home").DataTable().ajax.reload(null,false);
-                    }, 2000);
-                }
-
                 if (message.includes(agentName+'+') && message.includes('give_up')) {
                     var message1 = message[0]+' đã từ bỏ xử lý yêu cầu số '+message[1];
                     var href = "{% url 'agent:processing_ticket' %}";

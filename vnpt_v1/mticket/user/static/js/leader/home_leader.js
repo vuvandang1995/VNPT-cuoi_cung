@@ -1,6 +1,7 @@
 $(document).ready(function(){
     $('body .tk_table').each( function(){
-        var topicname = $(this).attr('id').split('__')[1];
+        var topicname = $(this).attr('name');
+        var id = $(this).attr('id');
         $(this).DataTable({
             "columnDefs": [
                 { "width": "5%", "targets": 0 },
@@ -17,13 +18,8 @@ $(document).ready(function(){
                 "type": "GET",
                 "url": location.href +"/data/" + topicname,
                 "contentType": "application/json; charset=utf-8",
-                "data": function(result){
-                    return JSON.stringify(result);
-                },
                 "complete": function(){
-                    setTimeout(function(){
-                        countdowntime();
-                    }, 4000);
+                    countdowntime(id);
                 }
             },
             "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
@@ -52,24 +48,24 @@ $(document).ready(function(){
                 url:location.href,
                 data: {'close':id, 'csrfmiddlewaretoken':token},
                 success: function(){
-                    $('.tk_table').DataTable().ajax.reload();
+                    // $('.tk_table').DataTable().ajax.reload();
                     if (stt != 'Đóng'){
-                        array2.push('admin_close_ticket');
-                        array2.push(id);
-                        var sender = $('#sender'+id).html();
-                        group_agent_Socket.send(JSON.stringify({
-                            'message' : array2,
-                            'time' : date,
-                        }));
-
                         if (stt == 'Chờ'){
                             var topic = $("#tp"+id).html();
                             group_agent_Socket.send(JSON.stringify({
                                 'message' : 'tải lại trang đi!'+topic,
                                 'time' : date,
                             }));
+                        }else{
+                            array2.push('admin_close_ticket');
+                            array2.push(id);
+                            group_agent_Socket.send(JSON.stringify({
+                                'message' : array2,
+                                'time' : date,
+                            }));
                         }
 
+                        var sender = $('#sender'+id).html();
                         var Socket1 = new WebSocket(
                         'ws://' + window.location.host +
                         '/ws/user/' + sender + '/');
@@ -85,18 +81,22 @@ $(document).ready(function(){
                             }, 1000);
                         };
                     }else{
-                        array2.push('admin_open_ticket');
-                        array2.push(id);
-                        group_agent_Socket.send(JSON.stringify({
-                            'message' : array2,
-                            'time' : date,
-                        }));
-
                         var topic = $("#tp"+id).html();
                         group_agent_Socket.send(JSON.stringify({
                             'message' : 'tải lại trang đi!'+topic,
                             'time' : date,
                         }));
+
+                        if (stt != 'Chờ'){
+                            array2.push('admin_open_ticket');
+                            array2.push(id);
+                            group_agent_Socket.send(JSON.stringify({
+                                'message' : array2,
+                                'time' : date,
+                            }));
+                        }
+
+
                         var sender = $('#sender'+id).html();
                         var Socket1 = new WebSocket(
                         'ws://' + window.location.host +
@@ -143,7 +143,7 @@ $(document).ready(function(){
                         'time' : date,
                     }));
 
-                    $('.tk_table').DataTable().ajax.reload();
+                    // $('.tk_table').DataTable().ajax.reload();
                     var sender = $('#sender'+id).html();
                     var Socket1 = new WebSocket(
                     'ws://' + window.location.host +
@@ -185,7 +185,7 @@ $(document).ready(function(){
             data: {'list_agent[]': JSON.stringify(list_agent),'csrfmiddlewaretoken':token, 'ticketid': id},
             success: function(){
                 document.getElementById("forward_ticket_close").click();
-                $('.tk_table').DataTable().ajax.reload();
+                // $('.tk_table').DataTable().ajax.reload();
                 list_agent.push('leader_forward');
                 list_agent.push(id);
                 group_agent_Socket.send(JSON.stringify({
@@ -249,7 +249,7 @@ $(document).ready(function(){
         var button = $(event.relatedTarget);
         var ticketid = button.attr('id');
         $("input[name=ticketid]").val(ticketid);
-        .ajax.reload(null,false);ut[name=topicc"+ticketid+"]").val();
+        var topic = $("input[name=topicc"+ticketid+"]").val();
         $("#mySelect").val(topic);
     });
 
@@ -269,7 +269,7 @@ $(document).ready(function(){
                 data: {'csrfmiddlewaretoken':token, 'ticketid_change': id, 'serviceid':serviceid},
                 success: function(){
                     document.getElementById("change_topic_close").click();
-                    $('.tk_table').DataTable().ajax.reload();
+                    // $('.tk_table').DataTable().ajax.reload();
                     
                     var message1 = '';
                     var message2 = '';
