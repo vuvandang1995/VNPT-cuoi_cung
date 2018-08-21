@@ -2,8 +2,9 @@ $(document).ready(function(){
     var table_comment = $('#list_comment').DataTable({
         "columnDefs": [
                     { "width": "15%", "targets": 0 },
-                    { "width": "20%", "targets": 1 },
-                    { "width": "65%", "targets": 2 },
+                    { "width": "10%", "targets": 1 },
+                    { "width": "20%", "targets": 2 },
+                    { "width": "55%", "targets": 3 },
                 ],
         "ajax": {
             "type": "GET",

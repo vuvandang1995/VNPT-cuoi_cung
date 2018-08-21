@@ -776,12 +776,17 @@ def history(request, id):
 def comment_data(request, id):
     if (request.session.has_key('user') and (Agents.objects.get(username=request.session['user'])).status == 1) or ((request.session.has_key('agent')and(Agents.objects.get(username=request.session['agent'])).status == 1)):
         data = []
-        if id != '0':
-            if id == 'all':
-                cm_log = CommentsLog.objects.all()
-            else:
-                ticket = Tickets.objects.get(id=int(id))
-                cm_log = CommentsLog.objects.filter(ticketid=ticket)
+        if id == '0':
+            pass
+        elif id == 'all':
+            cm_log = CommentsLog.objects.all()
+            for cm in cm_log:
+                agent = cm.agentid.fullname + '<br>' + cm.agentid.phone
+                data.append(
+                    [str(cm.date + timezone.timedelta(hours=7))[:-16], cm.ticketid.id, agent, cm.action])
+        else:
+            ticket = Tickets.objects.get(id=int(id))
+            cm_log = CommentsLog.objects.filter(ticketid=ticket)
             for cm in cm_log:
                 agent = cm.agentid.fullname + '<br>' + cm.agentid.phone
                 data.append(
