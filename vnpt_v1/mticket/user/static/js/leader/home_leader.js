@@ -21,9 +21,7 @@ $(document).ready(function(){
                     return JSON.stringify(result);
                 },
                 "complete": function(){
-                    setTimeout(function(){
-                        countdowntime();
-                    }, 4000);
+                    countdowntime();
                 }
             },
             "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
@@ -249,7 +247,7 @@ $(document).ready(function(){
         var button = $(event.relatedTarget);
         var ticketid = button.attr('id');
         $("input[name=ticketid]").val(ticketid);
-        .ajax.reload(null,false);ut[name=topicc"+ticketid+"]").val();
+        var topic = $("input[name=topicc"+ticketid+"]").val();
         $("#mySelect").val(topic);
     });
 

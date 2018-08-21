@@ -154,6 +154,7 @@
                         <li> <a href="{% url 'agent:outbox' %}" aria-expanded="false"><i class="fa fa-send-o"></i>&nbsp&nbsp&nbspYêu cầu gửi đi</a></li>
                         <li> <a href="{% url 'agent:processing_ticket' %}" aria-expanded="false"><i class="fa fa-hourglass-2"></i>&nbsp&nbsp&nbspYêu cầu đang xử lý</a></li>
                         <li> <a href="{% url 'agent:closed_ticket' %}" aria-expanded="false"><i class="fa fa-check-circle"></i>&nbsp&nbsp&nbspYêu cầu đã đóng</a></li>
+                        <li> <a href="{% url 'agent:comment_log' %}" aria-expanded="false"><i class="fa fa-history"></i>&nbsp&nbsp&nbspLịch sử cập nhật</a></li>
                         {% if admin == 4 %}
                             <li><a href="{% url 'agent:agent_to_leader' %}"><i class="fa fa-exchange"></i>&nbsp&nbsp&nbsp Chế độ Quản trị viên </a></li>
                         {% endif%}

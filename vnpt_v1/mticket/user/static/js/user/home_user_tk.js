@@ -1,6 +1,5 @@
 $('#invalid-msg').html("");
 function validateSize(){
-
     if( typeof (($("#attach"))[0].files[0]) === 'undefined'){
         var client = $('#id02 input[name=client]').val();
         $('#id02 input[name=client]').val(escapeHtml(client));
@@ -34,6 +33,7 @@ function validateSize(){
         return true;
     }
 }
+
 $(document).ready(function(){
     var table = $('#list_tk_tu_xu_ly').DataTable({
         "columnDefs": [
@@ -69,6 +69,7 @@ $(document).ready(function(){
         "order": [[ 0, "desc" ]],
         "displayLength": 25,
     });
+
     var table = $('#list_tk_gui_di').DataTable({
         "columnDefs": [
                     { "width": "2%", "targets": 0 },
@@ -106,12 +107,12 @@ $(document).ready(function(){
         "displayLength": 25,
     });
 
-
     $("#id02").on('show.bs.modal', function(event){
         var button = $(event.relatedTarget);
         var title = button.data('title');
         $("input[name=kind]").val(title);
     });
+
     $("#id02").submit(function() {
         var type = $("input[name=kind]").val();
         if (type == 'gui_di'){
@@ -147,40 +148,12 @@ $(document).ready(function(){
         }
 
     });
+
     $("#image").on('show.bs.modal', function(event){
         var button = $(event.relatedTarget);
         var path = button.data('title');
         var img = '<img src="/media/'+ path +'" style="max-width:80%;max-height:600px;">'
         $("#img").html(img);
-    });
-    $('body').on('click', '.close_ticket_txl', function(){
-        var id = $(this).attr('id');
-        var token = $("input[name=csrfmiddlewaretoken]").val();
-        var mgs = 'Yêu cầu số ' +id+' được đóng bởi '+userName;
-        var message = []
-        if(confirm("Bạn có chắc không ?")){
-            $.ajax({
-                type:'POST',
-                url:location.href,
-                data: {'tkid':id, 'csrfmiddlewaretoken':token},
-                success: function(){
-                    $("#list_tk_tu_xu_ly").DataTable().ajax.reload(null,false);
-                    var chatSocket1 = new WebSocket(
-                    'ws://' + window.location.host +
-                    '/ws/agent/agent+group_agent_Socket/');
-                    var message = '';
-                    message = 'load';
-            
-                    var date = formatAMPM(new Date());
-                    chatSocket1.onopen = function (event) {
-                        chatSocket1.send(JSON.stringify({
-                            'message' : message,
-                            'time' : date
-                        }));
-                    };
-                }
-            });
-        }
     });
 
     $('body').on('click', '.send_ticket', function(){
@@ -274,7 +247,6 @@ $(document).ready(function(){
         var loai_su_co = $("#usercontent input[name=loai_su_co]").val();
         var content = $("#usercontent textarea[name=content]").val();
         var thong_so_kt = $("#usercontent textarea[name=thong_so_kt]").val();
-        var note = $("#usercontent textarea[name=note]").val();
         var client = $("#usercontent input[name=client]").val();
         var info_client = $("#usercontent input[name=info_client]").val();
         var message = [];
@@ -283,7 +255,7 @@ $(document).ready(function(){
             type:'POST',
             url:location.href,
             data: {'tkid_modify':id, 'csrfmiddlewaretoken':token, 'loai_su_co': escapeHtml(loai_su_co),
-            'content': escapeHtml(content), 'thong_so_kt': escapeHtml(thong_so_kt), 'note': escapeHtml(note),
+            'content': escapeHtml(content), 'thong_so_kt': escapeHtml(thong_so_kt),
              'client': escapeHtml(client), 'info_client': escapeHtml(info_client)},
             success: function(){
                     var chatSocket1 = new WebSocket(
@@ -317,47 +289,6 @@ $(document).ready(function(){
                 $(".table").DataTable().ajax.reload(null,false);
             }
         });
-    });
-
-    $('body').on('click', '.close_ticket_gui_di', function(){
-        var id = $(this).attr('id');
-        var token = $("input[name=csrfmiddlewaretoken]").val();
-        var mgs = 'Yêu cầu số ' +id+' được đóng bởi '+userName;
-        var message = [];
-        if(confirm("Bạn có chắc không ?")){
-            $.ajax({
-                type:'POST',
-                url:location.href,
-                data: {'tkid':id, 'csrfmiddlewaretoken':token},
-                success: function(){
-                    // window.location.reload();
-                    $("#list_tk_gui_di").DataTable().ajax.reload(null,false);
-                    var array = $('#hd'+id).html().split("<br>");
-                    for (i = 0; i < array.length-1; i++) {
-                        var agentName = array[i].replace(/\s/g,'');
-                        message.push(agentName);
-                    }
-
-                    message.push(mgs);
-                    var date = formatAMPM(new Date());
-                    var chatSocket1 = new WebSocket(
-                    'ws://' + window.location.host +
-                    '/ws/agent/agent+group_agent_Socket/');
-                    chatSocket1.onopen = function (event) {
-                        chatSocket1.send(JSON.stringify({
-                            'message' : message,
-                            'time': date
-                        }));
-
-                        chatSocket1.send(JSON.stringify({
-                            'message' : 'reload_home_agent',
-                            'time': date
-                        }));
-                    };
-                }
-            });
-        }
-
     });
 
     $("body").on('click', '#chat_with_agent', function(){
@@ -435,58 +366,11 @@ $(document).ready(function(){
 
     });
 
-    $("#note").on('show.bs.modal', function(event){
-        var button = $(event.relatedTarget);
-        var title = button.data('title');
-        if (title === 'done'){
-            var tkid = button.attr('id');
-            $("input[name=ticketid]").val(tkid);
-            $('#note #title').html("Cập nhật ghi chú cho yêu cầu"+tkid)
-            var comment1 = $('#note'+tkid).html();
-            $('textarea#comment').val(comment1);
-        }
-    });
-
-    $("body").on('click', '#send_note', function(){
-        var id = $("#note input[name=ticketid]").val();
-        var token = $("input[name=csrfmiddlewaretoken]").val();
-        var comment = $('textarea#comment').val();
-        $("#note").modal('hide');
-        var message = [];
-        $.ajax({
-            type:'POST',
-            url:location.href,
-            data: {'tkid_reprocess':id, 'csrfmiddlewaretoken':token, 'comment': escapeHtml(comment)},
-            success: function(){
-                var chatSocket1 = new WebSocket(
-                    'ws://' + window.location.host +
-                    '/ws/agent/agent+group_agent_Socket/');
-                mgs = userName + ' đã mở lại yêu cầu số '+id;
-                var array = $('#hd'+id).html().split("<br>");
-                for (i = 0; i < array.length-1; i++) {
-                    var agentName = array[i].replace(/\s/g,'');
-                    message.push(agentName);
-                }
-                message.push(mgs);
-                var date = formatAMPM(new Date());
-                chatSocket1.onopen = function (event) {
-                    chatSocket1.send(JSON.stringify({
-                        'message' : message,
-                        'time' : date
-                    }));
-                };
-                $(".table").DataTable().ajax.reload(null,false);
-            }
-        });
-    });
-
     var table_comment = $('#list_comment').DataTable({
         "columnDefs": [
-                    { "width": "10%", "targets": 0 },
-                    { "width": "5%", "targets": 1 },
-                    { "width": "10%", "targets": 2 },
-                    { "width": "15%", "targets": 3 },
-                    { "width": "50%", "targets": 4 },
+                    { "width": "15%", "targets": 0 },
+                    { "width": "20%", "targets": 1 },
+                    { "width": "65%", "targets": 2 },
                 ],
         "ajax": {
             "type": "GET",
@@ -495,28 +379,35 @@ $(document).ready(function(){
             "data": function(result){
                 return JSON.stringify(result);
             },
-            "complete": function(){
-                setTimeout(function(){
-                    countdowntime();
-                }, 1000);
-            }
         },
         'dom': 'Rlfrtip',
         "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
         "order": [[ 0, "asc" ]],
         "displayLength": 25,
     });
+
     $("#all_note").on('show.bs.modal', function(event){
-        $("#new_comment").show();
-        $("#save_comment").hide();
-        $("#cancel_comment").hide();
-        $("#new_text").hide();
         var button = $(event.relatedTarget);
         var id = button.attr('id');
+        var type = button.data('title');
+        $("#all_note input[name=type]").val(type);
         $("#title_comment").text("Ghi chú yêu cầu số "+id);
         $("#comment_ticketid").val(id);
         $('#list_comment').DataTable().ajax.url("/user/comment_data_"+id).load();
         $('#list_comment').DataTable().ajax.reload(null,false);
+        if(type.includes("new")){
+            $("#new_comment").show();
+            $("#save_comment").hide();
+            $("#cancel_comment").hide();
+            $("#new_text").hide();
+        }else{
+            $("#new_comment").hide();
+            $("#save_comment").show();
+            $("#cancel_comment").hide();
+            $("#new_text").show();
+            $("#new_text").val("");
+        }
+
     });
 
     $("body").on('click', '#new_comment', function(){
@@ -536,42 +427,110 @@ $(document).ready(function(){
     });
 
     $("body").on('click', '#save_comment', function(){
-        $("#new_comment").show();
-        $("#save_comment").hide();
-        $("#cancel_comment").hide();
-        $("#new_text").hide();
+        var type = $("#all_note input[name=type]").val();
         var token = $("input[name=csrfmiddlewaretoken]").val();
         var comment = $("#new_text").val();
-        var id =$("#comment_ticketid").val()
+        var id =$("#comment_ticketid").val();
         var message = [];
-        $.ajax({
-            type:'POST',
-            url:location.href,
-            data: {'tkid_comment':id, 'csrfmiddlewaretoken':token, 'comment': escapeHtml(comment)},
-            success: function(){
-                $('#list_comment').DataTable().ajax.reload(null,false);
+        if(type=='new'){
+            $("#new_comment").show();
+            $("#save_comment").hide();
+            $("#cancel_comment").hide();
+            $("#new_text").hide();
+            $.ajax({
+                type:'POST',
+                url:location.href,
+                data: {'tkid_comment':id, 'csrfmiddlewaretoken':token, 'comment': escapeHtml(comment)},
+                success: function(){
+                    $('#list_comment').DataTable().ajax.reload(null,false);
 
-                $("#new_text").val("");
+                }
+            });
+        }else if(type=="close_txl"){
+            $("#all_note").modal("hide");
+            var mgs = 'Yêu cầu số ' +id+' được đóng bởi '+userName;
+            $.ajax({
+                type:'POST',
+                url:location.href,
+                data: {'tkid':id, 'csrfmiddlewaretoken':token},
+                success: function(){
+                    $("#list_tk_tu_xu_ly").DataTable().ajax.reload(null,false);
+                    var chatSocket1 = new WebSocket(
+                    'ws://' + window.location.host +
+                    '/ws/agent/agent+group_agent_Socket/');
+                    var message = '';
+                    message = 'load';
 
-//                var chatSocket1 = new WebSocket(
-//                    'ws://' + window.location.host +
-//                    '/ws/agent/agent+group_agent_Socket/');
-//                mgs = userName + ' đã mở lại yêu cầu số '+id;
-//                var array = $('#hd'+id).html().split("<br>");
-//                for (i = 0; i < array.length-1; i++) {
-//                    var agentName = array[i].replace(/\s/g,'');
-//                    message.push(agentName);
-//                }
-//                message.push(mgs);
-//                var date = formatAMPM(new Date());
-//                chatSocket1.onopen = function (event) {
-//                    chatSocket1.send(JSON.stringify({
-//                        'message' : message,
-//                        'time' : date
-//                    }));
-//                };
-                $(".table").DataTable().ajax.reload(null,false);
-            }
-        });
+                    var date = formatAMPM(new Date());
+                    chatSocket1.onopen = function (event) {
+                        chatSocket1.send(JSON.stringify({
+                            'message' : message,
+                            'time' : date
+                        }));
+                    };
+                }
+            });
+        }else if(type=="close_gd"){
+            $("#all_note").modal("hide");
+            var mgs = 'Yêu cầu số ' +id+' được đóng bởi '+userName;
+            $.ajax({
+                type:'POST',
+                url:location.href,
+                data: {'tkid':id, 'csrfmiddlewaretoken':token},
+                success: function(){
+                    // window.location.reload();
+                    $("#list_tk_gui_di").DataTable().ajax.reload(null,false);
+                    var array = $('#hd'+id).html().split("<br>");
+                    for (i = 0; i < array.length-1; i++) {
+                        var agentName = array[i].replace(/\s/g,'');
+                        message.push(agentName);
+                    }
+
+                    message.push(mgs);
+                    var date = formatAMPM(new Date());
+                    var chatSocket1 = new WebSocket(
+                    'ws://' + window.location.host +
+                    '/ws/agent/agent+group_agent_Socket/');
+                    chatSocket1.onopen = function (event) {
+                        chatSocket1.send(JSON.stringify({
+                            'message' : message,
+                            'time': date
+                        }));
+
+                        chatSocket1.send(JSON.stringify({
+                            'message' : 'reload_home_agent',
+                            'time': date
+                        }));
+                    };
+                }
+            });
+        }else{
+            $("#all_note").modal("hide");
+            $.ajax({
+                type:'POST',
+                url:location.href,
+                data: {'tkid_reprocess':id, 'csrfmiddlewaretoken':token, 'comment': escapeHtml(comment)},
+                success: function(){
+                    var chatSocket1 = new WebSocket(
+                        'ws://' + window.location.host +
+                        '/ws/agent/agent+group_agent_Socket/');
+                    mgs = userName + ' đã mở lại yêu cầu số '+id;
+                    var array = $('#hd'+id).html().split("<br>");
+                    for (i = 0; i < array.length-1; i++) {
+                        var agentName = array[i].replace(/\s/g,'');
+                        message.push(agentName);
+                    }
+                    message.push(mgs);
+                    var date = formatAMPM(new Date());
+                    chatSocket1.onopen = function (event) {
+                        chatSocket1.send(JSON.stringify({
+                            'message' : message,
+                            'time' : date
+                        }));
+                    };
+                    $(".table").DataTable().ajax.reload(null,false);
+                }
+            });
+        }
     });
 });

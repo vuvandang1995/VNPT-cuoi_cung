@@ -16,4 +16,5 @@ urlpatterns = [
     path('closed_ticket', views.closed_ticket, name='closed_ticket'),
     path('profile', views.profile, name="profile"),
     path('agent_to_leader', views.agent_to_leader, name='agent_to_leader'),
+    path('comment_log', views.comment_log, name='comment_log'),
 ]
