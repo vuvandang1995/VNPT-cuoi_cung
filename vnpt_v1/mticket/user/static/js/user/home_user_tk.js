@@ -470,7 +470,7 @@ $(document).ready(function(){
             $.ajax({
                 type:'POST',
                 url:location.href,
-                data: {'tkid':id, 'csrfmiddlewaretoken':token},
+                data: {'tkid':id, 'csrfmiddlewaretoken':token, 'comment': escapeHtml(comment)},
                 success: function(){
                     $("#list_tk_tu_xu_ly").DataTable().ajax.reload(null,false);
                     var chatSocket1 = new WebSocket(
@@ -494,7 +494,7 @@ $(document).ready(function(){
             $.ajax({
                 type:'POST',
                 url:location.href,
-                data: {'tkid':id, 'csrfmiddlewaretoken':token},
+                data: {'tkid':id, 'csrfmiddlewaretoken':token, 'comment': escapeHtml(comment)},
                 success: function(){
                     // window.location.reload();
                     $("#list_tk_gui_di").DataTable().ajax.reload(null,false);

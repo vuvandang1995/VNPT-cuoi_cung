@@ -1,4 +1,4 @@
-#!/home/huong/Desktop/VNPT_offical/mticket/env/bin/python3
+#!/home/mdtpro2018/project/VNPT-cuoi_cung/vnpt_v1/mticket/env/bin/python3
 from django.core import management
 
 if __name__ == "__main__":

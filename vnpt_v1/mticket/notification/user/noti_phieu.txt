@@ -1,1 +1,0 @@
-<a href="/user/"><div style="float:left;width:15%" class="btn btn-warning btn-circle m-r-10"><i class="fa fa-folder-open"></i></div><div style="float:right; width:80%"><p>Yêu cầu số 88 vừa được nhật ghi chú!</p><small><i class="fa fa-clock-o"></i>5:36 PM 21/8/2018</small></div></a>
