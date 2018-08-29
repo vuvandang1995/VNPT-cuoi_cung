@@ -1,0 +1,43 @@
+{% extends "videochat/base.html" %}
+{% load staticfiles %}
+{% block content %}
+  <!-- Video area -->
+  <div id="chatinstructions" class="row">
+      <div class="col-md-10">
+      <h3>Allow or Share access to your computer's camera and microphone</h3>
+      <p>Click the button at the top of your browser</p>
+      <p>Here are some examples of what you might be seeing</p>
+  </div>
+  </div>
+  <div id="chatvideo" class="row">
+    <div class="col-md-6">
+      <video id="their-video" autoplay></video>
+    </div>
+    <div class="col-md-4">
+      <video id="my-video" muted="true" autoplay></video>
+    </div>
+  </div>
+      <!-- Steps -->
+  <div id="chatinfo" class="row">
+    <div class="col-md-6">
+       <a href="#" class="btn btn-primary" role="button" id="join-call">Join call</a>
+    </div>
+  </div>
+
+   <div id="chatcontrol" class="row">
+    <!-- Call in progress -->
+    <div class="col-md-4">
+       <p>Currently in call with <span id="their-id">...</span></p>
+       <p><a class="btn btn-xs btn-danger" role="button" href="#" id="end-call">End call</a></p>
+    </div>
+   </div>
+
+{% endblock content %}
+{% block footer %}
+	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8/jquery.min.js"></script>
+	<script type="text/javascript" src="http://cdn.peerjs.com/0.3/peer.js"></script>
+	<script>
+	var csrftoken = '{{ csrf_token }}';
+	</script>
+	<script src="{% static 'js/chat_join.js' %}"></script>
+{% endblock footer %}
