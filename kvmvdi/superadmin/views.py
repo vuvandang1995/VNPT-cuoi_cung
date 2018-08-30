@@ -26,7 +26,7 @@ def home(request):
     user = request.user
     if user.is_authenticated:
         # return render(request, 'videochat/home.html',{'username': mark_safe(json.dumps(user.username)),})
-        return render(request, 'adminator/src/index.html',{'username': mark_safe(json.dumps(user.username)),})
+        return render(request, 'kvmvdi/index.html',{'username': mark_safe(json.dumps(user.username)),})
 
     else:
         return HttpResponseRedirect('/')
@@ -36,7 +36,7 @@ def user_login(request):
     user = request.user
     if user.is_authenticated:
         # return render(request, 'videochat/home.html',{'username': mark_safe(json.dumps(user.username)),})
-        return render(request, 'adminator/src/index.html',{'username': mark_safe(json.dumps(user.username)),})
+        return render(request, 'kvmvdi/index.html',{'username': mark_safe(json.dumps(user.username)),})
 
     else:
         if request.method == 'POST':
@@ -60,7 +60,7 @@ def user_login(request):
                     return redirect('/')
                 else:
                     print(user_form.errors)
-        return render(request, 'videochat/login.html')
+        return render(request, 'kvmvdi/login.html')
 
 
 def user_logout(request):
