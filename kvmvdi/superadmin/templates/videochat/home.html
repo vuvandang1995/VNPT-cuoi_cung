@@ -1,0 +1,10 @@
+{% extends "videochat/base.html" %}
+{% load staticfiles %}
+{% block content %}
+		{% if user.is_authenticated %}
+
+		{% endif %}
+{% endblock content %}
+{% block js %}
+	<script src="{% static 'peer/peer.js' %}"></script>
+{% endblock %}
