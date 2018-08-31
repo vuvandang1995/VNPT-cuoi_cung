@@ -25,7 +25,6 @@ class EmailThread(threading.Thread):
 def home(request):
     user = request.user
     if user.is_authenticated:
-        # return render(request, 'videochat/home.html',{'username': mark_safe(json.dumps(user.username)),})
         return render(request, 'kvmvdi/index.html',{'username': mark_safe(json.dumps(user.username)),})
 
     else:
@@ -35,9 +34,7 @@ def home(request):
 def user_login(request):
     user = request.user
     if user.is_authenticated:
-        # return render(request, 'videochat/home.html',{'username': mark_safe(json.dumps(user.username)),})
         return render(request, 'kvmvdi/index.html',{'username': mark_safe(json.dumps(user.username)),})
-
     else:
         if request.method == 'POST':
             if 'agentname' and 'agentpass' in request.POST:
@@ -45,14 +42,13 @@ def user_login(request):
                 password = request.POST['agentpass']
                 user = authenticate(username=username, password=password)
                 if user:
-                    if user.is_active:
+                    if user.is_active and user.is_adminkvm:
                         login(request, user)
                         return HttpResponseRedirect('/home')
                     else:
-                        return HttpResponse("Your WebRTC account is disabled.")
+                        return render(request, 'kvmvdi/login.html',{'error':'Your account is blocked!'})
                 else:
-                    print("Invalid login details: {0}, {1}".format(username, password))
-                    return HttpResponse("Invalid login details supplied. <a href='/'>Please try again</a>")
+                    return render(request, 'kvmvdi/login.html',{'error':'Invalid username or password '})
             elif 'firstname' and 'email' and 'password2' in request.POST:
                 user_form = UserForm(request.POST)
                 if user_form.is_valid():
@@ -60,6 +56,10 @@ def user_login(request):
                     return redirect('/')
                 else:
                     print(user_form.errors)
+                    error = ''
+                    for field in user_form:
+                        error += field.errors
+                    return render(request, 'kvmvdi/login.html',{'error':error})
         return render(request, 'kvmvdi/login.html')
 
 

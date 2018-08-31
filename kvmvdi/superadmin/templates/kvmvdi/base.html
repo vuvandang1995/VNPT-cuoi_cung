@@ -1,82 +1,93 @@
-{% load staticfiles %}
+<!DOCTYPE html>
 <html>
-<head>
+  <head>
+    {% load staticfiles %}
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <title>Manager KVM-VDi</title>
-  <style>
-    #loader {
-      transition: all 0.3s ease-in-out;
-      opacity: 1;
-      visibility: visible;
-      position: fixed;
-      height: 100vh;
-      width: 100%;
-      background: #fff;
-      z-index: 90000;
-    }
+    <title>Dashboard</title>
 
-    #loader.fadeOut {
-      opacity: 0;
-      visibility: hidden;
-    }
-
-    .spinner {
-      width: 40px;
-      height: 40px;
-      position: absolute;
-      top: calc(50% - 20px);
-      left: calc(50% - 20px);
-      background-color: #333;
-      border-radius: 100%;
-      -webkit-animation: sk-scaleout 1.0s infinite ease-in-out;
-      animation: sk-scaleout 1.0s infinite ease-in-out;
-    }
-
-    @-webkit-keyframes sk-scaleout {
-      0% { -webkit-transform: scale(0) }
-      100% {
-        -webkit-transform: scale(1.0);
-        opacity: 0;
+    <style>
+      #loader {
+        transition: all 0.3s ease-in-out;
+        opacity: 1;
+        visibility: visible;
+        position: fixed;
+        height: 100vh;
+        width: 100%;
+        background: #fff;
+        z-index: 90000;
       }
-    }
-
-    @keyframes sk-scaleout {
-      0% {
-        -webkit-transform: scale(0);
-        transform: scale(0);
-      } 100% {
-        -webkit-transform: scale(1.0);
-        transform: scale(1.0);
+      #loader.fadeOut {
         opacity: 0;
+        visibility: hidden;
       }
-    }
-  </style>
-	<link rel="stylesheet" href="{% static 'css/admin-tpl/style.css' %}">
-    {% block js %}
-    {% endblock%}
-</head>
-<body class="app">
-  <div id='loader'>
-    <div class="spinner"></div>
-  </div>
+      .spinner {
+        width: 40px;
+        height: 40px;
+        position: absolute;
+        top: calc(50% - 20px);
+        left: calc(50% - 20px);
+        background-color: #333;
+        border-radius: 100%;
+        -webkit-animation: sk-scaleout 1.0s infinite ease-in-out;
+        animation: sk-scaleout 1.0s infinite ease-in-out;
+      }
+      @-webkit-keyframes sk-scaleout {
+        0% { -webkit-transform: scale(0) }
+        100% {
+          -webkit-transform: scale(1.0);
+          opacity: 0;
+        }
+      }
+      @keyframes sk-scaleout {
+        0% {
+          -webkit-transform: scale(0);
+          transform: scale(0);
+        } 100% {
+          -webkit-transform: scale(1.0);
+          transform: scale(1.0);
+          opacity: 0;
+        }
+      }
+    </style>
+    <link rel="stylesheet" href="{% static 'css/admin-tpl/style.css' %}">
+  </head>
+  <body class="app">
+    <!-- @TOC -->
+    <!-- =================================================== -->
+    <!--
+      + @Page Loader
+      + @App Content
+          - #Left Sidebar
+              > $Sidebar Header
+              > $Sidebar Menu
+          - #Main
+              > $Topbar
+              > $App Screen Content
+    -->
 
-  <script src="{% static 'js/admin-tpl/analytics.js' %}"></script>
+    <!-- @Page Loader -->
+    <!-- =================================================== -->
+    <div id='loader'>
+      <div class="spinner"></div>
+    </div>
 
-  <script>
-    window.addEventListener('load', () => {
-      const loader = document.getElementById('loader');
-      setTimeout(() => {
-        loader.classList.add('fadeOut');
-      }, 300);
-    });
-  </script>
 
-  <!-- @App Content -->
-  <!-- =================================================== -->
-  <div>
-    <!-- #Left Sidebar ==================== -->
-    <div class="sidebar">
+    <script src="{% static 'js/admin-tpl/analytics.js' %}"></script>
+    <script>
+      window.addEventListener('load', () => {
+        const loader = document.getElementById('loader');
+        setTimeout(() => {
+          loader.classList.add('fadeOut');
+        }, 300);
+      });
+    </script>
+
+    <!-- @App Content -->
+    <!-- =================================================== -->
+    <div>
+      <!-- #Left Sidebar ==================== -->
+      <div class="sidebar">
         <div class="sidebar-inner">
           <!-- ### $Sidebar Header ### -->
           <div class="sidebar-logo">
@@ -488,7 +499,7 @@
                   </li>
                   <li role="separator" class="divider"></li>
                   <li>
-                    <a href="" class="d-b td-n pY-5 bgcH-grey-100 c-grey-700">
+                    <a href="logout" class="d-b td-n pY-5 bgcH-grey-100 c-grey-700">
                       <i class="ti-power-off mR-10"></i>
                       <span>Logout</span>
                     </a>
@@ -499,53 +510,16 @@
           </div>
         </div>
 
-        {% block content %}
-        {% endblock %}
-    
-    
+        <!-- ### $App Screen Content ### -->
+        {% block content%}
+        {% endblock%}
+
+      </div>
     </div>
-  </div>
 
-  <script src="{% static 'js/admin-tpl/vendor.js' %}"></script>
-  <script src="{% static 'js/admin-tpl/bundle.js' %}"></script>
-	{% block footer %}
-	{% endblock footer %}
-<script>
-  var userName = {{ username }};
-  var chatSocket = new WebSocket(
-    'ws://' + window.location.host +
-    '/ws/' + userName + '/');
+    <script src="{% static 'js/admin-tpl/vendor.js' %}"></script>
+    <script src="{% static 'js/admin-tpl/bundle.js' %}"></script>
+    <script src="{% static 'js/admin-tpl/script.js' %}"></script>
 
-    var reciver_phone = document.getElementById("reciver_phone");
-
-  
-  
-
-  chatSocket.onmessage = function(e) {
-    var data = JSON.parse(e.data);
-    var message = data['message'];
-    var who = data['who'];
-    var stt = data['stt'];
-    if (stt == 'new' && userName != who){
-      var element = '<option value="'+message+'" name="'+who+'">'+who+'</option>'
-      $('#contacts').append(element);
-      var id1 = $('#my-peer').html().split(' ')[2];
-      chatSocket.send(JSON.stringify({
-        'message' : id1,
-        'who': userName,
-        'stt': 'online'
-      }));
-    }
-
-    if (stt == 'online' && userName != who){
-      var element = '<option value="'+message+'" name="'+who+'">'+who+'</option>'
-      $('#contacts').append(element);
-    }
-    
-    if (message == 'out' && userName != who){
-        $("#contacts option[name='"+who+"']").remove();
-    }
-};
-</script>
-</body>
+  </body>
 </html>
