@@ -51,6 +51,8 @@
       }
     </style>
     <link rel="stylesheet" href="{% static 'css/admin-tpl/style.css' %}">
+    {% block js%}
+    {% endblock%}
   </head>
   <body class="app">
     <!-- @TOC -->
@@ -97,7 +99,7 @@
                   <div class="peers ai-c fxw-nw">
                     <div class="peer">
                       <div class="logo">
-                        <img src="assets/static/images/logo.png" alt="">
+                        <img src="" alt="">
                       </div>
                     </div>
                     <div class="peer peer-greed">
@@ -486,7 +488,7 @@
                     </a>
                   </li>
                   <li>
-                    <a href="" class="d-b td-n pY-5 bgcH-grey-100 c-grey-700">
+                    <a href="profile" class="d-b td-n pY-5 bgcH-grey-100 c-grey-700">
                       <i class="ti-user mR-10"></i>
                       <span>Profile</span>
                     </a>
@@ -511,8 +513,8 @@
         </div>
 
         <!-- ### $App Screen Content ### -->
-        {% block content%}
-        {% endblock%}
+          {% block content%}
+          {% endblock%}
 
       </div>
     </div>
