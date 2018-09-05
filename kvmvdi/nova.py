@@ -17,10 +17,19 @@ glance = Client('2', session=sess)
 neutron = client_neutron.Client(session=sess)
 
 # lấy ra các thành phần cần thiết
-im = glance.images.get("e51826a7-72a2-4ffb-a16c-adad74ffc681") # lấy ra image có id là e51826a7-72a2-4ffb-a16c-adad74ffc681
+# im = glance.images.get("e51826a7-72a2-4ffb-a16c-adad74ffc681") # lấy ra image có id là e51826a7-72a2-4ffb-a16c-adad74ffc681
+im = nova.glance.find_image("cirros") # lấy ra image có name hoac id la cirros
+
 fl = nova.flavors.find(name="tiny") # lấy ra flavor có name là tiny
-net = neutron.list_networks(name="self service") # lấy ra mạng có tên là self service
-network_id = net['networks'][0]['id'] # lấy ra id của network trên
 
-nova.servers.create("myserver", flavor=fl, image=im, nics = [{'net-id':network_id}],) # lệnh tạo VM
+# net = neutron.list_networks(name="self service") # lấy ra mạng có tên là self service
+net = nova.neutron.find_network("self service") # lấy ra mạng có tên là self service
+# network_id = net['networks'][0]['id'] # lấy ra id của network trên
 
+# nova.servers.create("myserver", flavor=fl, image=im, nics = [{'net-id':net.id}],) # lệnh tạo VM
+sv = nova.servers.get("b6322a3a-66d3-43a2-86ff-b3e76f039b08")
+# print(sv.get_spice_console("spice-html5"))
+print(nova.flavors.list())
+attrs = vars(nova)
+
+# print(', '.join("%s: %s" % item for item in attrs.items()))
