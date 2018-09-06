@@ -1,6 +1,7 @@
 from django.conf.urls import include, url
 from . import views
 
+app_name = 'client'
 urlpatterns = [
     # url(r'^$', views.user_login),
     # url(r'^$', views.user_login),

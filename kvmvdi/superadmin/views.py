@@ -122,6 +122,8 @@ def user_logout(request):
 
 def user_profile(request):
     user = request.user
-    return render(request, 'kvmvdi/profile.html', {'username': mark_safe(json.dumps(user.username))})
-
+    if user.is_authenticated:
+        return render(request, 'kvmvdi/profile.html', {'username': mark_safe(json.dumps(user.username))})
+    else:
+        return HttpResponseRedirect('/')
     

@@ -18,7 +18,6 @@ from django.conf.urls import include, url
 from django.contrib import admin
 
 urlpatterns = [
-    url(r'^admin/', admin.site.urls),
-    url(r'', include('superadmin.urls')),
-    url(r'client', include('client.urls')),
+    path(r'', include('superadmin.urls', namespace='superadmin')),
+    path(r'client', include('client.urls', namespace='client')),
 ]
