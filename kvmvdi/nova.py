@@ -26,10 +26,11 @@ fl = nova.flavors.find(name="tiny") # lấy ra flavor có name là tiny
 net = nova.neutron.find_network("self service") # lấy ra mạng có tên là self service
 # network_id = net['networks'][0]['id'] # lấy ra id của network trên
 
-# nova.servers.create("myserver", flavor=fl, image=im, nics = [{'net-id':net.id}],) # lệnh tạo VM
+nova.servers.create("myserver", flavor=fl, image=im, nics = [{'net-id':net.id}],) # lệnh tạo VM
 sv = nova.servers.get("b6322a3a-66d3-43a2-86ff-b3e76f039b08")
-# print(sv.get_spice_console("spice-html5"))
-print(nova.flavors.list())
-attrs = vars(nova)
+print(sv.get_vnc_console("novnc"))
 
-# print(', '.join("%s: %s" % item for item in attrs.items()))
+
+# image = glance.images.create(name="myNewImage")
+# glance.images.upload(image.id, open('/home/mdtpro2018/Downloads/ubuntu-18.04.1-desktop-amd64.iso', 'rb'))
+print('ok roi')
