@@ -8,11 +8,10 @@ $(document).ready(function(){
     var ram = $("input[name=ram]").val();
     var vcpus = $("input[name=vcpus]").val();
     var disk = $("input[name=disk]").val();
-
     $.ajax({
         type:'POST',
         url:location.href,
-        data: {'svname': svname, 'description': description, 'csrfmiddlewaretoken':token, 'image': parseInt(image), 'network': network, 'ram': ram, 'vcpus': vcpus,'disk': disk},
+        data: {'svname': svname, 'description': description, 'csrfmiddlewaretoken':token, 'image': image, 'network': network, 'ram': ram, 'vcpus': vcpus,'disk': disk},
         success: function(){
             document.getElementById("close_modal").click();
         }

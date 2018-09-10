@@ -4,6 +4,38 @@
 		{% if user.is_authenticated %}
 
         <div class="row">
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-title">
+                        <h4>VMs list </h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="display nowrap table table-hover table-striped table-bordered" id="list_vm" width="100%">
+                                <thead>
+                                    <tr align="center">
+                                        <th>Project</th>
+                                        <th>Host</th>
+                                        <th>Name</th>
+                                        <th>Image Name</th>
+                                        <th>IP Address</th>
+                                        <th>Flavor</th>
+                                        <th>Status</th>
+                                        <th>Task</th>
+                                        <th>Time since created</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody align="center">
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
           <div class="col-lg-4">
               <div class="card">
                 <div class="card-body">

@@ -28,7 +28,7 @@ from neutronclient.v2_0 import client as client_neutron #dòng này có nghĩa l
 loader = loading.get_plugin_loader('password')
 
 # xác thực kết nối tới Controller
-auth = loader.load_from_options(auth_url="http://192.168.40.61:5000/v3", username="admin", password="ducnm37", project_name="admin", user_domain_id="default", project_domain_id="default")
+auth = loader.load_from_options(auth_url="http://192.168.40.146:5000/v3", username="admin", password="ok123", project_name="admin", user_domain_id="default", project_domain_id="default")
 
 # tạo phiên kết nối
 sess = session.Session(auth=auth)
@@ -49,6 +49,12 @@ image_list = []
 for image in im:
     image_list.append(image.name)
 
+
+sv = nova.servers.list()
+sv_list = []
+for item in sv:
+    sv_list.append(item.name)
+
 fl = nova.flavors.list()
 flavor_list = []
 for flavor in fl:
@@ -65,8 +71,29 @@ class EmailThread(threading.Thread):
     def run(self):
         self.email.send()
 
+class CreateVmThread(threading.Thread):
+    def __init__(self, svname, flavor=None, image=None, network_id=None, ram=None, vcpus=None, disk=None):
+        threading.Thread.__init__(self)
+        self._stop_event = threading.Event()
+        self.svname = svname
+        self.flavor = flavor
+        self.image = image
+        self.network_id = network_id
+        self.ram = ram
+        self.vcpus = vcpus
+        self.disk = disk
+        self.nova = client.Client(2, session=sess)
+
+    def run(self):
+        self.nova.servers.create(self.svname, flavor=self.flavor, image=self.image, nics = [{'net-id':self.network_id}],)
+    def createFlavor(self):
+        self.nova.flavors.create(self.svname, self.ram, self.vcpus, self.disk, flavorid='auto', ephemeral=0, swap=0, rxtx_factor=1.0, is_public=True, description=None)
+
 def home(request):
     user = request.user
+    for item in sv:
+        print(item._info)
+        print(item._info['status'])
     if user.is_authenticated:
         if request.method == 'POST':
             svname = request.POST['svname']
@@ -76,10 +103,21 @@ def home(request):
             vcpus = int(request.POST['vcpus'])
             disk = int(request.POST['disk'])
             if [ram, vcpus, disk] in flavor_list:
-                nova.servers.create(svname, flavor=nova.flavors.find(ram=ram, vcpus=vcpus, disk=disk), image=nova.glance.find_image(image), nics = [{'net-id':nova.neutron.find_network(network).id}],)
+                fl = nova.flavors.find(ram=ram, vcpus=vcpus, disk=disk)
+                im = nova.glance.find_image(image)
+                net = nova.neutron.find_network(network).id
+                thread = CreateVmThread(svname=svname, flavor=fl, image=im, network_id=net)
+                thread.start()
             else:
-                nova.flavors.create(svname, ram, vcpus, disk, flavorid='auto', ephemeral=0, swap=0, rxtx_factor=1.0, is_public=True, description=None)
-                nova.servers.create(svname, flavor=nova.flavors.find(ram=ram, vcpus=vcpus, disk=disk), image=nova.glance.find_image(image), nics = [{'net-id':nova.neutron.find_network(network).id}],)
+                thread = CreateVmThread(svname=svname, ram=ram, vcpus=vcpus, disk=disk)
+                thread.createFlavor()
+                check = False
+                while check == False:
+                    if nova.flavors.find(ram=ram, vcpus=vcpus, disk=disk):
+                        check = True
+                        falvor = nova.flavors.find(ram=ram, vcpus=vcpus, disk=disk)
+                thread = CreateVmThread(svname, falvor, nova.glance.find_image(image), nova.neutron.find_network(network).id)
+                thread.start()
         return render(request, 'kvmvdi/index.html',{'username': mark_safe(json.dumps(user.username)),
                                                         'networks': network_list,
                                                         'images': image_list})
