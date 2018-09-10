@@ -2,162 +2,46 @@
 {% load staticfiles %}
 {% block content %}
 		{% if user.is_authenticated %}
-    <main class='main-content bgc-grey-100'>
-        <div id='mainContent'>
-          <div class="row gap-20 masonry pos-r">
-            <div class="masonry-sizer col-md-6"></div>
-            <div class="masonry-item  w-100">
-              <div class="row gap-20">
-                <!-- #Toatl Visits ==================== -->
-                <div class='col-md-3'>
-                  <div class="layers bd bgc-white p-20">
-                    <div class="layer w-100 mB-10">
-                      <h6 class="lh-1">Total Visits</h6>
-                    </div>
-                    <div class="layer w-100">
-                      <div class="peers ai-sb fxw-nw">
-                        <div class="peer peer-greed">
-                          <span id="sparklinedash"></span>
-                        </div>
-                        <div class="peer">
-                          <span class="d-ib lh-0 va-m fw-600 bdrs-10em pX-15 pY-15 bgc-green-50 c-green-500">+10%</span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
 
-                <!-- #Total Page Views ==================== -->
-                <div class='col-md-3'>
-                  <div class="layers bd bgc-white p-20">
-                    <div class="layer w-100 mB-10">
-                      <h6 class="lh-1">Total Page Views</h6>
-                    </div>
-                    <div class="layer w-100">
-                      <div class="peers ai-sb fxw-nw">
-                        <div class="peer peer-greed">
-                          <span id="sparklinedash2"></span>
-                        </div>
-                        <div class="peer">
-                          <span class="d-ib lh-0 va-m fw-600 bdrs-10em pX-15 pY-15 bgc-red-50 c-red-500">-7%</span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <!-- #Unique Visitors ==================== -->
-                <div class='col-md-3'>
-                  <div class="layers bd bgc-white p-20">
-                    <div class="layer w-100 mB-10">
-                      <h6 class="lh-1">Unique Visitor</h6>
-                    </div>
-                    <div class="layer w-100">
-                      <div class="peers ai-sb fxw-nw">
-                        <div class="peer peer-greed">
-                          <span id="sparklinedash3"></span>
-                        </div>
-                        <div class="peer">
-                          <span class="d-ib lh-0 va-m fw-600 bdrs-10em pX-15 pY-15 bgc-purple-50 c-purple-500">~12%</span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <!-- #Bounce Rate ==================== -->
-                <div class='col-md-3'>
-                  <div class="layers bd bgc-white p-20">
-                    <div class="layer w-100 mB-10">
-                      <h6 class="lh-1">Bounce Rate</h6>
-                    </div>
-                    <div class="layer w-100">
-                      <div class="peers ai-sb fxw-nw">
-                        <div class="peer peer-greed">
-                          <span id="sparklinedash4"></span>
-                        </div>
-                        <div class="peer">
-                          <span class="d-ib lh-0 va-m fw-600 bdrs-10em pX-15 pY-15 bgc-blue-50 c-blue-500">33%</span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
+        <div class="row">
+          <div class="col-lg-4">
+              <div class="card">
+                <div class="card-body">
+                  <div class="year-calendar"></div>
                 </div>
               </div>
-
-              <div class="row gap-20">
-                <div class="box-header">
-                  <button data-title="tu_xu_ly" style="float:right" class="btn btn-lg btn-primary" data-toggle="modal" data-target="#id02">
-                      <span class="glyphicon glyphicon-plus"></span> Create VMs
-                  </button>
-              </div>
-              </div>
-
-              <div class="modal fade" id="id02" role="dialog" >
-                <div class="modal-dialog modal-lg">
-                    <div class="modal-content ">
-                        <form method="POST" enctype="multipart/form-data">
-                            <div class="modal-header">
-                                <h4 class="modal-title">Create VMs</h4>
-                            </div>
-                             <div class="modal-body form-group">
-                                 {% csrf_token %}
-                                 
-                                 <input type="hidden" name="kind">
-                                 <label>Tên khách hàng</label>
-                                 {{form.client}}
-                                 <br>
-                                 <label>Thông tin khách hàng</label>
-                                 {{form.info_client}}
-                                 <br>
-                                 <label>Loại sự cố</label>
-                                 {{form.loai_su_co}}
-                                 <br>
-                                 <label for="title"><b>Thông số kỹ thuật</b></label>
-                                 {{form.thong_so_kt}}
-                                 <br>
-    
-                                 <label for="topic"><b>Dịch vụ</b></label>
-                                 <select name="service" class="form-control" id="mySelect">
-                                     {% for key, value in group.items %}
-                                        <optgroup label="{{key}}">
-                                            {% for sv in service %}
-                                            {% if key == sv.groupserviceid.name %}
-                                                <option value="{{sv.name}}" name="{{service}}">{{sv.name}} - {{sv.description}}</option>
-                                            {% endif %}
-                                            {% endfor %}
-                                        </optgroup>
-                                     {% endfor %}
-                                </select>
-                                 <br>
-                                 <label for="level"><b>Mức ưu tiên</b></label>
-                                 <select name="lv_priority" class="form-control" id="lv_select">
-                                     <option value="0">Thấp</option>
-                                     <option value="1">Trung bình</option>
-                                     <option value="2">Cao</option>
-                                 </select>
-                                 <br>
-                                 <label for="content"><b>Nội dung</b></label>
-                                 {{form.content}}
-                                 <br>
-                                 <label for="attach"><b>Đính kèm</b></label><br />
-                                 <input type="file" class="form-control" accept="image/*" name="attach" id="attach">
-                                 <div><font id="invalid-msg" color="red" size="5"></font></div>
-    
-                             </div>
-                            <div class="modal-footer">
-                                 <button type="submit" class="btn btn-primary" value="OK" id="i_submit" onclick="return validateSize()">Gửi</button>
-                                 <button type="button" class="btn btn-default" data-dismiss="modal">Đóng</button>
-                             </div>
-                      </form>
-                    </div>
-                </div>
-              </div>
-            </div>
-           
           </div>
+
+          <div class="col-lg-8">
+                <div class="card">
+                    <div class="card-title">
+                        <h4>Lịch sử </h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive m-t-40">
+                            <table id="example23" class="display nowrap table table-hover table-striped table-bordered" cellspacing="0" width="100%">
+                                <thead>
+                                    <tr>
+                                        <th width="10%">ID</th>
+                                        <th width="35%">Tiêu đề</th>
+                                        <th width="20%">Chủ đề</th>
+                                        <th width="10%">Người gửi</th>
+                                        <th width="10%">Trạng thái</th>
+                                        <th width="15%">Ngày hết hạn</th>
+                                    </tr>
+                                </thead>
+
+                                <tbody id="list_tk_h istory">
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+          </div>
+
         </div>
-      </main>
+
 		{% endif %}
 {% endblock content %}
 

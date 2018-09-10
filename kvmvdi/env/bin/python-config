@@ -1,4 +1,4 @@
-#!/home/mdtpro2018/project/kvm-vdi-python/kvmvdi/env/bin/python
+#!/home/mdtpro2018/project/VNPT-cuoi_cung/kvmvdi/env/bin/python
 
 import sys
 import getopt

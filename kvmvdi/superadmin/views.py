@@ -19,8 +19,43 @@ from .tokens import account_activation_token
 from django.core.mail import EmailMessage
 from superadmin.models import MyUser
 
-from django.contrib import messages
+from keystoneauth1 import loading
+from keystoneauth1 import session
+from novaclient import client
+# from glanceclient import Client
+from neutronclient.v2_0 import client as client_neutron #dòng này có nghĩa là thay tên cho "client" cần được import vào để tránh trùng với dùng thứ 3
 
+loader = loading.get_plugin_loader('password')
+
+# xác thực kết nối tới Controller
+auth = loader.load_from_options(auth_url="http://192.168.40.61:5000/v3", username="admin", password="ducnm37", project_name="admin", user_domain_id="default", project_domain_id="default")
+
+# tạo phiên kết nối
+sess = session.Session(auth=auth)
+
+# tạo các class add session và version
+nova = client.Client(2, session=sess)
+# glance = Client('2', session=sess)
+neutron = client_neutron.Client(session=sess)
+networks = neutron.list_networks()
+network_list = []
+for item in networks["networks"]:
+    network_keys = {'name'}
+    network_dict = {key: value for key, value in item.items() if key in network_keys}
+    network_list.append(network_dict)
+
+im = nova.glance.list()
+image_list = []
+for image in im:
+    image_list.append(image.name)
+
+fl = nova.flavors.list()
+flavor_list = []
+for flavor in fl:
+    combo = []
+    combo = [flavor.ram, flavor.vcpus, flavor.disk]
+    flavor_list.append(combo)
+                
 class EmailThread(threading.Thread):
     def __init__(self, email):
         threading.Thread.__init__(self)
@@ -32,9 +67,22 @@ class EmailThread(threading.Thread):
 
 def home(request):
     user = request.user
-    print(user)
     if user.is_authenticated:
-        return render(request, 'kvmvdi/index.html',{'username': mark_safe(json.dumps(user.username)),})
+        if request.method == 'POST':
+            svname = request.POST['svname']
+            image = request.POST['image']
+            network = request.POST['network']
+            ram = int(float(request.POST['ram']) * 1024)
+            vcpus = int(request.POST['vcpus'])
+            disk = int(request.POST['disk'])
+            if [ram, vcpus, disk] in flavor_list:
+                nova.servers.create(svname, flavor=nova.flavors.find(ram=ram, vcpus=vcpus, disk=disk), image=nova.glance.find_image(image), nics = [{'net-id':nova.neutron.find_network(network).id}],)
+            else:
+                nova.flavors.create(svname, ram, vcpus, disk, flavorid='auto', ephemeral=0, swap=0, rxtx_factor=1.0, is_public=True, description=None)
+                nova.servers.create(svname, flavor=nova.flavors.find(ram=ram, vcpus=vcpus, disk=disk), image=nova.glance.find_image(image), nics = [{'net-id':nova.neutron.find_network(network).id}],)
+        return render(request, 'kvmvdi/index.html',{'username': mark_safe(json.dumps(user.username)),
+                                                        'networks': network_list,
+                                                        'images': image_list})
     else:
         return HttpResponseRedirect('/')
 

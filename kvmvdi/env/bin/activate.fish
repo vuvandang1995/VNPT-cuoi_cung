@@ -36,7 +36,7 @@ end
 # Unset irrelevant variables.
 deactivate nondestructive
 
-set -gx VIRTUAL_ENV "/home/mdtpro2018/project/kvm-vdi-python/kvmvdi/env"
+set -gx VIRTUAL_ENV "/home/mdtpro2018/project/VNPT-cuoi_cung/kvmvdi/env"
 
 set -gx _OLD_VIRTUAL_PATH $PATH
 set -gx PATH "$VIRTUAL_ENV/bin" $PATH
