@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.template import RequestContext
 from django.contrib.auth import login
-from django.http import HttpResponseRedirect, HttpResponse
+from django.http import HttpResponseRedirect, HttpResponse, JsonResponse
 from django.contrib.auth import logout
 import uuid
 import random
@@ -91,9 +91,10 @@ class CreateVmThread(threading.Thread):
 
 def home(request):
     user = request.user
-    for item in sv:
-        print(item._info)
-        print(item._info['status'])
+    # for item in sv:
+    #     print(nova.glance.find_image(item._info['image']['id']).name)
+    #     item._info['flavor']['id']
+
     if user.is_authenticated:
         if request.method == 'POST':
             svname = request.POST['svname']
@@ -123,6 +124,32 @@ def home(request):
                                                         'images': image_list})
     else:
         return HttpResponseRedirect('/')
+
+
+def home_data(request):
+    user = request.user
+    if user.is_authenticated:
+        data = []
+        for item in sv:
+            host = '<p>'+item._info['OS-EXT-SRV-ATTR:host']+'</p>'
+            name = '<p>'+item._info['name']+'</p>'
+            image_name = '<p>'+nova.glance.find_image(item._info['image']['id']).name+'</p>'
+            ip = '<p>'+item._info['addresses']['public'][0]['addr']+'</p>'
+            flavor = '<p>'+nova.flavors.find(id=item._info['flavor']['id']).name+'</p>'
+            status = '<span class="label label-success">'+item._info['status']+'</span>'
+            created = '<p>'+item._info['created']+'</p>'
+            actions = '''
+                <div class="btn-group">
+                    <button type="button" class="btn btn-danger" data-title="del" id="del_'''+item._info['name']+'''">
+                        <i class="fa fa-trash" data-toggle="tooltip" title="Xóa"></i>
+                    </button> 
+                </div>
+            '''
+            data.append([host, name, image_name, ip, flavor, status, created, actions])
+        big_data = {"data": data}
+        json_data = json.loads(json.dumps(big_data))
+        return JsonResponse(json_data)
+
 
 
 def user_login(request):

@@ -14,6 +14,9 @@ $(document).ready(function(){
         data: {'svname': svname, 'description': description, 'csrfmiddlewaretoken':token, 'image': image, 'network': network, 'ram': ram, 'vcpus': vcpus,'disk': disk},
         success: function(){
             document.getElementById("close_modal").click();
+            setTimeout(function(){
+                $('#list_vm').DataTable().ajax.reload(null,false);
+            }, 2000);
         }
     });
 });

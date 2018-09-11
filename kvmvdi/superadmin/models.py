@@ -75,3 +75,18 @@ class MyUser(AbstractBaseUser):
         "Is the user a member of staff?"
         # Simplest possible answer: All admins are staff
         return self.is_admin
+
+
+class Server(models.Model):
+    project = models.CharField(max_length=255)
+    host = models.CharField(max_length=255)
+    name = models.CharField(max_length=255)
+    image_name = models.CharField(max_length=255)
+    ip = models.CharField(max_length=255)
+    flavor = models.CharField(max_length=255)
+    status = models.CharField(max_length=255)
+    created = models.CharField(max_length=255)
+
+    class Meta:
+        managed = True
+        db_table = 'serverVM'

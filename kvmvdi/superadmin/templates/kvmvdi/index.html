@@ -14,14 +14,12 @@
                             <table class="display nowrap table table-hover table-striped table-bordered" id="list_vm" width="100%">
                                 <thead>
                                     <tr align="center">
-                                        <th>Project</th>
                                         <th>Host</th>
                                         <th>Name</th>
                                         <th>Image Name</th>
                                         <th>IP Address</th>
                                         <th>Flavor</th>
                                         <th>Status</th>
-                                        <th>Task</th>
                                         <th>Time since created</th>
                                         <th>Actions</th>
                                     </tr>
@@ -78,4 +76,5 @@
 {% endblock content %}
 
 {% block js %}
+    <script src="{% static 'js/superadmin/home_superadmin.js' %}"></script>
 {% endblock %}

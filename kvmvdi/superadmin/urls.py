@@ -14,6 +14,7 @@ urlpatterns = [
     path('logout/', views.user_logout, name='logout'),
     path(r'^resetpassword/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})/$',
         views.resetpwd, name='resetpassword'),
+    path('home_data', views.home_data, name='home_data'),
 
     # url(r'chat/([0-9]{5})',views.chat, name='chat'),
     # url(r'update_status/$', views.update_status, name='update_status'),
