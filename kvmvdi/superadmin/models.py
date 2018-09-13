@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import (
     BaseUserManager, AbstractBaseUser
 )
+from django_cryptography.fields import encrypt
 
 class MyUserManager(BaseUserManager):
     def create_user(self, email, username, fullname, key, password):
@@ -90,3 +91,17 @@ class Server(models.Model):
     class Meta:
         managed = True
         db_table = 'serverVM'
+
+
+class Ops(models.Model):
+    name = models.CharField(max_length=255)
+    ip = models.CharField(max_length=255)
+    username = models.CharField(max_length=255)
+    password = encrypt(models.CharField(max_length=50))
+    project = models.CharField(max_length=255)
+    userdomain = models.CharField(max_length=255)
+    projectdomain = models.CharField(max_length=255)
+
+    class Meta:
+        managed = True
+        db_table = 'ops'

@@ -17,7 +17,8 @@ from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes, force_text
 from .tokens import account_activation_token
 from django.core.mail import EmailMessage
-from superadmin.models import MyUser
+from superadmin.models import MyUser, Ops
+
 
 from keystoneauth1 import loading
 from keystoneauth1 import session
@@ -26,12 +27,6 @@ from novaclient import client
 from neutronclient.v2_0 import client as client_neutron #dòng này có nghĩa là thay tên cho "client" cần được import vào để tránh trùng với dùng thứ 3
 
 loader = loading.get_plugin_loader('password')
-
-# xác thực kết nối tới Controller
-auth = loader.load_from_options(auth_url="http://192.168.40.146:5000/v3", username="admin", password="ok123", project_name="admin", user_domain_id="default", project_domain_id="default")
-
-# tạo phiên kết nối
-sess = session.Session(auth=auth)
                 
 class EmailThread(threading.Thread):
     def __init__(self, email):
@@ -42,123 +37,164 @@ class EmailThread(threading.Thread):
     def run(self):
         self.email.send()
 
-class CreateVmThread(threading.Thread):
-    def __init__(self, svname, flavor=None, image=None, network_id=None, ram=None, vcpus=None, disk=None):
+class VmThread(threading.Thread):
+    def __init__(self, auth_url, username, password, project_name, user_domain_id, project_domain_id):
         threading.Thread.__init__(self)
         self._stop_event = threading.Event()
-        self.svname = svname
-        self.flavor = flavor
-        self.image = image
-        self.network_id = network_id
-        self.ram = ram
-        self.vcpus = vcpus
-        self.disk = disk
-        self.nova = client.Client(2, session=sess)
+        self.auth = loader.load_from_options(auth_url=auth_url, username=username, password=password, project_name=project_name, user_domain_id=user_domain_id, project_domain_id=project_domain_id)
+        self.sess = session.Session(auth=self.auth)
+        self.nova = client.Client(2, session=self.sess)
 
-    def run(self):
-        self.nova.servers.create(self.svname, flavor=self.flavor, image=self.image, nics = [{'net-id':self.network_id}],)
-    def createFlavor(self):
-        self.nova.flavors.create(self.svname, self.ram, self.vcpus, self.disk, flavorid='auto', ephemeral=0, swap=0, rxtx_factor=1.0, is_public=True, description=None)
+    def run(self, svname, flavor, image, network_id):
+        self.nova.servers.create(svname, flavor=flavor, image=image, nics = [{'net-id':network_id}])
+
+    def createFlavor(self, svname, ram, vcpus, disk):
+        self.nova.flavors.create(svname, ram, vcpus, disk, flavorid='auto', ephemeral=0, swap=0, rxtx_factor=1.0, is_public=True, description=None)
+
+    def delete_vm(self, svid):
+        self.nova.servers.delete(svid)
+    
+    def list_flavor(self):
+        fl = self.nova.flavors.list()
+        flavor_list = []
+        for flavor in fl:
+            combo = []
+            combo = [flavor.ram, flavor.vcpus, flavor.disk]
+            flavor_list.append(combo)
+        return flavor_list
+
+    def list_server(self):
+        return self.nova.servers.list()
+    
+    def find_flavor(self, ram=None, vcpus=None, disk=None, id=None):
+        if id is None:
+            return self.nova.flavors.find(ram=ram, vcpus=vcpus, disk=disk)
+        else:
+            return self.nova.flavors.find(id=id)
+    
+    def find_image(self, image):
+        return self.nova.glance.find_image(image)
+
+    def find_network(self, network):
+        return self.nova.neutron.find_network(network).id
 
 def home(request):
     user = request.user
-    # xác thực kết nối tới Controller
-    auth = loader.load_from_options(auth_url="http://192.168.40.146:5000/v3", username="admin", password="ok123", project_name="admin", user_domain_id="default", project_domain_id="default")
-
-    # tạo phiên kết nối
-    sess = session.Session(auth=auth)
-
-    # tạo các class add session và version
-    nova = client.Client(2, session=sess)
-    # glance = Client('2', session=sess)
-    neutron = client_neutron.Client(session=sess)
-    networks = neutron.list_networks()
-    network_list = []
-    for item in networks["networks"]:
-        network_keys = {'name'}
-        network_dict = {key: value for key, value in item.items() if key in network_keys}
-        network_list.append(network_dict)
-
-    im = nova.glance.list()
-    image_list = []
-    for image in im:
-        image_list.append(image.name)
-
-    fl = nova.flavors.list()
-    flavor_list = []
-    for flavor in fl:
-        combo = []
-        combo = [flavor.ram, flavor.vcpus, flavor.disk]
-        flavor_list.append(combo)
-
+    list_ops = Ops.objects.all()
     if user.is_authenticated:
         if request.method == 'POST':
-            svname = request.POST['svname']
-            image = request.POST['image']
-            network = request.POST['network']
-            ram = int(float(request.POST['ram']) * 1024)
-            vcpus = int(request.POST['vcpus'])
-            disk = int(request.POST['disk'])
-            if [ram, vcpus, disk] in flavor_list:
-                fl = nova.flavors.find(ram=ram, vcpus=vcpus, disk=disk)
-                im = nova.glance.find_image(image)
-                net = nova.neutron.find_network(network).id
-                thread = CreateVmThread(svname=svname, flavor=fl, image=im, network_id=net)
-                thread.start()
-            else:
-                thread = CreateVmThread(svname=svname, ram=ram, vcpus=vcpus, disk=disk)
-                thread.createFlavor()
-                check = False
-                while check == False:
-                    if nova.flavors.find(ram=ram, vcpus=vcpus, disk=disk):
-                        check = True
-                        falvor = nova.flavors.find(ram=ram, vcpus=vcpus, disk=disk)
-                thread = CreateVmThread(svname, falvor, nova.glance.find_image(image), nova.neutron.find_network(network).id)
-                thread.start()
+            if 'image' in request.POST:
+                if Ops.objects.get(ip=request.POST['ops']):
+                    ops = Ops.objects.get(ip=request.POST['ops'])
+                    auth_url = "http://"+ops.ip+":5000/v3"
+                    username = ops.username
+                    password = ops.password
+                    project_name = ops.project
+                    user_domain_id = ops.userdomain
+                    project_domain_id = ops.projectdomain
+
+
+                    # # tạo các class add session và version
+                    # nova = client.Client(2, session=sess)
+                    # neutron = client_neutron.Client(session=sess)
+                    # networks = neutron.list_networks()
+                    # network_list = []
+                    # for item in networks["networks"]:
+                    #     network_keys = {'name'}
+                    #     network_dict = {key: value for key, value in item.items() if key in network_keys}
+                    #     network_list.append(network_dict)
+
+                    # im = nova.glance.list()
+                    # image_list = []
+                    # for image in im:
+                    #     image_list.append(image.name)
+
+
+                    svname = request.POST['svname']
+                    image = request.POST['image']
+                    network = request.POST['network']
+                    ram = int(float(request.POST['ram']) * 1024)
+                    vcpus = int(request.POST['vcpus'])
+                    disk = int(request.POST['disk'])
+
+                    thread = VmThread(auth_url=auth_url, username=username, password=password, project_name=project_name, user_domain_id=user_domain_id, project_domain_id=project_domain_id)
+                    if [ram, vcpus, disk] in thread.list_flavor():
+                        fl = thread.find_flavor(ram=ram, vcpus=vcpus, disk=disk)
+                        im = thread.find_image(image)
+                        net = thread.find_network(network)
+                        thread.run(svname=svname, flavor=fl, image=im, network_id=net)
+                    else:
+                        thread.createFlavor(svname-svname, ram=ram, vcpus=vcpus, disk=disk)
+                        check = False
+                        while check == False:
+                            if thread.find_flavor(ram=ram, vcpus=vcpus, disk=disk):
+                                check = True
+                        thread.run(svname=svname, flavor=thread.find_flavor(ram=ram, vcpus=vcpus, disk=disk), image=thread.find_image(image), network_id=thread.find_network(network))
+                else:
+                    return HttpResponseRedirect('/')
+            elif 'delete' in request.POST:
+                ops = Ops.objects.get(ip=request.POST['ops'])
+                auth_url = "http://"+ops.ip+":5000/v3"
+                username = ops.username
+                password = ops.password
+                project_name = ops.project
+                user_domain_id = ops.userdomain
+                project_domain_id = ops.projectdomain
+                svid = request.POST['delete']
+                thread = VmThread(auth_url=auth_url, username=username, password=password, project_name=project_name, user_domain_id=user_domain_id, project_domain_id=project_domain_id)
+                thread.delete_vm(svid=svid)
+            elif 'ipsv' in request.POST:
+                Ops.objects.create(name=request.POST['nameops'],
+                                    ip=request.POST['ipsv'],
+                                    username=request.POST['username'],
+                                    password=request.POST['password'],
+                                    project=request.POST['project'],
+                                    userdomain=request.POST['userid'],
+                                    projectdomain=request.POST['projectid'])
         return render(request, 'kvmvdi/index.html',{'username': mark_safe(json.dumps(user.username)),
-                                                        'networks': network_list,
-                                                        'images': image_list})
+                                                        'ops': list_ops})
     else:
         return HttpResponseRedirect('/')
 
 
-def home_data(request):
+def home_data(request, ops_ip):
     user = request.user
-    # xác thực kết nối tới Controller
-    auth = loader.load_from_options(auth_url="http://192.168.40.146:5000/v3", username="admin", password="ok123", project_name="admin", user_domain_id="default", project_domain_id="default")
-
-    # tạo phiên kết nối
-    sess = session.Session(auth=auth)
-
-    # tạo các class add session và version
-    nova = client.Client(2, session=sess)
-    sv = nova.servers.list()
-    sv_list = []
-    for item in sv:
-        sv_list.append(item.name)
-
     if user.is_authenticated:
+        if Ops.objects.get(ip=ops_ip):
+            ops = Ops.objects.get(ip=ops_ip)
+            auth_url = "http://"+ops.ip+":5000/v3"
+            username = ops.username
+            password = ops.password
+            project_name = ops.project
+            user_domain_id = ops.userdomain
+            project_domain_id = ops.projectdomain
+            thread = VmThread(auth_url=auth_url, username=username, password=password, project_name=project_name, user_domain_id=user_domain_id, project_domain_id=project_domain_id)
         data = []
-        for item in sv:
+        for item in thread.list_server():
+            print(dir(item))
+            print(item.get_console_url("novnc"))
             host = '<p>'+item._info['OS-EXT-SRV-ATTR:host']+'</p>'
             name = '<p>'+item._info['name']+'</p>'
-            image_name = '<p>'+nova.glance.find_image(item._info['image']['id']).name+'</p>'
-            ip = '<p>'+item._info['addresses']['public'][0]['addr']+'</p>'
-            flavor = '<p>'+nova.flavors.find(id=item._info['flavor']['id']).name+'</p>'
+            image_name = '<p>'+thread.find_image(image=item._info['image']['id']).name+'</p>'
+            ip = '<p>'+next(iter(item.networks.values()))[0]+'</p>'
+            network = '<p>'+list(item.networks.keys())[0]+'</p>'
+            flavor = '<p>'+thread.find_flavor(id=item._info['flavor']['id']).name+'</p>'
             status = '<span class="label label-success">'+item._info['status']+'</span>'
             created = '<p>'+item._info['created']+'</p>'
             actions = '''
                 <div class="btn-group">
-                    <button type="button" class="btn btn-danger" data-title="del" id="del_'''+item._info['name']+'''">
-                        <i class="fa fa-trash" data-toggle="tooltip" title="Xóa"></i>
+                    <button type="button" class="btn btn-danger delete" name="'''+ops_ip+'''" id="del_'''+item._info['id']+'''">
+                        <i class="fa fa-trash" data-toggle="tooltip" title="Delete"></i>
+                    </button>
+                    <button type="button" class="btn btn-success console" data-title="console" id="'''+item.get_vnc_console("novnc")["console"]["url"]+'''">
+                        <i class="fa fa-bars" data-toggle="tooltip" title="Console"></i>
                     </button> 
                 </div>
             '''
-            data.append([host, name, image_name, ip, flavor, status, created, actions])
+            data.append([host, name, image_name, ip, network, flavor, status, created, actions])
         big_data = {"data": data}
         json_data = json.loads(json.dumps(big_data))
         return JsonResponse(json_data)
-
 
 
 def user_login(request):

@@ -183,10 +183,10 @@
                 <div class="container-fluid">
                     <!-- Start Page Content -->
                     <div class="card-title">
-                            <button type="button" class="btn btn-primary" data-toggle="modal" data-title="add" data-target="#id02">
-                                <i class="fa fa-plus"></i> Create VMs
-                            </button>
-                        </div>
+                        <button type="button" class="btn btn-success" data-toggle="modal" data-title="add_ops" data-target="#id01">
+                            <i class="fa fa-plus"></i> Add OpenStack System
+                        </button>
+                    </div>
                     <div class="row">
             
                         <div class="col-md-3">
@@ -258,57 +258,100 @@
                     </div>
 
                     <div id="info_user">
-                    {% csrf_token %}
-                    {% block content %}
-                    {% endblock %}
+                        {% csrf_token %}
+                        {% block content %}
+                        {% endblock %}
+                        
+                        <div class="modal" id="id01">
+                            <div class="modal-dialog modal-lg">
+                                <div class="modal-content ">
+                                        <div class="modal-header">
+                                            <h4 class="modal-title">Add OpenStack System</h4>
+                                        </div>
+                                            <div class="modal-body form-group">
+                                                <label><b>System name</b></label>
+                                                <input class="form-control" type="text" name="nameops" required>
+                                                <br>
+
+                                                <label><b>IP</b></label>
+                                                <input class="form-control" type="text" name="ipsv" required>
+                                                <br>
+
+                                                <label><b>Username</b></label>
+                                                <input class="form-control" type="text" name="username" required>
+                                                <br>
+
+                                                <label for="psw"><b>Password</b></label>
+                                                <input class="form-control inputText" type="password" name="password" required>
+                                                <br>
+                                                
+                                                <label><b>Project name or Project ID</b></label>
+                                                <input class="form-control" type="text" name="project" required>
+                                                <br>
+
+                                                <label><b>User domain ID or name</b></label>
+                                                <input class="form-control" type="text" name="userid" required>
+                                                <br>
+
+                                                <label><b>Project domain ID or name</b></label>
+                                                <input class="form-control" type="text" name="projectid" required>
+
+                                                <div><font id="invalid-msg" color="red" size="5"></font></div>
                     
-                    <div class="modal" id="id02">
-                        <div class="modal-dialog modal-lg">
-                            <div class="modal-content ">
-                                    <div class="modal-header">
-                                        <h4 class="modal-title">Create VMs</h4>
-                                    </div>
-                                      <div class="modal-body form-group">
-                                          <input type="hidden" name="kind">
-                                          <label><b>Instance Name</b></label>
-                                          <input class="form-control" type="text" placeholder="Instance Name" name="svname" required>
-                                          <br>
-                                          <label><b>Description</b></label>
-                                          <input class="form-control" type="text" placeholder="Description" name="description" required>
-                                          <br>
-                                          <label><b>Select Image</b></label>
-                                          <select name="image" class="form-control" id="mySelect_image">
-                                            {% for image in images %}
-                                                <option value="{{image}}" >{{image}}</option>
-                                            {% endfor %}
-                                            </select>
-                                          <br>
-                                          <label><b>Select Network</b></label>
-                                          <select name="network" class="form-control" id="mySelect">
+                                            </div>
+                                        <div class="modal-footer">
+                                                <button type="submit" class="btn btn-primary" value="OK" id="ops_submit" >Add</button>
+                                                <button type="button" class="btn btn-default" data-dismiss="modal" id="close_modal_ops">Close</button>
+                                            </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="modal" id="id02">
+                            <div class="modal-dialog modal-lg">
+                                <div class="modal-content ">
+                                        <div class="modal-header">
+                                            <h4 class="modal-title">Create VMs</h4>
+                                        </div>
+                                        <div class="modal-body form-group">
+                                            <input type="hidden" value="" name="svip">
+                                            <label><b>Instance Name</b></label>
+                                            <input class="form-control" type="text" placeholder="Instance Name" name="svname" required>
+                                            <br>
+                                            <label><b>Description</b></label>
+                                            <input class="form-control" type="text" placeholder="Description" name="description" required>
+                                            <br>
+                                            <label><b>Select Image</b></label>
+                                            <select name="image" class="form-control" id="mySelect_image">
+                                                {% for image in images %}
+                                                    <option value="{{image}}" >{{image}}</option>
+                                                {% endfor %}
+                                                </select>
+                                            <br>
+                                            <label><b>Select Network</b></label>
+                                            <select name="network" class="form-control" id="mySelect">
                                                 {% for network in networks %}
                                                     {% for key, value in network.items %}
                                                         <option value="{{value}}" >{{value}}</option>
                                                     {% endfor%}
                                                 {% endfor %}
-                                          </select>
-                                          <br>
-              
-                                          <b> Ram </b><input type="number" name="ram" min="0" max="100" step="0.5" value="0.5" style="width: 60px" required>
-                                          <b> Vcpus </b><input type="number" name="vcpus" min="0" max="100" required value="1" style="width: 60px">
-                                          <b> Disk (Gb) </b><input type="number" name="disk" min="0" max="1000" step="5" value="20" style="width: 60px" required>
-                                          <br>
-                                          
-                                          <div><font id="invalid-msg" color="red" size="5"></font></div>
-              
-                                      </div>
-                                    <div class="modal-footer">
-                                          <button type="submit" class="btn btn-primary" value="OK" id="i_submit" >Create</button>
-                                          <button type="button" class="btn btn-default" data-dismiss="modal" id="close_modal">Close</button>
-                                      </div>
+                                            </select>
+                                            <br>
+                
+                                            <b> Ram </b><input type="number" name="ram" min="0" max="100" step="0.5" value="0.5" style="width: 60px" required>
+                                            <b> Vcpus </b><input type="number" name="vcpus" min="0" max="100" required value="1" style="width: 60px">
+                                            <b> Disk (Gb) </b><input type="number" name="disk" min="0" max="1000" step="5" value="20" style="width: 60px" required>
+                                            
+                                            <div><font id="invalid-msg" color="red" size="5"></font></div>
+                
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="submit" class="btn btn-primary" value="OK" id="i_submit" >Create</button>
+                                            <button type="button" class="btn btn-default" data-dismiss="modal" id="close_modal">Close</button>
+                                        </div>
+                                </div>
                             </div>
                         </div>
-                    </div>
-              
 
                     </div>
                 </div>
