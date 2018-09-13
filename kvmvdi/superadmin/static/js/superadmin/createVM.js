@@ -16,7 +16,7 @@ $(document).ready(function(){
             document.getElementById("close_modal").click();
             setTimeout(function(){
                 $('#list_vm').DataTable().ajax.reload(null,false);
-            }, 2000);
+            }, 8000);
         }
     });
 });

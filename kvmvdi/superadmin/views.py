@@ -32,35 +32,6 @@ auth = loader.load_from_options(auth_url="http://192.168.40.146:5000/v3", userna
 
 # tạo phiên kết nối
 sess = session.Session(auth=auth)
-
-# tạo các class add session và version
-nova = client.Client(2, session=sess)
-# glance = Client('2', session=sess)
-neutron = client_neutron.Client(session=sess)
-networks = neutron.list_networks()
-network_list = []
-for item in networks["networks"]:
-    network_keys = {'name'}
-    network_dict = {key: value for key, value in item.items() if key in network_keys}
-    network_list.append(network_dict)
-
-im = nova.glance.list()
-image_list = []
-for image in im:
-    image_list.append(image.name)
-
-
-sv = nova.servers.list()
-sv_list = []
-for item in sv:
-    sv_list.append(item.name)
-
-fl = nova.flavors.list()
-flavor_list = []
-for flavor in fl:
-    combo = []
-    combo = [flavor.ram, flavor.vcpus, flavor.disk]
-    flavor_list.append(combo)
                 
 class EmailThread(threading.Thread):
     def __init__(self, email):
@@ -91,9 +62,34 @@ class CreateVmThread(threading.Thread):
 
 def home(request):
     user = request.user
-    # for item in sv:
-    #     print(nova.glance.find_image(item._info['image']['id']).name)
-    #     item._info['flavor']['id']
+    # xác thực kết nối tới Controller
+    auth = loader.load_from_options(auth_url="http://192.168.40.146:5000/v3", username="admin", password="ok123", project_name="admin", user_domain_id="default", project_domain_id="default")
+
+    # tạo phiên kết nối
+    sess = session.Session(auth=auth)
+
+    # tạo các class add session và version
+    nova = client.Client(2, session=sess)
+    # glance = Client('2', session=sess)
+    neutron = client_neutron.Client(session=sess)
+    networks = neutron.list_networks()
+    network_list = []
+    for item in networks["networks"]:
+        network_keys = {'name'}
+        network_dict = {key: value for key, value in item.items() if key in network_keys}
+        network_list.append(network_dict)
+
+    im = nova.glance.list()
+    image_list = []
+    for image in im:
+        image_list.append(image.name)
+
+    fl = nova.flavors.list()
+    flavor_list = []
+    for flavor in fl:
+        combo = []
+        combo = [flavor.ram, flavor.vcpus, flavor.disk]
+        flavor_list.append(combo)
 
     if user.is_authenticated:
         if request.method == 'POST':
@@ -128,6 +124,19 @@ def home(request):
 
 def home_data(request):
     user = request.user
+    # xác thực kết nối tới Controller
+    auth = loader.load_from_options(auth_url="http://192.168.40.146:5000/v3", username="admin", password="ok123", project_name="admin", user_domain_id="default", project_domain_id="default")
+
+    # tạo phiên kết nối
+    sess = session.Session(auth=auth)
+
+    # tạo các class add session và version
+    nova = client.Client(2, session=sess)
+    sv = nova.servers.list()
+    sv_list = []
+    for item in sv:
+        sv_list.append(item.name)
+
     if user.is_authenticated:
         data = []
         for item in sv:
@@ -155,7 +164,7 @@ def home_data(request):
 def user_login(request):
     user = request.user
     if user.is_authenticated:
-        return render(request, 'kvmvdi/index.html',{'username': mark_safe(json.dumps(user.username)),})
+        return HttpResponseRedirect('/home')
     else:
         if request.method == 'POST':
             # post form để User yêu cầu reset mật khẩu, gửi link về mail
