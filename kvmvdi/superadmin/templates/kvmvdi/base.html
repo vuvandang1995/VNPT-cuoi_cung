@@ -323,18 +323,11 @@
                                             <br>
                                             <label><b>Select Image</b></label>
                                             <select name="image" class="form-control" id="mySelect_image">
-                                                {% for image in images %}
-                                                    <option value="{{image}}" >{{image}}</option>
-                                                {% endfor %}
-                                                </select>
+                                                
+                                            </select>
                                             <br>
                                             <label><b>Select Network</b></label>
                                             <select name="network" class="form-control" id="mySelect">
-                                                {% for network in networks %}
-                                                    {% for key, value in network.items %}
-                                                        <option value="{{value}}" >{{value}}</option>
-                                                    {% endfor%}
-                                                {% endfor %}
                                             </select>
                                             <br>
                 
@@ -369,6 +362,10 @@
         $(".left-sidebar").css("width", "auto");
     });
     var x = document.getElementById("myAudio");
+    var userName = {{ username }};
+    var opsSocket = new WebSocket(
+        'ws://' + window.location.host +
+        '/ws/' + userName + '/');
 
     function notiFunction() {
         if ($('body .noti_fy .point').length){
@@ -398,6 +395,28 @@
         }
     }
 
+    opsSocket.onmessage = function(e) {
+        var data = JSON.parse(e.data);
+        var message = data['message'];
+        var network = data['network'];
+        if (message[0] == 'image_list'){
+            $('#mySelect_image').find('option').remove();
+            var i;
+            for (i=1; i<message.length; i++){
+                var element = '<option value="'+message[i]+'">'+message[i]+'</option>';
+                $("#mySelect_image").append(element);
+            }
+        }
+
+        if (network[0] == 'network_list'){
+            $('#mySelect').find('option').remove();
+            var i;
+            for (i=1; i<network.length; i++){
+                var element = '<option value="'+network[i]+'">'+network[i]+'</option>';
+                $("#mySelect").append(element);
+            }
+        }
+    };
 </script>
 </body>
 </html>

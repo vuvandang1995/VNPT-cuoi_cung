@@ -4,6 +4,8 @@ from django.contrib.auth.models import (
 )
 from django_cryptography.fields import encrypt
 
+
+
 class MyUserManager(BaseUserManager):
     def create_user(self, email, username, fullname, key, password):
         """

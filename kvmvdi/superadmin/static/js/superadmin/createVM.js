@@ -13,13 +13,11 @@ $(document).ready(function(){
             type:'POST',
             url:location.href,
             data: {'svname': svname, 'ops': ops, 'description': description, 'csrfmiddlewaretoken':token, 'image': image, 'network': network, 'ram': ram, 'vcpus': vcpus,'disk': disk},
-            success: function(){
-                document.getElementById("close_modal").click();
-                setTimeout(function(){
-                    $('#list_vm').DataTable().ajax.reload(null,false);
-                }, 8000);
-            }
         });
+        document.getElementById("close_modal").click();
+        setTimeout(function(){
+            $('.list_vm').DataTable().ajax.reload(null,false);
+        }, 8000);
     });
 
     $("#ops_submit").click(function() {
@@ -42,6 +40,7 @@ $(document).ready(function(){
         });
     });
 
+
     $("#id02").on('show.bs.modal', function(event){
         var button = $(event.relatedTarget);
         var ip = button.data('title');
@@ -51,6 +50,9 @@ $(document).ready(function(){
         $("input[name=ram]").val("0.5");
         $("input[name=vcpus]").val("1");
         $("input[name=disk]").val("20");
+        opsSocket.send(JSON.stringify({
+            'message' : ip,
+        }));
   });
 
     $("#id01").on('show.bs.modal', function(event){

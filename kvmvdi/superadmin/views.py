@@ -18,6 +18,7 @@ from django.utils.encoding import force_bytes, force_text
 from .tokens import account_activation_token
 from django.core.mail import EmailMessage
 from superadmin.models import MyUser, Ops
+import os
 
 
 from keystoneauth1 import loading
@@ -44,6 +45,7 @@ class VmThread(threading.Thread):
         self.auth = loader.load_from_options(auth_url=auth_url, username=username, password=password, project_name=project_name, user_domain_id=user_domain_id, project_domain_id=project_domain_id)
         self.sess = session.Session(auth=self.auth)
         self.nova = client.Client(2, session=self.sess)
+        self.neutron = client_neutron.Client(session=self.sess)
 
     def run(self, svname, flavor, image, network_id):
         self.nova.servers.create(svname, flavor=flavor, image=image, nics = [{'net-id':network_id}])
@@ -65,6 +67,24 @@ class VmThread(threading.Thread):
 
     def list_server(self):
         return self.nova.servers.list()
+
+    def list_images(self):
+        image_list = []
+        for image in self.nova.glance.list():
+            image_list.append(image.name)
+        image_list.insert(0, "image_list")
+        return image_list        
+
+    def list_networks(self):
+        network_list = []
+        for item in self.neutron.list_networks()["networks"]:
+            network_keys = {'name'}
+            for key, value in item.items():
+                if key in network_keys:
+                    network_list.append(value)
+        network_list.insert(0, "network_list")
+        return network_list
+
     
     def find_flavor(self, ram=None, vcpus=None, disk=None, id=None):
         if id is None:
@@ -77,6 +97,19 @@ class VmThread(threading.Thread):
 
     def find_network(self, network):
         return self.nova.neutron.find_network(network).id
+
+class check_ping(threading.Thread):
+    def __init__(self, host):
+        threading.Thread.__init__(self)
+        self._stop_event = threading.Event()
+        self.host = host
+
+    def run(self):
+        response = os.system("ping -c 1 " + self.host)
+        if response == 0:
+            return True
+        else:
+            return False
 
 def home(request):
     user = request.user
@@ -93,23 +126,6 @@ def home(request):
                     user_domain_id = ops.userdomain
                     project_domain_id = ops.projectdomain
 
-
-                    # # tạo các class add session và version
-                    # nova = client.Client(2, session=sess)
-                    # neutron = client_neutron.Client(session=sess)
-                    # networks = neutron.list_networks()
-                    # network_list = []
-                    # for item in networks["networks"]:
-                    #     network_keys = {'name'}
-                    #     network_dict = {key: value for key, value in item.items() if key in network_keys}
-                    #     network_list.append(network_dict)
-
-                    # im = nova.glance.list()
-                    # image_list = []
-                    # for image in im:
-                    #     image_list.append(image.name)
-
-
                     svname = request.POST['svname']
                     image = request.POST['image']
                     network = request.POST['network']
@@ -124,7 +140,7 @@ def home(request):
                         net = thread.find_network(network)
                         thread.run(svname=svname, flavor=fl, image=im, network_id=net)
                     else:
-                        thread.createFlavor(svname-svname, ram=ram, vcpus=vcpus, disk=disk)
+                        thread.createFlavor(svname=svname, ram=ram, vcpus=vcpus, disk=disk)
                         check = False
                         while check == False:
                             if thread.find_flavor(ram=ram, vcpus=vcpus, disk=disk):
@@ -156,46 +172,93 @@ def home(request):
     else:
         return HttpResponseRedirect('/')
 
-
 def home_data(request, ops_ip):
     user = request.user
     if user.is_authenticated:
         if Ops.objects.get(ip=ops_ip):
-            ops = Ops.objects.get(ip=ops_ip)
-            auth_url = "http://"+ops.ip+":5000/v3"
-            username = ops.username
-            password = ops.password
-            project_name = ops.project
-            user_domain_id = ops.userdomain
-            project_domain_id = ops.projectdomain
-            thread = VmThread(auth_url=auth_url, username=username, password=password, project_name=project_name, user_domain_id=user_domain_id, project_domain_id=project_domain_id)
-        data = []
-        for item in thread.list_server():
-            print(dir(item))
-            print(item.get_console_url("novnc"))
-            host = '<p>'+item._info['OS-EXT-SRV-ATTR:host']+'</p>'
-            name = '<p>'+item._info['name']+'</p>'
-            image_name = '<p>'+thread.find_image(image=item._info['image']['id']).name+'</p>'
-            ip = '<p>'+next(iter(item.networks.values()))[0]+'</p>'
-            network = '<p>'+list(item.networks.keys())[0]+'</p>'
-            flavor = '<p>'+thread.find_flavor(id=item._info['flavor']['id']).name+'</p>'
-            status = '<span class="label label-success">'+item._info['status']+'</span>'
-            created = '<p>'+item._info['created']+'</p>'
-            actions = '''
-                <div class="btn-group">
-                    <button type="button" class="btn btn-danger delete" name="'''+ops_ip+'''" id="del_'''+item._info['id']+'''">
-                        <i class="fa fa-trash" data-toggle="tooltip" title="Delete"></i>
-                    </button>
-                    <button type="button" class="btn btn-success console" data-title="console" id="'''+item.get_vnc_console("novnc")["console"]["url"]+'''">
-                        <i class="fa fa-bars" data-toggle="tooltip" title="Console"></i>
-                    </button> 
-                </div>
-            '''
-            data.append([host, name, image_name, ip, network, flavor, status, created, actions])
-        big_data = {"data": data}
-        json_data = json.loads(json.dumps(big_data))
-        return JsonResponse(json_data)
+            thread = check_ping(host=ops_ip)
+            if thread.run():
+                ops = Ops.objects.get(ip=ops_ip)
+                auth_url = "http://"+ops.ip+":5000/v3"
+                username = ops.username
+                password = ops.password
+                project_name = ops.project
+                user_domain_id = ops.userdomain
+                project_domain_id = ops.projectdomain
 
+                thread = VmThread(auth_url=auth_url, username=username, password=password, project_name=project_name, user_domain_id=user_domain_id, project_domain_id=project_domain_id)
+                # print(thread.list_networks())
+                data = []
+                for item in thread.list_server():
+                    # print(dir(item))
+                    # print(item.interface_list())
+                    try:
+                        host = '<p>'+item._info['OS-EXT-SRV-ATTR:host']+'</p>'
+                    except:
+                        host = '<p></p>'
+                    try:
+                        name = '<p>'+item._info['name']+'</p>'
+                    except:
+                        name = '<p></p>'
+
+                    try:
+                        image_name = '<p>'+thread.find_image(image=item._info['image']['id']).name+'</p>'
+                    except:
+                        image_name = '<p></p>'
+
+                    try:
+                        ip = '<p>'+next(iter(item.networks.values()))[0]+'</p>'
+                    except:
+                        ip = '<p></p>'
+
+                    try:
+                        network = '<p>'+list(item.networks.keys())[0]+'</p>'
+                    except:
+                        network = '<p></p>'
+
+                    try:
+                        flavor = '<p>'+thread.find_flavor(id=item._info['flavor']['id']).name+'</p>'
+                    except:
+                        flavor = '<p></p>'
+
+                    if item._info['status'] == 'ACTIVE':
+                        status = '<span class="label label-success">'+item._info['status']+'</span>'
+                    else:
+                        status = '<span class="label label-danger">'+item._info['status']+'</span>'
+
+                    created = '<p>'+item._info['created']+'</p>'
+
+                    try:
+                        actions = '''
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-danger delete" name="'''+ops_ip+'''" id="del_'''+item._info['id']+'''">
+                                <i class="fa fa-trash" data-toggle="tooltip" title="Delete"></i>
+                            </button>
+                            <button type="button" class="btn btn-success console" data-title="console" id="'''+item.get_console_url("novnc")["console"]["url"]+'''">
+                                <i class="fa fa-bars" data-toggle="tooltip" title="Console"></i>
+                            </button> 
+                        </div>
+                        '''
+                    except:
+                        actions = '''
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-danger delete" name="'''+ops_ip+'''" id="del_'''+item._info['id']+'''">
+                                <i class="fa fa-trash" data-toggle="tooltip" title="Delete"></i>
+                            </button>
+                        </div>
+                        '''
+                    data.append([host, name, image_name, ip, network, flavor, status, created, actions])
+                big_data = {"data": data}
+                json_data = json.loads(json.dumps(big_data))
+                return JsonResponse(json_data)
+            else:
+                data = []
+                data.append(['<p></p>', '<p></p>', '<p></p>', '<p></p>', '<p></p>', '<p></p>', '<p></p>', '<p></p>', '<p></p>'])
+                big_data = {"data": data}
+                json_data = json.loads(json.dumps(big_data))
+                return JsonResponse(json_data)
+
+            
 
 def user_login(request):
     user = request.user

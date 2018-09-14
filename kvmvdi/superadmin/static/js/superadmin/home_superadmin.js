@@ -28,8 +28,8 @@ $(document).ready(function(){
                 data: {'delete':id, 'csrfmiddlewaretoken':token, 'ops':ops},
                 success: function(){
                     setTimeout(function(){
-                        $('#list_vm').DataTable().ajax.reload(null,false);
-                    }, 8000);
+                        $('.list_vm').DataTable().ajax.reload(null,false);
+                    }, 4000);
                 }
            });
         }
