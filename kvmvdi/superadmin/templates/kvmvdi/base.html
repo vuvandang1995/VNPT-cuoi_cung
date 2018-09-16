@@ -153,12 +153,13 @@
                     <ul id="sidebarnav">
                         <li class="nav-devider"></li>
                         <li class="nav-label">{{ user.fullname}}</li>
-                        <li> <a href="{% url 'superadmin:home' %}" aria-expanded="false"><i class="fa fa-home"></i>&nbsp&nbsp&nbsp Trang chủ</a></li>
-                        <li> <a href="" aria-expanded="false"><i class="fa fa-envelope"></i>&nbsp&nbsp&nbspYêu cầu gửi đến</a></li>
-                        <li> <a href="" aria-expanded="false"><i class="fa fa-send-o"></i>&nbsp&nbsp&nbspYêu cầu gửi đi</a></li>
-                        <li> <a href="" aria-expanded="false"><i class="fa fa-hourglass-2"></i>&nbsp&nbsp&nbspYêu cầu đang xử lý</a></li>
-                        <li> <a href="" aria-expanded="false"><i class="fa fa-check-circle"></i>&nbsp&nbsp&nbspYêu cầu đã đóng</a></li>
-                        <li> <a href="" aria-expanded="false"><i class="fa fa-history"></i>&nbsp&nbsp&nbspLịch sử cập nhật</a></li>
+                        <li> 
+                            <a aria-expanded="false"><i class="fa fa-plus"></i> 
+                                <button type="button" class="btn btn-success" data-toggle="modal" data-title="add_ops" data-target="#id01">
+                                    Add OPS System
+                                </button>
+                            </a>
+                        </li>
                         
                     </ul>
                 </nav>
@@ -182,11 +183,7 @@
                 <!-- Container fluid  -->
                 <div class="container-fluid">
                     <!-- Start Page Content -->
-                    <div class="card-title">
-                        <button type="button" class="btn btn-success" data-toggle="modal" data-title="add_ops" data-target="#id01">
-                            <i class="fa fa-plus"></i> Add OpenStack System
-                        </button>
-                    </div>
+
                     <div class="row">
             
                         <div class="col-md-3">
@@ -331,9 +328,17 @@
                                             </select>
                                             <br>
                 
-                                            <b> Ram </b><input type="number" name="ram" min="0" max="100" step="0.5" value="0.5" style="width: 60px" required>
-                                            <b> Vcpus </b><input type="number" name="vcpus" min="0" max="100" required value="1" style="width: 60px">
-                                            <b> Disk (Gb) </b><input type="number" name="disk" min="0" max="1000" step="5" value="20" style="width: 60px" required>
+                                            <b> Ram </b><input class="price" type="number" name="ram" min="0" max="100" step="0.5" value="0.5" style="width: 60px" required>
+                                            <b> Vcpus </b><input class="price" type="number" name="vcpus" min="0" max="100" required value="1" style="width: 60px">
+                                            <b> Disk (Gb) </b><input class="price" type="number" name="disk" min="0" max="1000" step="5" value="20" style="width: 60px" required>
+                                            <br>
+                                            <br>
+                                            
+                                            <label><b>Instance Count</b></label>
+                                            <input type="number" class="price" name="count" min="1" max="50" required value="1" style="width: 60px">
+
+                                            <b>Price</b>
+                                            <input type="text" name="price" style="width: 60px" disabled> USD/MONTH
                                             
                                             <div><font id="invalid-msg" color="red" size="5"></font></div>
                 

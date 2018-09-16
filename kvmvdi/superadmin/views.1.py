@@ -20,9 +20,14 @@ from django.core.mail import EmailMessage
 from superadmin.models import MyUser, Ops
 import os
 
-from .plugin.novaclient import nova
-from .plugin.neutronclient import neutron
 
+from keystoneauth1 import loading
+from keystoneauth1 import session
+from novaclient import client
+# from glanceclient import Client
+from neutronclient.v2_0 import client as client_neutron #dòng này có nghĩa là thay tên cho "client" cần được import vào để tránh trùng với dùng thứ 3
+
+loader = loading.get_plugin_loader('password')
                 
 class EmailThread(threading.Thread):
     def __init__(self, email):
@@ -32,8 +37,66 @@ class EmailThread(threading.Thread):
 
     def run(self):
         self.email.send()
-        
 
+class VmThread(threading.Thread):
+    def __init__(self, auth_url, username, password, project_name, user_domain_id, project_domain_id):
+        threading.Thread.__init__(self)
+        self._stop_event = threading.Event()
+        self.auth = loader.load_from_options(auth_url=auth_url, username=username, password=password, project_name=project_name, user_domain_id=user_domain_id, project_domain_id=project_domain_id)
+        self.sess = session.Session(auth=self.auth)
+        self.nova = client.Client(2, session=self.sess)
+        self.neutron = client_neutron.Client(session=self.sess)
+
+    def run(self, svname, flavor, image, network_id):
+        self.nova.servers.create(svname, flavor=flavor, image=image, nics = [{'net-id':network_id}])
+
+    def createFlavor(self, svname, ram, vcpus, disk):
+        self.nova.flavors.create(svname, ram, vcpus, disk, flavorid='auto', ephemeral=0, swap=0, rxtx_factor=1.0, is_public=True, description=None)
+
+    def delete_vm(self, svid):
+        self.nova.servers.delete(svid)
+    
+    def list_flavor(self):
+        fl = self.nova.flavors.list()
+        flavor_list = []
+        for flavor in fl:
+            combo = []
+            combo = [flavor.ram, flavor.vcpus, flavor.disk]
+            flavor_list.append(combo)
+        return flavor_list
+
+    def list_server(self):
+        return self.nova.servers.list()
+
+    def list_images(self):
+        image_list = []
+        for image in self.nova.glance.list():
+            image_list.append(image.name)
+        image_list.insert(0, "image_list")
+        return image_list        
+
+    def list_networks(self):
+        network_list = []
+        for item in self.neutron.list_networks()["networks"]:
+            network_keys = {'name'}
+            for key, value in item.items():
+                if key in network_keys:
+                    network_list.append(value)
+        network_list.insert(0, "network_list")
+        return network_list
+
+    
+    def find_flavor(self, ram=None, vcpus=None, disk=None, id=None):
+        if id is None:
+            return self.nova.flavors.find(ram=ram, vcpus=vcpus, disk=disk)
+        else:
+            return self.nova.flavors.find(id=id)
+    
+    def find_image(self, image):
+        return self.nova.glance.find_image(image)
+
+    def find_network(self, network):
+        return self.nova.neutron.find_network(network).id
 
 class check_ping(threading.Thread):
     def __init__(self, host):
@@ -48,7 +111,6 @@ class check_ping(threading.Thread):
         else:
             return False
 
-
 def home(request):
     user = request.user
     list_ops = Ops.objects.all()
@@ -57,14 +119,12 @@ def home(request):
             if 'image' in request.POST:
                 if Ops.objects.get(ip=request.POST['ops']):
                     ops = Ops.objects.get(ip=request.POST['ops'])
-                    ip = ops.ip
+                    auth_url = "http://"+ops.ip+":5000/v3"
                     username = ops.username
                     password = ops.password
                     project_name = ops.project
                     user_domain_id = ops.userdomain
                     project_domain_id = ops.projectdomain
-
-                    connect = nova(ip=ip, username=username, password=password, project_name=project_name, user_domain_id=user_domain_id, project_domain_id=project_domain_id)
 
                     svname = request.POST['svname']
                     image = request.POST['image']
@@ -72,34 +132,33 @@ def home(request):
                     ram = int(float(request.POST['ram']) * 1024)
                     vcpus = int(request.POST['vcpus'])
                     disk = int(request.POST['disk'])
-                    count = int(request.POST['count'])
 
-                    if [ram, vcpus, disk] in connect.list_flavor():
-                        fl = connect.find_flavor(ram=ram, vcpus=vcpus, disk=disk)
-                        im = connect.find_image(image)
-                        net = connect.find_network(network)
-                        connect.createVM(svname=svname, flavor=fl, image=im, network_id=net, max_count=count)
+                    thread = VmThread(auth_url=auth_url, username=username, password=password, project_name=project_name, user_domain_id=user_domain_id, project_domain_id=project_domain_id)
+                    if [ram, vcpus, disk] in thread.list_flavor():
+                        fl = thread.find_flavor(ram=ram, vcpus=vcpus, disk=disk)
+                        im = thread.find_image(image)
+                        net = thread.find_network(network)
+                        thread.run(svname=svname, flavor=fl, image=im, network_id=net)
                     else:
-                        connect.createFlavor(svname=svname, ram=ram, vcpus=vcpus, disk=disk)
+                        thread.createFlavor(svname=svname, ram=ram, vcpus=vcpus, disk=disk)
                         check = False
                         while check == False:
-                            if connect.find_flavor(ram=ram, vcpus=vcpus, disk=disk):
+                            if thread.find_flavor(ram=ram, vcpus=vcpus, disk=disk):
                                 check = True
-                        connect.createVM(svname=svname, flavor=connect.find_flavor(ram=ram, vcpus=vcpus, disk=disk), image=connect.find_image(image), network_id=connect.find_network(network), max_count=count)
+                        thread.run(svname=svname, flavor=thread.find_flavor(ram=ram, vcpus=vcpus, disk=disk), image=thread.find_image(image), network_id=thread.find_network(network))
                 else:
                     return HttpResponseRedirect('/')
             elif 'delete' in request.POST:
                 ops = Ops.objects.get(ip=request.POST['ops'])
-                ip = ops.ip
+                auth_url = "http://"+ops.ip+":5000/v3"
                 username = ops.username
                 password = ops.password
                 project_name = ops.project
                 user_domain_id = ops.userdomain
                 project_domain_id = ops.projectdomain
-
-                connect = nova(ip=ip, username=username, password=password, project_name=project_name, user_domain_id=user_domain_id, project_domain_id=project_domain_id)
                 svid = request.POST['delete']
-                connect.delete_vm(svid=svid)
+                thread = VmThread(auth_url=auth_url, username=username, password=password, project_name=project_name, user_domain_id=user_domain_id, project_domain_id=project_domain_id)
+                thread.delete_vm(svid=svid)
             elif 'ipsv' in request.POST:
                 Ops.objects.create(name=request.POST['nameops'],
                                     ip=request.POST['ipsv'],
@@ -120,17 +179,17 @@ def home_data(request, ops_ip):
             thread = check_ping(host=ops_ip)
             if thread.run():
                 ops = Ops.objects.get(ip=ops_ip)
-                ip = ops.ip
+                auth_url = "http://"+ops.ip+":5000/v3"
                 username = ops.username
                 password = ops.password
                 project_name = ops.project
                 user_domain_id = ops.userdomain
                 project_domain_id = ops.projectdomain
 
-                connect = nova(ip=ip, username=username, password=password, project_name=project_name, user_domain_id=user_domain_id, project_domain_id=project_domain_id)
+                thread = VmThread(auth_url=auth_url, username=username, password=password, project_name=project_name, user_domain_id=user_domain_id, project_domain_id=project_domain_id)
                 # print(thread.list_networks())
                 data = []
-                for item in connect.list_server():
+                for item in thread.list_server():
                     # print(dir(item))
                     # print(item.interface_list())
                     try:
@@ -142,25 +201,25 @@ def home_data(request, ops_ip):
                     except:
                         name = '<p></p>'
 
-                    # try:
-                    #     image_name = '<p>'+connect.find_image(image=item._info['image']['id']).name+'</p>'
-                    # except:
-                    #     image_name = '<p></p>'
+                    try:
+                        image_name = '<p>'+thread.find_image(image=item._info['image']['id']).name+'</p>'
+                    except:
+                        image_name = '<p></p>'
 
                     try:
                         ip = '<p>'+next(iter(item.networks.values()))[0]+'</p>'
                     except:
                         ip = '<p></p>'
 
-                    # try:
-                    #     network = '<p>'+list(item.networks.keys())[0]+'</p>'
-                    # except:
-                    #     network = '<p></p>'
+                    try:
+                        network = '<p>'+list(item.networks.keys())[0]+'</p>'
+                    except:
+                        network = '<p></p>'
 
-                    # try:
-                    #     flavor = '<p>'+connect.find_flavor(id=item._info['flavor']['id']).name+'</p>'
-                    # except:
-                    #     flavor = '<p></p>'
+                    try:
+                        flavor = '<p>'+thread.find_flavor(id=item._info['flavor']['id']).name+'</p>'
+                    except:
+                        flavor = '<p></p>'
 
                     if item._info['status'] == 'ACTIVE':
                         status = '<span class="label label-success">'+item._info['status']+'</span>'
@@ -188,8 +247,7 @@ def home_data(request, ops_ip):
                             </button>
                         </div>
                         '''
-                    # data.append([host, name, image_name, ip, network, flavor, status, created, actions])
-                    data.append([host, name, ip, status, created, actions])
+                    data.append([host, name, image_name, ip, network, flavor, status, created, actions])
                 big_data = {"data": data}
                 json_data = json.loads(json.dumps(big_data))
                 return JsonResponse(json_data)

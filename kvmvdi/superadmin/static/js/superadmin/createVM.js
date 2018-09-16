@@ -9,10 +9,11 @@ $(document).ready(function(){
         var ram = $("input[name=ram]").val();
         var vcpus = $("input[name=vcpus]").val();
         var disk = $("input[name=disk]").val();
+        var count = $("input[name=count]").val();
         $.ajax({
             type:'POST',
             url:location.href,
-            data: {'svname': svname, 'ops': ops, 'description': description, 'csrfmiddlewaretoken':token, 'image': image, 'network': network, 'ram': ram, 'vcpus': vcpus,'disk': disk},
+            data: {'svname': svname, 'ops': ops, 'description': description, 'csrfmiddlewaretoken':token, 'image': image, 'network': network, 'ram': ram, 'vcpus': vcpus,'disk': disk, 'count': count},
         });
         document.getElementById("close_modal").click();
         setTimeout(function(){
@@ -50,10 +51,22 @@ $(document).ready(function(){
         $("input[name=ram]").val("0.5");
         $("input[name=vcpus]").val("1");
         $("input[name=disk]").val("20");
+        $("input[name=count]").val("1");
+        $("input[name=price]").val("23.5");
         opsSocket.send(JSON.stringify({
             'message' : ip,
         }));
-  });
+    });
+
+    $('body .price').change(function(){
+        var ram = $("body input[name=ram]").val();
+        var vcpus = $("body input[name=vcpus]").val();
+        var disk = $("body input[name=disk]").val();
+        var count = $("body input[name=count]").val();
+        var price_new = (parseInt(ram) * 3 + parseInt(vcpus) * 2 + parseInt(disk) * 1) * parseInt(count);
+        $("body input[name=price]").val(price_new);
+    });
+
 
     $("#id01").on('show.bs.modal', function(event){
         $("input[name=nameops]").val("");
@@ -63,5 +76,5 @@ $(document).ready(function(){
         $("input[name=project]").val("");
         $("input[name=userid]").val("");
         $("input[name=projectid]").val("");
-});
+    });
 });
