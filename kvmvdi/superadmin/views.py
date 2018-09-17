@@ -21,6 +21,7 @@ from superadmin.models import MyUser, Ops
 import os
 
 from .plugin.novaclient import nova
+from .plugin.keystoneclient import keystone
 from .plugin.neutronclient import neutron
 
                 
@@ -52,7 +53,7 @@ class check_ping(threading.Thread):
 def home(request):
     user = request.user
     list_ops = Ops.objects.all()
-    if user.is_authenticated:
+    if user.is_authenticated  and user.is_adminkvm:
         if request.method == 'POST':
             if 'image' in request.POST:
                 if Ops.objects.get(ip=request.POST['ops']):
@@ -115,7 +116,7 @@ def home(request):
 
 def home_data(request, ops_ip):
     user = request.user
-    if user.is_authenticated:
+    if user.is_authenticated  and user.is_adminkvm:
         if Ops.objects.get(ip=ops_ip):
             thread = check_ping(host=ops_ip)
             if thread.run():
@@ -204,8 +205,10 @@ def home_data(request, ops_ip):
 
 def user_login(request):
     user = request.user
-    if user.is_authenticated:
+    if user.is_authenticated  and user.is_adminkvm:
         return HttpResponseRedirect('/home')
+    elif user.is_authenticated  and user.is_adminkvm == False:
+        return HttpResponseRedirect('/client')
     else:
         if request.method == 'POST':
             # post form để User yêu cầu reset mật khẩu, gửi link về mail
@@ -241,6 +244,9 @@ def user_login(request):
                     if user.is_active and user.is_adminkvm:
                         login(request, user)
                         return HttpResponseRedirect('/home')
+                    elif user.is_active and user.is_adminkvm == False:
+                        login(request, user)
+                        return HttpResponseRedirect('/client')
                     else:
                         return render(request, 'kvmvdi/login.html',{'error':'Your account is blocked!'})
                 else:
@@ -249,9 +255,17 @@ def user_login(request):
                 user_form = UserForm(request.POST)
                 if user_form.is_valid():
                     user = user_form.save()
+                    ip = '192.168.40.146'
+                    username = 'admin'
+                    password = 'ok123'
+                    project_name = 'admin'
+                    user_domain_id = 'default'
+                    project_domain_id = 'default'
+                    connect = keystone(ip=ip, username=username, password=password, project_name=project_name, user_domain_id=user_domain_id, project_domain_id=project_domain_id)
+                    connect.create_project(name=user.username, domain='default')
+                    # connect.get_role()
                     return redirect('/')
                 else:
-                    print(user_form.errors)
                     error = ''
                     for field in user_form:
                         error += field.errors
@@ -285,7 +299,7 @@ def user_logout(request):
 
 def user_profile(request):
     user = request.user
-    if user.is_authenticated:
+    if user.is_authenticated  and user.is_adminkvm:
         return render(request, 'kvmvdi/profile.html', {'username': mark_safe(json.dumps(user.username))})
     else:
         return HttpResponseRedirect('/')

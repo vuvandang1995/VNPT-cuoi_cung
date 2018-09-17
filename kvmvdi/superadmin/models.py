@@ -82,17 +82,35 @@ class MyUser(AbstractBaseUser):
 
 class Server(models.Model):
     project = models.CharField(max_length=255)
-    host = models.CharField(max_length=255)
+    description = models.CharField(max_length=255)
+    host = models.CharField(max_length=255, null=True)
     name = models.CharField(max_length=255)
-    image_name = models.CharField(max_length=255)
-    ip = models.CharField(max_length=255)
-    flavor = models.CharField(max_length=255)
-    status = models.CharField(max_length=255)
-    created = models.CharField(max_length=255)
+    ip = models.CharField(max_length=255,null=True)
+    ram = models.IntegerField()
+    vcpus = models.IntegerField()
+    disk = models.IntegerField()
+    status = models.IntegerField(default=1)
+    owner = models.ForeignKey('Myuser', models.CASCADE, db_column='owner')
+    created = models.CharField(max_length=255, null=True)
 
     class Meta:
         managed = True
         db_table = 'serverVM'
+
+
+class Oders(models.Model):
+    service = models.CharField(max_length=255)
+    server = models.ForeignKey('Server', models.CASCADE, db_column='server')
+    ip = models.CharField(max_length=255,null=True)
+    price = models.IntegerField()
+    status = models.IntegerField(default=1)
+    owner = models.ForeignKey('Myuser', models.CASCADE, db_column='owner')
+    created = models.DateTimeField()
+
+    class Meta:
+        managed = True
+        db_table = 'oders'
+
 
 
 class Ops(models.Model):
