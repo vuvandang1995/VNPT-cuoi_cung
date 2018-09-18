@@ -133,7 +133,7 @@ def home_data(request, ops_ip):
                 data = []
                 for item in connect.list_server():
                     # print(dir(item))
-                    # print(item.interface_list())
+                    # print(item._info['OS-EXT-STS:power_state'])
                     try:
                         host = '<p>'+item._info['OS-EXT-SRV-ATTR:host']+'</p>'
                     except:
@@ -178,7 +178,7 @@ def home_data(request, ops_ip):
                             </button>
                             <button type="button" class="btn btn-success console" data-title="console" id="'''+item.get_console_url("novnc")["console"]["url"]+'''">
                                 <i class="fa fa-bars" data-toggle="tooltip" title="Console"></i>
-                            </button> 
+                            </button>
                         </div>
                         '''
                     except:
@@ -263,7 +263,11 @@ def user_login(request):
                     project_domain_id = 'default'
                     connect = keystone(ip=ip, username=username, password=password, project_name=project_name, user_domain_id=user_domain_id, project_domain_id=project_domain_id)
                     connect.create_project(name=user.username, domain='default')
-                    # connect.get_role()
+                    check = False
+                    while check == False:
+                        if connect.find_project(user.username):
+                            check = True
+                    connect.add_user_to_project(user.username)
                     return redirect('/')
                 else:
                     error = ''

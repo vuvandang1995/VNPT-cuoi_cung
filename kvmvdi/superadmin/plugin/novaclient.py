@@ -41,6 +41,15 @@ class nova(opsutils.Base):
     def delete_vm(self, svid):
         self.nova.servers.delete(svid)
     
+    def start_vm(self, svid):
+        self.nova.servers.start(svid)
+
+    def reboot_vm(self, svid):
+        self.nova.servers.reboot(svid, reboot_type='SOFT')
+
+    def stop_vm(self, svid):
+        self.nova.servers.stop(svid)
+    
     def find_flavor(self, ram=None, vcpus=None, disk=None, id=None):
         if id is None:
             return self.nova.flavors.find(ram=ram, vcpus=vcpus, disk=disk)

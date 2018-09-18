@@ -21,6 +21,7 @@ import os
 
 from superadmin.plugin.novaclient import nova
 from superadmin.plugin.neutronclient import neutron
+from superadmin.plugin.keystoneclient import keystone
 
 from django.utils import timezone
 
@@ -102,12 +103,64 @@ def home(request):
                 connect.delete_vm(svid=svid)
                 server = Server.objects.get(name=request.POST['svname'])
                 server.delete()
+            elif 'start' in request.POST:
+                ops = Ops.objects.get(ip=request.POST['ops'])
+                ip = ops.ip
+                username = ops.username
+                password = ops.password
+                project_name = ops.project
+                user_domain_id = ops.userdomain
+                project_domain_id = ops.projectdomain
+
+                connect = nova(ip=ip, username=username, password=password, project_name=project_name, user_domain_id=user_domain_id, project_domain_id=project_domain_id)
+                svid = request.POST['start']
+                connect.start_vm(svid=svid)
+                # server = Server.objects.get(name=request.POST['svname'])
+                # server.delete()
+            elif 'reboot' in request.POST:
+                ops = Ops.objects.get(ip=request.POST['ops'])
+                ip = ops.ip
+                username = ops.username
+                password = ops.password
+                project_name = ops.project
+                user_domain_id = ops.userdomain
+                project_domain_id = ops.projectdomain
+
+                connect = nova(ip=ip, username=username, password=password, project_name=project_name, user_domain_id=user_domain_id, project_domain_id=project_domain_id)
+                svid = request.POST['reboot']
+                connect.reboot_vm(svid=svid)
+                # server = Server.objects.get(name=request.POST['svname'])
+                # server.delete()
+            elif 'stop' in request.POST:
+                ops = Ops.objects.get(ip=request.POST['ops'])
+                ip = ops.ip
+                username = ops.username
+                password = ops.password
+                project_name = ops.project
+                user_domain_id = ops.userdomain
+                project_domain_id = ops.projectdomain
+
+                connect = nova(ip=ip, username=username, password=password, project_name=project_name, user_domain_id=user_domain_id, project_domain_id=project_domain_id)
+                svid = request.POST['stop']
+                connect.stop_vm(svid=svid)
+                # server = Server.objects.get(name=request.POST['svname'])
+                # server.delete()
         return render(request, 'client/index.html',{'username': mark_safe(json.dumps(user.username))})
     else:
         return HttpResponseRedirect('/')
 
 def home_data(request, ops_ip):
     user = request.user
+
+    # ip = '192.168.40.146'
+    # username = 'admin'
+    # password = 'ok123'
+    # project_name = 'admin'
+    # user_domain_id = 'default'
+    # project_domain_id = 'default'
+    # connect = keystone(ip=ip, username=username, password=password, project_name=project_name, user_domain_id=user_domain_id, project_domain_id=project_domain_id)
+    # # connect.add_user_to_project()
+    # connect.get_role()
     if user.is_authenticated and user.is_adminkvm == False:
         if Ops.objects.get(ip=ops_ip):
             thread = check_ping(host=ops_ip)
@@ -145,30 +198,66 @@ def home_data(request, ops_ip):
 
                     if item._info['status'] == 'ACTIVE':
                         status = '<span class="label label-success">'+item._info['status']+'</span>'
-                    else:
+                        try:
+                            actions = '''
+                            <div>
+                                <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+                                Actions <span class="caret"></span></button>
+                                <ul class="dropdown-menu dropdown-menu-right" role="menu" id= "nav_ul">
+                                    <li>
+                                        <button data-batch-action="true" class="data-table-action btn-danger btn control" name="'''+ops_ip+'''_'''+item._info['name']+'''" id="del_'''+item._info['id']+'''" type="submit"> Delete Instance</button>
+                                    </li>
+                                    <li>
+                                        <button data-batch-action="true" class="data-table-action btn-danger btn console" data-title="console" id="'''+item.get_console_url("novnc")["console"]["url"]+'''" type="submit"> Console Instance</button>
+                                    </li>
+                                    <li>
+                                        <button data-batch-action="true" class="data-table-action btn-danger btn control" name="'''+ops_ip+'''_'''+item._info['name']+'''" id="reboot_'''+item._info['id']+'''" type="submit"> Reboot Instance</button>
+                                    </li>
+                                    <li>
+                                        <button data-batch-action="true" class="data-table-action btn-danger btn control" name="'''+ops_ip+'''_'''+item._info['name']+'''" id="stop_'''+item._info['id']+'''" type="submit"> Stop Instance</button>
+                                    </li>
+                                    
+
+                                </ul>
+                            <div>
+                            '''
+                        except:
+                            actions = '''
+                            <div>
+                                <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+                                Actions <span class="caret"></span></button>
+                                <ul class="dropdown-menu dropdown-menu-right" role="menu" id= "nav_ul">
+                                    <li>
+                                        <button data-batch-action="true" class="data-table-action btn-danger btn control" name="'''+ops_ip+'''_'''+item._info['name']+'''" id="del_'''+item._info['id']+'''" type="submit"> Delete Instance</button>
+                                    </li>
+                                    <li>
+                                        <button data-batch-action="true" class="data-table-action btn-danger btn control" name="'''+ops_ip+'''_'''+item._info['name']+'''" id="reboot_'''+item._info['id']+'''" type="submit"> Reboot Instance</button>
+                                    </li>
+                                    <li>
+                                        <button data-batch-action="true" class="data-table-action btn-danger btn control" name="'''+ops_ip+'''_'''+item._info['name']+'''" id="stop_'''+item._info['id']+'''" type="submit"> Stop Instance</button>
+                                    </li>
+                                </ul>
+                            <div>
+                            '''
+                    elif item._info['status'] == 'SHUTOFF':
                         status = '<span class="label label-danger">'+item._info['status']+'</span>'
-
+                        actions = '''
+                            <div>
+                                <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+                                Actions <span class="caret"></span></button>
+                                <ul class="dropdown-menu dropdown-menu-right" role="menu" id= "nav_ul">
+                                    <li>
+                                        <button data-batch-action="true" class="data-table-action btn-danger btn control" name="'''+ops_ip+'''_'''+item._info['name']+'''" id="del_'''+item._info['id']+'''" type="submit"> Delete Instance</button>
+                                    </li>
+                                    <li>
+                                        <button data-batch-action="true" class="data-table-action btn-danger btn control" name="'''+ops_ip+'''_'''+item._info['name']+'''" id="start_'''+item._info['id']+'''" type="submit"> Start Instance</button>
+                                    </li>
+                                </ul>
+                            <div>
+                            '''
+                            
                     created = '<p>'+item._info['created']+'</p>'
-
-                    try:
-                        actions = '''
-                        <div class="btn-group">
-                            <button type="button" class="btn btn-danger delete" name="'''+ops_ip+'''_'''+item._info['name']+'''" id="del_'''+item._info['id']+'''">
-                                <i class="fa fa-trash" data-toggle="tooltip" title="Delete"></i>
-                            </button>
-                            <button type="button" class="btn btn-success console" data-title="console" id="'''+item.get_console_url("novnc")["console"]["url"]+'''">
-                                <i class="fa fa-bars" data-toggle="tooltip" title="Console"></i>
-                            </button> 
-                        </div>
-                        '''
-                    except:
-                        actions = '''
-                        <div class="btn-group">
-                            <button type="button" class="btn btn-danger delete" name="'''+ops_ip+'''" id="del_'''+item._info['id']+'''">
-                                <i class="fa fa-trash" data-toggle="tooltip" title="Delete"></i>
-                            </button>
-                        </div>
-                        '''
+                    
                     # data.append([host, name, image_name, ip, network, flavor, status, created, actions])
                     data.append([name, ip, ram, vcpus, disk, status, created, actions])
                 big_data = {"data": data}

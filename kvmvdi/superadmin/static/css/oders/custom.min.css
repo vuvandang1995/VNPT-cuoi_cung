@@ -60,3 +60,28 @@
             margin: 5px;
             top: 3px;
         }
+
+
+.dropdown-menu > li > .btn {
+    border: none;
+    color: #dc3545;
+    box-shadow: none;
+    border-radius: 0;
+    margin: 0;
+    padding: 3px 20px;
+    white-space: nowrap;
+    min-width: 100%;
+    text-align: left;
+    background: transparent;
+    display: block;
+    clear: both;
+    font-weight: normal;
+    line-height: 1.42857;
+}
+#nav_ul
+{
+    position: absolute !important;
+    left: 40px !important;
+    margin-left: 145px; 
+    margin-top: 145px;
+}

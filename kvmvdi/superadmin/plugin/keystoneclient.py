@@ -9,10 +9,16 @@ class keystone(opsutils.Base):
     def create_project(self, name, domain):
         self.keystone.projects.create(name=name, domain=domain, description=None, enabled=True, parent=None)
 
-    # def add_user_to_project(self, user, project):
-    #     self.user = self.keystone.users.get('admin')
-    #     self.project = self.keystone.users.get('admin')
-    #     self.keystone.grant(role, user=user, project=project)
+    def add_user_to_project(self, project):
+        self.user = self.keystone.users.find(name='admin')
+        self.project = self.keystone.projects.find(name=project)
+        self.role = self.keystone.roles.find(name='admin')
+        self.keystone.roles.grant(self.role, user=self.user, project=self.project)
 
+
+    def find_project(self, project):
+        return self.keystone.projects.find(name=project)
     # def get_role(self):
-    #     print(self.keystone.roles.get('68134d4111374c9ba9aea9d09683375b'))
+    #     print(self.keystone.roles.find(name='admin'))
+    #     print(self.keystone.projects.find(name='user1'))
+    #     print(self.keystone.users.find(name='admin'))
