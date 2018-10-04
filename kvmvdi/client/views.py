@@ -86,7 +86,7 @@ def home(request):
                                 check = True
                         connect.createVM(svname=svname, flavor=connect.find_flavor(ram=ram, vcpus=vcpus, disk=disk), image=connect.find_image(image), network_id=connect.find_network(network), max_count=count)
                     Server.objects.create(project=user.username, description=description, name=svname, ram=ram, vcpus=vcpus, disk=disk, owner=user)
-                    Oders.objects.create(service='cloud', price=request.POST['price'], created=timezone.now(), owner=user, server=Server.objects.get(name=svname))
+                    Oders.objects.create(service='cloud', price=int(request.POST['price']), created=timezone.now(), owner=user, server=Server.objects.get(name=svname))
                 else:
                     return HttpResponseRedirect('/')
             elif 'delete' in request.POST:
@@ -174,6 +174,7 @@ def home_data(request, ops_ip):
                 project_domain_id = ops.projectdomain
 
                 connect = nova(ip=ip, username=username, password=password, project_name=project_name, user_domain_id=user_domain_id, project_domain_id=project_domain_id)
+                # print(connect.find_hypervisor('2'))
                 data = []
                 for item in connect.list_server():
                     

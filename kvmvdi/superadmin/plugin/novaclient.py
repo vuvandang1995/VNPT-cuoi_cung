@@ -12,9 +12,16 @@ class nova(opsutils.Base):
         self.services = self.nova.services.list()
         self.flavors = self.nova.flavors.list()
         self.images = self.nova.glance.list()
+        self.hypervisors = self.nova.hypervisors.list()
     
     def list_server(self):
         return self.servers
+
+    def list_hypervisor(self):
+        return self.hypervisors
+
+    def find_hypervisor(self, hypervisor):
+        return self.nova.hypervisors.get(hypervisor)
 
     def list_images(self):
         image_list = []
@@ -33,7 +40,7 @@ class nova(opsutils.Base):
         return flavor_list
 
     def createVM(self, svname, flavor, image, network_id, max_count):
-        self.nova.servers.create(svname, flavor=flavor, image=image, nics = [{'net-id':network_id}], max_count=max_count)
+        self.nova.servers.create(svname, flavor=flavor, image=image, nics = [{'net-id':network_id}], max_count=max_count, availability_zone='nova:compute2')
 
     def createFlavor(self, svname, ram, vcpus, disk):
         self.nova.flavors.create(svname, ram, vcpus, disk, flavorid='auto', ephemeral=0, swap=0, rxtx_factor=1.0, is_public=True, description=None)
