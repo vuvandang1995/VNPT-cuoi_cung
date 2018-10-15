@@ -56,6 +56,12 @@ class nova(opsutils.Base):
 
     def stop_vm(self, svid):
         self.nova.servers.stop(svid)
+
+    def snapshot_vm(self, svid, snapshotname):
+        self.nova.servers.create_image(svid, image_name=snapshotname)
+
+    def backup_vm(self, svid, backup_name, backup_type, rotation):
+        self.nova.servers.backup(svid, backup_name=backup_name, backup_type=backup_type, rotation=rotation)
     
     def find_flavor(self, ram=None, vcpus=None, disk=None, id=None):
         if id is None:

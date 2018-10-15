@@ -319,6 +319,64 @@
                             </div>
                         </div>
 
+
+                        <div class="modal" id="snapshot">
+                            <div class="modal-dialog modal-lg">
+                                <div class="modal-content ">
+                                        <div class="modal-header">
+                                            <h4 class="modal-title">Create Snapshot</h4>
+                                        </div>
+                                        <div class="modal-body form-group">
+                                            <input type="hidden" value="" name="svip">
+                                            <input type="hidden" value="" name="project">
+                                            <label><b>Snapshot Name</b></label>
+                                            <input class="form-control" type="text" placeholder="Snapshot Name" name="snapshotname" required>
+                                    
+                                            <div><font id="invalid-msg" color="red" size="5"></font></div>
+                
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="submit" class="btn btn-primary" value="OK" id="snapshot_submit" >Create</button>
+                                            <button type="button" class="btn btn-default" data-dismiss="modal" id="close_modal_snapshot">Close</button>
+                                        </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="modal" id="backup">
+                            <div class="modal-dialog modal-lg">
+                                <div class="modal-content ">
+                                        <div class="modal-header">
+                                            <h4 class="modal-title">Backup name</h4>
+                                        </div>
+                                        <div class="modal-body form-group">
+                                            <input type="hidden" value="" name="svip">
+                                            <input type="hidden" value="" name="project">
+                                            <label><b>Backup Name</b></label>
+                                            <input class="form-control" type="text" placeholder="Backup Name" name="backupname" required>
+                                            <br>
+                                            <label><b>Backup Type</b></label>
+                                            <select name="backup_type" class="form-control" id="mySelect_backup_type">
+                                                <option value="daily">Daily</option>
+                                                <option value="weekly">Weekly</option>
+                                                <option value="monthly">Monthly</option>
+                                            </select>
+                                            <br>
+
+                                            <label><b>Count</b></label>
+                                            <input type="number" name="rotation" min="1" max="50" required value="1" style="width: 60px">
+                                    
+                                            <div><font id="invalid-msg" color="red" size="5"></font></div>
+                
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="submit" class="btn btn-primary" value="OK" id="backup_submit" >Create</button>
+                                            <button type="button" class="btn btn-default" data-dismiss="modal" id="close_modal_backup">Close</button>
+                                        </div>
+                                </div>
+                            </div>
+                        </div>
+
                     </div>
                 </div>
         </div>

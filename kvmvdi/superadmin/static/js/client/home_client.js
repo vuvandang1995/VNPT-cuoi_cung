@@ -20,13 +20,47 @@ $(document).ready(function(){
         window.open(url);
     });
 
+    $("#snapshot").on('show.bs.modal', function(event){
+        $("input[name=snapshotname]").val('');
+    });
+
+    $("#backup").on('show.bs.modal', function(event){
+        $("input[name=backupname]").val('');
+    });
+
     $("body").on('click', '.control', function(){
         var id = $(this).attr('id').split('_')[1];
         var action = $(this).attr('id').split('_')[0];
         var ops = $(this).attr('name').split('_')[0];
         var svname = $(this).attr('name').split('_')[1];
         var token = $("input[name=csrfmiddlewaretoken]").val();
-        if (confirm('Bạn có chắc ?')){
+        if (action == 'snapshot'){
+            $("body").on('click', '#snapshot_submit', function(){
+                var snapshotname = $("input[name=snapshotname]").val();
+                $.ajax({
+                    type:'POST',
+                    url:location.href,
+                    data: {'snapshot':id, 'csrfmiddlewaretoken':token, 'ops':ops, 'svname': svname, 'snapshotname': snapshotname},
+                    success: function(){
+                        document.getElementById("close_modal_snapshot").click();
+                    }
+                });
+            });
+        }else if (action == 'backup'){
+            $("body").on('click', '#backup_submit', function(){
+                var backupname = $("input[name=backupname]").val();
+                var backup_type = document.getElementById("mySelect_backup_type").value;
+                var rotation = $("input[name=rotation]").val();
+                $.ajax({
+                    type:'POST',
+                    url:location.href,
+                    data: {'backup':id, 'csrfmiddlewaretoken':token, 'ops':ops, 'svname': svname, 'backupname': backupname, 'backup_type': backup_type, 'rotation': rotation},
+                    success: function(){
+                        document.getElementById("close_modal_backup").click();
+                    }
+                });
+            });
+        }else if (confirm('Bạn có chắc ?')){
             if (action == 'del'){
                 $.ajax({
                     type:'POST',

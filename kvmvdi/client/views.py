@@ -145,6 +145,40 @@ def home(request):
                 connect.stop_vm(svid=svid)
                 # server = Server.objects.get(name=request.POST['svname'])
                 # server.delete()
+            elif 'snapshot' in request.POST:
+                ops = Ops.objects.get(ip=request.POST['ops'])
+                ip = ops.ip
+                username = ops.username
+                password = ops.password
+                project_name = ops.project
+                user_domain_id = ops.userdomain
+                project_domain_id = ops.projectdomain
+
+                connect = nova(ip=ip, username=username, password=password, project_name=project_name, user_domain_id=user_domain_id, project_domain_id=project_domain_id)
+                svid = request.POST['snapshot']
+                snapshotname = request.POST['snapshotname']
+                # print(request.POST)
+                connect.snapshot_vm(svid=svid, snapshotname=snapshotname)
+                # server = Server.objects.get(name=request.POST['svname'])
+                # server.delete()
+            elif 'backup' in request.POST:
+                ops = Ops.objects.get(ip=request.POST['ops'])
+                ip = ops.ip
+                username = ops.username
+                password = ops.password
+                project_name = ops.project
+                user_domain_id = ops.userdomain
+                project_domain_id = ops.projectdomain
+
+                connect = nova(ip=ip, username=username, password=password, project_name=project_name, user_domain_id=user_domain_id, project_domain_id=project_domain_id)
+                svid = request.POST['backup']
+                backup_name = request.POST['backupname']
+                backup_type = request.POST['backup_type']
+                rotation = request.POST['rotation']
+                # print(request.POST)
+                connect.backup_vm(svid=svid, backup_name=backup_name, backup_type=backup_type, rotation=rotation)
+                # server = Server.objects.get(name=request.POST['svname'])
+                # server.delete()
         return render(request, 'client/index.html',{'username': mark_safe(json.dumps(user.username))})
     else:
         return HttpResponseRedirect('/')
@@ -177,7 +211,7 @@ def home_data(request, ops_ip):
                 # print(connect.find_hypervisor('2'))
                 data = []
                 for item in connect.list_server():
-                    
+                    # print(item._info)
                     try:
                         name = '<p>'+item._info['name']+'</p>'
                     except:
@@ -188,14 +222,14 @@ def home_data(request, ops_ip):
                     except:
                         ip = '<p></p>'
 
-                    # ram = '<p>'+Server.objects.get(name='user1').ram+'</p>'
-                    # vcpus = '<p>'+Server.objects.get(name='user1').vcpus+'</p>'
-                    # disk = '<p>'+Server.objects.get(name='user1').disk+'</p>'
+                    ram = '<p>'+str(connect.find_flavor(id=item._info['flavor']['id']).ram)+'</p>'
+                    vcpus = '<p>'+str(connect.find_flavor(id=item._info['flavor']['id']).vcpus)+'</p>'
+                    disk = '<p>'+str(connect.find_flavor(id=item._info['flavor']['id']).disk)+'</p>'
 
                     
-                    ram = '<p>'+str(Server.objects.get(name=item._info['name']).ram)+'</p>'
-                    vcpus = '<p>'+str(Server.objects.get(name=item._info['name']).vcpus)+'</p>'
-                    disk = '<p>'+str(Server.objects.get(name=item._info['name']).disk)+'</p>'
+                    # ram = '<p>'+str(Server.objects.get(name=item._info['name']).ram)+'</p>'
+                    # vcpus = '<p>'+str(Server.objects.get(name=item._info['name']).vcpus)+'</p>'
+                    # disk = '<p>'+str(Server.objects.get(name=item._info['name']).disk)+'</p>'
 
                     if item._info['status'] == 'ACTIVE':
                         status = '<span class="label label-success">'+item._info['status']+'</span>'
@@ -209,6 +243,9 @@ def home_data(request, ops_ip):
                                         <button data-batch-action="true" class="data-table-action btn-danger btn control" name="'''+ops_ip+'''_'''+item._info['name']+'''" id="del_'''+item._info['id']+'''" type="submit"> Delete Instance</button>
                                     </li>
                                     <li>
+                                        <button data-batch-action="true" data-toggle="modal" data-target="#backup" class="data-table-action btn-danger btn control" name="'''+ops_ip+'''_'''+item._info['name']+'''" id="backup_'''+item._info['id']+'''" type="submit">Backup</button>
+                                    </li>
+                                    <li>
                                         <button data-batch-action="true" class="data-table-action btn-danger btn console" data-title="console" id="'''+item.get_console_url("novnc")["console"]["url"]+'''" type="submit"> Console Instance</button>
                                     </li>
                                     <li>
@@ -217,7 +254,6 @@ def home_data(request, ops_ip):
                                     <li>
                                         <button data-batch-action="true" class="data-table-action btn-danger btn control" name="'''+ops_ip+'''_'''+item._info['name']+'''" id="stop_'''+item._info['id']+'''" type="submit"> Stop Instance</button>
                                     </li>
-                                    
 
                                 </ul>
                             <div>
@@ -230,6 +266,9 @@ def home_data(request, ops_ip):
                                 <ul class="dropdown-menu dropdown-menu-right" role="menu" id= "nav_ul">
                                     <li>
                                         <button data-batch-action="true" class="data-table-action btn-danger btn control" name="'''+ops_ip+'''_'''+item._info['name']+'''" id="del_'''+item._info['id']+'''" type="submit"> Delete Instance</button>
+                                    </li>
+                                    <li>
+                                        <button data-batch-action="true" data-toggle="modal" data-target="#backup" class="data-table-action btn-danger btn control" name="'''+ops_ip+'''_'''+item._info['name']+'''" id="backup_'''+item._info['id']+'''" type="submit">Backup</button>
                                     </li>
                                     <li>
                                         <button data-batch-action="true" class="data-table-action btn-danger btn control" name="'''+ops_ip+'''_'''+item._info['name']+'''" id="reboot_'''+item._info['id']+'''" type="submit"> Reboot Instance</button>
@@ -251,11 +290,15 @@ def home_data(request, ops_ip):
                                         <button data-batch-action="true" class="data-table-action btn-danger btn control" name="'''+ops_ip+'''_'''+item._info['name']+'''" id="del_'''+item._info['id']+'''" type="submit"> Delete Instance</button>
                                     </li>
                                     <li>
+                                        <button data-batch-action="true" data-toggle="modal" data-target="#snapshot" class="data-table-action btn-danger btn control" name="'''+ops_ip+'''_'''+item._info['name']+'''" id="snapshot_'''+item._info['id']+'''" type="submit"> Create Snapshot</button>
+                                    </li>
+                                    <li>
                                         <button data-batch-action="true" class="data-table-action btn-danger btn control" name="'''+ops_ip+'''_'''+item._info['name']+'''" id="start_'''+item._info['id']+'''" type="submit"> Start Instance</button>
                                     </li>
                                 </ul>
                             <div>
                             '''
+            
                             
                     created = '<p>'+item._info['created']+'</p>'
                     
