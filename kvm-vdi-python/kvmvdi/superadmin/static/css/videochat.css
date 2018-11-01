@@ -1,0 +1,69 @@
+body {
+	padding-left: 20px;
+  	padding-top: 70px;
+}
+h3 a {
+	color: #fca205;
+}
+
+#my-video {
+	margin: 0;
+	height: 200px;
+	width: 200px;
+	padding: 20px;
+}
+
+#their-video {
+	height: 300px;
+	width: 400px;
+	padding: 20px;
+}
+
+.jumbotron {
+	padding-top: 0px;
+}
+
+#chatinstructions {
+	background-color: #dadada;
+}
+
+#chatvideo {
+	background-color: #dadada;
+	display: none;
+}
+
+#chatinfo {
+	background-color: #ededed;
+	display: none;
+}
+
+#chatcontrol {
+	background-color: #dadada;
+	display: none;
+}
+
+#homelink {
+	text-decoration: none;
+	color: white;
+}
+
+#edit-contact {
+	display: none;
+}
+
+.voffset { margin-top: 2px;}
+.voffset1 {margin-top: 5px;}
+.voffset2 {margin-top: 10px;}
+
+
+.player-buttons
+{
+    background: url('http://cdn1.iconfinder.com/data/icons/iconslandplayer/PNG/64x64/CircleBlue/Play1Pressed.png') center center no-repeat;
+    height: 128px;
+    left: 50%;
+    margin: -64px 0 0 -64px;
+    position: absolute;
+    top: 50%;
+    width: 128px;
+    z-index: 1; 
+}

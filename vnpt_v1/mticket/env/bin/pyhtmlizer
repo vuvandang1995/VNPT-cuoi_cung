@@ -1,11 +1,12 @@
-#!/home/huong/Desktop/VNPT_offical/mticket/env/bin/python3
-
-# -*- coding: utf-8 -*-
+#!/home/mdtpro2018/project/VNPT-cuoi_cung/vnpt_v1/mticket/env/bin/python3
+# EASY-INSTALL-ENTRY-SCRIPT: 'Twisted==18.7.0','console_scripts','pyhtmlizer'
+__requires__ = 'Twisted==18.7.0'
 import re
 import sys
-
-from twisted.scripts.htmlizer import run
+from pkg_resources import load_entry_point
 
 if __name__ == '__main__':
     sys.argv[0] = re.sub(r'(-script\.pyw?|\.exe)?$', '', sys.argv[0])
-    sys.exit(run())
+    sys.exit(
+        load_entry_point('Twisted==18.7.0', 'console_scripts', 'pyhtmlizer')()
+    )

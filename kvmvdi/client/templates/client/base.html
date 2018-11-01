@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+        {% load staticfiles %}
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <!-- Tell the browser to be responsive to screen width -->
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        
+        <meta name="description" content="">
+        <meta name="author" content="">
+        <!-- Favicon icon -->
+        <link rel="icon" type="image/png" sizes="16x16" href="{% static 'images/favicon.png' %}">
+        <title>{{user.username}}</title>
+        <!-- Bootstrap Core CSS -->
+        <link rel="stylesheet" href="{% static 'css/base-css/bootstrap-css/bootstrap.min.css' %}" type="text/css">
+        <link rel="stylesheet" href="{% static 'css/oders/custom.min.css' %}" type="text/css">
+
+        <script src="{% static 'js/base-js/jquery.min.js' %}"></script>
+        <script src="{% static 'js/base-js/scripts.js' %}"></script>
+
+        <script src="{% static 'js/base-js/popper.min.js' %}"></script>
+
+        <script src="{% static 'js/base-js/bootstrap.min.js' %}"></script>
+
+        <script src="{% static 'js/base-js/jquery.slimscroll.js' %}"></script>
+        <script src="{% static 'js/base-js/sidebarmenu.js' %}"></script>
+        <script src="{% static 'js/base-js/sticky-kit.min.js' %}"></script>
+        <script src="{% static 'js/base-js/moment.latest.min.js' %}"></script>
+        
+        <script src="{% static 'js/base-js/pignose.calendar.min.js' %}"></script>
+        <script src="{% static 'js/base-js/pignose.init.js' %}"></script>
+
+        <script src="{% static 'js/client/createVM_client.js' %}"></script>
+
+
+        <!-- Custom CSS -->
+    
+        <link rel="stylesheet" href="{% static 'css/base-css/semantic.ui.min.css' %}" type="text/css">
+        
+        <link rel="stylesheet" href="{% static 'css/base-css/pignose.calendar.min.css' %}" type="text/css">
+        
+        <link rel="stylesheet" href="{% static 'css/base-css/helper.css' %}" type="text/css">
+        
+        <link rel="stylesheet" href="{% static 'css/base-css/style.css' %}" type="text/css">
+
+        {% block js %} {% endblock%}
+
+        {% comment %} <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Sans:400,700"> {% endcomment %}
+
+        
+
+</head>
+<body class="fix-header fix-sidebar">
+    
+    <!-- Main wrapper  -->
+    <div id="main-wrapper">
+        <!-- header header  -->
+        <div class="header">
+            <nav class="navbar top-navbar navbar-expand-md navbar-light">
+                <!-- Logo -->
+                <div class="navbar-header" >
+                    <a class="navbar-brand" href="{% url 'superadmin:home' %}">
+                        <span><img src="{% static 'images/meditech.png' %}" alt="homepage" style="width:260px;height:40px;"></span>
+                    </a>
+                </div>
+                <!-- End Logo -->
+                <div class="navbar-collapse">
+                    <!-- toggle and nav items -->
+                    <ul class="navbar-nav mr-auto mt-md-0">
+                        <!-- This is  -->
+                        <li class="nav-item"> <a class="nav-link nav-toggler hidden-md-up text-muted  " href="javascript:void(0)"><i class="mdi mdi-menu"></i></a> </li>
+                        <li class="nav-item m-l-10"> <a class="nav-link sidebartoggler hidden-sm-down text-muted  " href="javascript:void(0)"><i class="ti-menu"></i></a> </li>
+                        <!-- Messages -->
+                       
+                        <!-- End Messages -->
+                    </ul>
+                    <!-- User profile and search -->
+                    <ul class="navbar-nav my-lg-0">
+
+                        <!-- Comment -->
+                        <li class="nav-item dropdown notify_" >
+                            <a class="nav-link dropdown-toggle text-muted " onclick="notiFunction()"  data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <i class="fa fa-bell"></i>
+                                <div class="notify noti_fy"> </div>
+                            </a>
+                            
+                            <div class="dropdown-menu dropdown-menu-right mailbox animated zoomIn" >
+                                <ul>
+                                    <li>
+                                        <div class="drop-title noti_msg">
+
+                                        </div>
+                                    </li>
+
+                                    <li>
+                                        <div class="message-center noti_noti">
+                                                <a href="/agent/closed_ticket"><div class="btn btn-success btn-circle m-r-10"><i class="fa fa-check"></i></div><div class="mail-contnet"><span class="mail-desc">Yêu cầu số 43 vừa được nhật ghi chú!</span> <span class="time">2:37 PM 24/8/2018</span></div></a>
+                                            
+                                        </div>
+                                    </li>
+                                    
+                                    <li>
+                                        <a class="nav-link text-center" href="javascript:void(0);"> <strong>Xem tất cả</strong> <i class="fa fa-angle-right"></i> </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </li>
+                        <!-- End Comment -->
+                        <!-- Messages -->
+                        <li class="nav-item dropdown chat_">
+                            <a class="nav-link dropdown-toggle text-muted" onclick="chatFunction()"  id="2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <i class="fa fa-envelope"></i>
+								<div class="notify chat_noti"> </div>
+							</a>
+                            <div class="dropdown-menu dropdown-menu-right mailbox animated zoomIn" aria-labelledby="2">
+                                <ul>
+                                    <li>
+                                        <div class="drop-title chat_msg"></div>
+                                    </li>
+                                    <li>
+                                        <div class="message-center notification_chat">
+                                            <!-- Message -->
+                                            
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <a class="nav-link text-center" href="javascript:void(0);"> <strong>Xem tất cả</strong> <i class="fa fa-angle-right"></i> </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </li>
+                        <!-- End Messages -->
+                        <!-- Profile -->
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle text-muted"   data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><img src="{% static 'images/avatar.png' %}" alt="user" class="profile-pic" /></a>
+                            <div class="dropdown-menu dropdown-menu-right animated zoomIn">
+                                <ul class="dropdown-user">
+                                    <li><a href="{% url 'superadmin:profile' %}"><i class="ti-user"></i> Thông tin cá nhân</a></li>
+                                    <li><a href="{% url 'superadmin:logout' %}"><i class="fa fa-power-off"></i> Đăng xuất</a></li>
+                                </ul>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+        </div>
+        <!-- End header header -->
+        <!-- Left Sidebar  -->
+        <div class="left-sidebar">
+            <!-- Sidebar scroll-->
+            <div class="scroll-sidebar">
+                <!-- Sidebar navigation-->
+                <nav class="sidebar-nav">
+                    <ul id="sidebarnav">
+                        <li class="nav-devider"></li>
+                        <li class="nav-label">Hello {{ user.fullname}}</li>
+                        <li> 
+                            <a href="{% url 'client:home' %}" aria-expanded="false"><i class="fa fa-home"></i> 
+                                &nbsp&nbsp&nbsp Dashborad
+                            </a>
+                        </li>
+                        <li> 
+                            <a href="{% url 'client:oders' %}" aria-expanded="false"><i class="fa fa-check-circle"></i> 
+                                &nbsp&nbsp&nbsp Oders
+                            </a>
+                        </li>
+
+                        <li> 
+                            <a href="http://mticket.meditech.vn" aria-expanded="false"><i class="fa fa-ticket"></i> 
+                                &nbsp&nbsp&nbsp Mtickets
+                            </a>
+                        </li>
+
+                        
+                    </ul>
+                </nav>
+                <!-- End Sidebar navigation -->
+            </div>
+            <!-- End Sidebar scroll-->
+        </div>
+        <div class="page-wrapper">
+                <!-- Bread crumb -->
+                <div class="row page-titles">
+                    <div class="col-md-5 align-self-center">
+                        <h3 class="text-primary">OPS-Dashboard</h3> </div>
+                    <div class="col-md-7 align-self-center">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item active">OPS-Dashboard</li>
+                        </ol>
+                    </div>
+                </div>
+                
+                <!-- End Bread crumb -->
+                <!-- Container fluid  -->
+                <div class="container-fluid">
+                    <!-- Start Page Content -->
+
+                    <div class="row">
+            
+                        <div class="col-md-3">
+                            <div class="card p-30">
+                                <div class="media">
+                                    <div class="media-left meida media-middle">
+                                        <span><i class="fa fa-envelope f-s-35 color-primary"></i></span>
+                                        <p></p>
+                                        <a href=""><p class="m-b-0">Balance: 130 USD</p></a>
+                                    </div>
+                                    <div class="media-body media-text-right" id="pending">
+                                        <h2>{{ tk_open }}</h2>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+        
+                        
+                        <div class="col-md-3">
+                            <div class="card p-30">
+                                <div class="media">
+                                    <div class="media-left meida media-middle">
+                                        <span><i class="fa fa-envelope-open f-s-40 color-success"></i></span>
+                                        <p></p>
+                                        <a href=""><p class="m-b-0">VMs running: 1</p></a>
+        
+                                    </div>
+                                    <div class="media-body media-text-right" id="processing">
+                                        <h2>{{ tk_processing }}</h2>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        
+                        <div class="col-md-3">
+                            <div class="card p-30">
+                                <div class="media">
+                                    <div class="media-left meida media-middle">
+                                        <span><i class="fa fa-check-square-o f-s-40 color-warning"></i></span>
+                                        <p></p>
+                                        <a href=""><p class="m-b-0">VMs shutoff: 0</p></a>
+        
+                                    </div>
+                                    <div class="media-body media-text-right" id="done">
+                                        <h2>{{ tk_done}}</h2>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        
+                        <div class="col-md-3">
+                            <div class="card p-30">
+                                <div class="media">
+                                    <div class="media-left meida media-middle">
+                                        <span><i class="fa fa-archive f-s-40 color-danger"></i></span>
+                                        <p></p>
+                                        <a href=""><p class="m-b-0">Oders count: 1</p></a>
+        
+                                    </div>
+                                    <div class="media-body media-text-right">
+                                        <h2>{{ service_total }}</h2>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                    </div>
+
+                    <div id="info_user">
+                        {% csrf_token %}
+                        {% block content %}
+                        {% endblock %}
+
+                        <div class="modal" id="id02">
+                            <div class="modal-dialog modal-lg">
+                                <div class="modal-content ">
+                                        <div class="modal-header">
+                                            <h4 class="modal-title">Create VMs</h4>
+                                        </div>
+                                        <div class="modal-body form-group">
+                                            <input type="hidden" value="" name="svip">
+                                            <input type="hidden" value="" name="project">
+                                            <label><b>Instance Name</b></label>
+                                            <input class="form-control" type="text" placeholder="Instance Name" name="svname" required>
+                                            <br>
+                                            <label><b>Description</b></label>
+                                            <input class="form-control" type="text" placeholder="Description" name="description" required>
+                                            <br>
+                                            <label><b>Select Image</b></label>
+                                            <select name="image" class="form-control" id="mySelect_image">
+                                                
+                                            </select>
+                                            <br>
+                                            <label><b>Select Network</b></label>
+                                            <select name="network" class="form-control" id="mySelect">
+                                            </select>
+                                            <br>
+                
+                                            <b> Ram </b><input class="price" type="number" name="ram" min="0" max="100" step="0.5" value="0.5" style="width: 60px" required>
+                                            <b> Vcpus </b><input class="price" type="number" name="vcpus" min="0" max="100" required value="1" style="width: 60px">
+                                            <b> Disk (Gb) </b><input class="price" type="number" name="disk" min="0" max="1000" step="5" value="20" style="width: 60px" required>
+                                            <br>
+                                            <br>
+                                            
+                                            <label><b>Instance Count</b></label>
+                                            <input type="number" class="price" name="count" min="1" max="50" required value="1" style="width: 60px">
+
+                                            <b>Price</b>
+                                            <input type="text" name="price" style="width: 60px" disabled> USD/MONTH
+                                            
+                                            <div><font id="invalid-msg" color="red" size="5"></font></div>
+                
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="submit" class="btn btn-primary" value="OK" id="i_submit" >Create</button>
+                                            <button type="button" class="btn btn-default" data-dismiss="modal" id="close_modal">Close</button>
+                                        </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="modal" id="snapshot">
+                            <div class="modal-dialog modal-lg">
+                                <div class="modal-content ">
+                                        <div class="modal-header">
+                                            <h4 class="modal-title">Create Snapshot</h4>
+                                        </div>
+                                        <div class="modal-body form-group">
+                                            <input type="hidden" value="" name="svip">
+                                            <input type="hidden" value="" name="project">
+                                            <label><b>Snapshot Name</b></label>
+                                            <input class="form-control" type="text" placeholder="Snapshot Name" name="snapshotname" required>
+                                    
+                                            <div><font id="invalid-msg" color="red" size="5"></font></div>
+                
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="submit" class="btn btn-primary" value="OK" id="snapshot_submit" >Create</button>
+                                            <button type="button" class="btn btn-default" data-dismiss="modal" id="close_modal_snapshot">Close</button>
+                                        </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="modal" id="backup">
+                            <div class="modal-dialog modal-lg">
+                                <div class="modal-content ">
+                                        <div class="modal-header">
+                                            <h4 class="modal-title">Backup name</h4>
+                                        </div>
+                                        <div class="modal-body form-group">
+                                            <input type="hidden" value="" name="svip">
+                                            <input type="hidden" value="" name="project">
+                                            <label><b>Backup Name</b></label>
+                                            <input class="form-control" type="text" placeholder="Backup Name" name="backupname" required>
+                                            <br>
+                                            <label><b>Backup Type</b></label>
+                                            <select name="backup_type" class="form-control" id="mySelect_backup_type">
+                                                <option value="daily">Daily</option>
+                                                <option value="weekly">Weekly</option>
+                                                <option value="monthly">Monthly</option>
+                                            </select>
+                                            <br>
+
+                                            <label><b>Count</b></label>
+                                            <input type="number" name="rotation" min="1" max="50" required value="1" style="width: 60px">
+                                    
+                                            <div><font id="invalid-msg" color="red" size="5"></font></div>
+                
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="submit" class="btn btn-primary" value="OK" id="backup_submit" >Create</button>
+                                            <button type="button" class="btn btn-default" data-dismiss="modal" id="close_modal_backup">Close</button>
+                                        </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+        </div>
+    </div>
+
+<audio id="myAudio">
+    <source src="{% static 'ping.mp3' %}" type="audio/mpeg">
+</audio>
+<script src="{% static 'js/base-js/datatables.min.js' %}"></script>
+<script>
+    $(".sidebar-nav").hover(function(){
+        $(".left-sidebar").css("width", "260px");
+    }, function(){
+        $(".left-sidebar").css("width", "auto");
+    });
+    var x = document.getElementById("myAudio");
+    var userName = {{ username }};
+    var opsSocket = new WebSocket(
+        'ws://' + window.location.host +
+        '/ws/' + userName + '/');
+
+    function notiFunction() {
+        if ($('body .noti_fy .point').length){
+            var token = $("input[name=csrfmiddlewaretoken]").val();
+            $.ajax({
+                type:'POST',
+                url:location.href,
+                data: {'noti_noti': 0, 'csrfmiddlewaretoken':token},
+                success: function(){
+                    $("body .noti_fy").load(location.href + " .noti_fy");
+                }
+            });
+        }
+    }
+
+    function chatFunction() {
+        if ($('body .chat_noti .point').length){
+            var token = $("input[name=csrfmiddlewaretoken]").val();
+            $.ajax({
+                type:'POST',
+                url:location.href,
+                data: {'noti_chat': 0, 'csrfmiddlewaretoken':token},
+                success: function(){
+                    $("body .chat_noti").load(location.href + " .chat_noti");
+                }
+            });
+        }
+    }
+
+    opsSocket.onmessage = function(e) {
+        var data = JSON.parse(e.data);
+        var message = data['message'];
+        var network = data['network'];
+        if (message[0] == 'image_list'){
+            $('#mySelect_image').find('option').remove();
+            var i;
+            for (i=1; i<message.length; i++){
+                var element = '<option value="'+message[i]+'">'+message[i]+'</option>';
+                $("#mySelect_image").append(element);
+            }
+        }
+
+        if (network[0] == 'network_list'){
+            $('#mySelect').find('option').remove();
+            var i;
+            for (i=1; i<network.length; i++){
+                var element = '<option value="'+network[i]+'">'+network[i]+'</option>';
+                $("#mySelect").append(element);
+            }
+        }
+    };
+</script>
+</body>
+</html>

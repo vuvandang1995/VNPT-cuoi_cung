@@ -264,7 +264,7 @@
             var dateend = $('body #dateend'+tkid).text();
             var countDownDate = new Date(dateend).getTime();
             var x = setInterval(function() {
-
+                clearInterval(sessionStorage.getItem(tkid));
                 // Get todays date and time
                 var now = new Date().getTime();
                 
@@ -291,6 +291,11 @@
                         clearInterval(x);
                         document.getElementById("downtime-"+tkid).innerHTML = "Hết thời gian";
                     }
+                }
+                if (typeof(Storage) !== "undefined") {
+                    sessionStorage.setItem(tkid, x);
+                } else {
+                    document.write('Trình duyệt của bạn không hỗ trợ local storage');
                 }
             }, 1000);
         });
@@ -618,6 +623,18 @@
                 }
 
 
+                if (message.includes(agentName) && message[1].includes('vừa được nhật ghi chú!')) {
+                    var len = message.length;
+                    var message1 = message[len-1];
+                    var href = "{% url 'agent:processing_ticket' %}";
+                    var noti = '<a href="'+href+'"><div class="btn btn-success btn-circle m-r-10"><i class="fa fa-check"></i></div><div class="mail-contnet"><span class="mail-desc">'+message1+'</span> <span class="time">'+time+'</span></div></a>';
+                    $('.noti_noti').prepend(noti);
+                    var noti1 = '<span class="heartbit"></span> <span class="point">';
+                    $('body .noti_fy').prepend(noti1);
+                    x.play();
+                }
+
+
                 if (message.includes(agentName) && message[1].includes(' được chỉnh sửa bởi ')) {
                     var len = message.length;
                     var message1 = message[len-1];
@@ -849,23 +866,25 @@
             if (listkeys[i] != 'id_chat_leader'){
                 var listchat = [];
                 listchat = sessionStorage.getItem(listkeys[i]).split(',');
-                register_popup_agent(listchat[0].replace(/"/g, ''), listchat[1], listchat[2].replace(/"/g, ''), listchat[3].replace(/"/g, ''));
-                var tkid = listchat[4];
+                if (listchat.length > 1){
+                    register_popup_agent(listchat[0].replace(/"/g, ''), listchat[1], listchat[2].replace(/"/g, ''), listchat[3].replace(/"/g, ''));
+                    var tkid = listchat[4];
 
-                if (dict_ws[tkid] == undefined){
-                    dict_ws[tkid] = new WebSocket(
-                    'ws://' + window.location.host +
-                    '/ws/' + tkid + '/');
+                    if (dict_ws[tkid] == undefined){
+                        dict_ws[tkid] = new WebSocket(
+                        'ws://' + window.location.host +
+                        '/ws/' + tkid + '/');
+                    }
+
+
+                    dict_ws[tkid].onmessage = function(e) {
+                        var data = JSON.parse(e.data);
+                        var message = data['message'];
+                        var who = data['who'];
+                        var time = data['time'];
+                        insertChat1(who, message, time, tkid);
+                    };
                 }
-
-
-                dict_ws[tkid].onmessage = function(e) {
-                    var data = JSON.parse(e.data);
-                    var message = data['message'];
-                    var who = data['who'];
-                    var time = data['time'];
-                    insertChat1(who, message, time, tkid);
-                };
                 
                 break;
             }

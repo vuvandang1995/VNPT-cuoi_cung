@@ -444,7 +444,24 @@ $(document).ready(function(){
                 data: {'tkid_comment':id, 'csrfmiddlewaretoken':token, 'comment': escapeHtml(comment)},
                 success: function(){
                     $('#list_comment').DataTable().ajax.reload(null,false);
+                    var chatSocket1 = new WebSocket(
+                    'ws://' + window.location.host +
+                    '/ws/agent/agent+group_agent_Socket/');
 
+                    var array = $('#hd'+id).html().split("<br>");
+                    for (i = 0; i < array.length-1; i++) {
+                        var agentName = array[i].replace(/\s/g,'');
+                        message.push(agentName);
+                    }
+                    mgs = 'Yêu cầu số '+id+' vừa được nhật ghi chú!'
+                    message.push(mgs);
+                    var date = formatAMPM(new Date());
+                    chatSocket1.onopen = function (event) {
+                        chatSocket1.send(JSON.stringify({
+                            'message' : message,
+                            'time' : date
+                        }));
+                    };
                 }
             });
         }else if(type=="close_txl"){
@@ -453,7 +470,7 @@ $(document).ready(function(){
             $.ajax({
                 type:'POST',
                 url:location.href,
-                data: {'tkid':id, 'csrfmiddlewaretoken':token},
+                data: {'tkid':id, 'csrfmiddlewaretoken':token, 'comment': escapeHtml(comment)},
                 success: function(){
                     $("#list_tk_tu_xu_ly").DataTable().ajax.reload(null,false);
                     var chatSocket1 = new WebSocket(
@@ -477,7 +494,7 @@ $(document).ready(function(){
             $.ajax({
                 type:'POST',
                 url:location.href,
-                data: {'tkid':id, 'csrfmiddlewaretoken':token},
+                data: {'tkid':id, 'csrfmiddlewaretoken':token, 'comment': escapeHtml(comment)},
                 success: function(){
                     // window.location.reload();
                     $("#list_tk_gui_di").DataTable().ajax.reload(null,false);

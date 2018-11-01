@@ -1,0 +1,22 @@
+{% extends "videochat/base.html" %}
+{% load staticfiles %}
+{% block content %}
+	<h2>Account Profile</h2>
+
+	  {% if user.is_authenticated %}
+		<div class="row">
+				<div class="col-md-8">
+						<h4>User name: </h4> {{ user.username}}
+						<h4>Email: </h4> {{ user.email}}
+				</div>
+		</div>
+		
+
+	        
+		  {% else %}
+		        	You are not logged in
+		  {% endif %}
+{% endblock content %}
+{% block footer %}
+	<script src="{% static "js/profile.js" %}"></script>
+{% endblock footer %}

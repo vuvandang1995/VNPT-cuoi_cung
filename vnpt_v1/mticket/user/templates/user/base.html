@@ -213,7 +213,7 @@
             var dateend = $('body #dateend'+tkid).text();
             var countDownDate = new Date(dateend).getTime();
             var x = setInterval(function() {
-
+                clearInterval(sessionStorage.getItem(tkid));
                 // Get todays date and time
                 var now = new Date().getTime();
                 
@@ -240,6 +240,12 @@
                         clearInterval(x);
                         document.getElementById("downtime-"+tkid).innerHTML = "Hết thời gian";
                     }
+                }
+
+                if (typeof(Storage) !== "undefined") {
+                    sessionStorage.setItem(tkid, x);
+                } else {
+                    document.write('Trình duyệt của bạn không hỗ trợ local storage');
                 }
             }, 1000);
         });
@@ -402,6 +408,20 @@
                 setTimeout(function(){
                     $("#list_tk_gui_di").DataTable().ajax.reload(); 
                 }, 2000);
+                
+            }
+
+
+            if (message.includes('vừa được nhật ghi chú!')){
+                var href="{% url 'user:homeuser' %}"
+                var noti = '<a href="'+href+'"><div style="float:left;width:15%" class="btn btn-warning btn-circle m-r-10"><i class="fa fa-folder-open"></i></div><div style="float:right; width:80%"><p>'+message+'</p><small><i class="fa fa-clock-o"></i>'+time+'</small></div></a>';
+                $('.noti_noti').prepend(noti);
+                $('body .num_noti').remove();
+                var noti1 = '<span class="label label-warning num_noti">'+noti_noti1+'</span>';
+                $('body .noti_fy').prepend(noti1);
+                $('body .msg').empty();
+                $('body .msg').html('Bạn có '+noti_noti1+' thông báo mới');
+                x.play();
                 
             }
 
@@ -613,25 +633,27 @@
     if (sessionStorage.length) {
         var listchat = [];
         listchat = sessionStorage.getItem(listkeys[0]).split(',');
-        register_popup(listchat[0].replace(/"/g, ''), listchat[1]);
-        var tkid = listchat[1].replace(/\s/g,'');
+        if (listchat.length > 1){
+            register_popup(listchat[0].replace(/"/g, ''), listchat[1]);
+            var tkid = listchat[1].replace(/\s/g,'');
 
-        if (dict_ws[tkid] == undefined){
-            dict_ws[tkid] = new WebSocket(
-            'ws://' + window.location.host +
-            '/ws/' + tkid + '/');
-        }
+            if (dict_ws[tkid] == undefined){
+                dict_ws[tkid] = new WebSocket(
+                'ws://' + window.location.host +
+                '/ws/' + tkid + '/');
+            }
 
 
-        dict_ws[tkid].onmessage = function(e) {
-            var data = JSON.parse(e.data);
-            var message = data['message'];
-            var who = data['who'];
-            var time = data['time'];
-            insertChat1(who, message, time, tkid);
-        };
-        for (i=1; i <= sessionStorage.length; i++){
-            sessionStorage.removeItem(listkeys[i]);
+            dict_ws[tkid].onmessage = function(e) {
+                var data = JSON.parse(e.data);
+                var message = data['message'];
+                var who = data['who'];
+                var time = data['time'];
+                insertChat1(who, message, time, tkid);
+            };
+            for (i=1; i <= sessionStorage.length; i++){
+                sessionStorage.removeItem(listkeys[i]);
+            }
         }
     }
 

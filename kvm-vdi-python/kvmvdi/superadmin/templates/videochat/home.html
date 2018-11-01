@@ -1,0 +1,98 @@
+{% extends "videochat/base.html" %}
+{% load staticfiles %}
+{% block content %}
+	<div class="container">
+      <!-- Main component for a primary marketing message or call to action -->
+      <div class="jumbotron">
+		<h1>Siêu phẩm ứng dụng chat video</h1>
+		<h4 id="my-peer">Your id: </h4>
+			<div class="row">
+				<div class="col-md-4">
+					{% if user.is_authenticated %}
+						<h4>Your contacts:</h4>
+						<select class="form-control" id="contacts">
+							<option value="none">Select a contact</option>
+								
+						</select>
+					{% endif %}
+					<!-- Provide a button to click to submit the form. -->
+					<button class="btn btn-success" name="joinchat" id="btnCall">Call</button>
+					<button class="btn btn-success" id="dis_camera">Disable Camera</button>
+					<button style="display: none;" class="btn btn-danger" id="btnDone">Done</button>
+
+            		
+				</div>
+			</div>
+		
+		<video hidden id="localStream" width="200" controls></video>
+        <br /><br />
+        <video hidden id="remoteStream" width="300" controls></video>
+		<br /><br />
+
+		<section class="make-center">
+			<input type="text" id="room-id" value="abcdef" autocorrect=off autocapitalize=off size=20>
+			<button id="open-room">Open Room</button>
+			<button id="join-room">Join Room</button>
+			<button id="open-or-join-room">Auto Open Or Join Room</button>
+		
+			<br><br>
+			<input type="text" id="input-text-chat" placeholder="Enter Text Chat" disabled>
+			<button id="share-file" disabled>Share File</button>
+			<br><br>
+			<button id="btn-leave-room" disabled>Leave /or close the room</button>
+		
+			<div id="room-urls" style="text-align: center;display: none;background: #F1EDED;margin: 15px -10px;border: 1px solid rgb(189, 189, 189);border-left: 0;border-right: 0;"></div>
+		
+			<div id="chat-container">
+				<div id="file-container"></div>
+				<div class="chat-output"></div>
+			</div>
+			<div id="videos-container"></div>
+		</section>
+		<script src="{% static 'peer/main.js' %}"></script>
+
+
+	  </div>
+	  <div class="modal fade" id="myModal" role="dialog">
+		<div class="modal-dialog">
+		
+		  <!-- Modal content-->
+		  <div class="modal-content">
+			<div class="modal-header">
+			  <button type="button" class="close" data-dismiss="modal">&times;</button>
+			  <h4 class="modal-title" ></h4>
+			</div>
+			<div class="modal-body">
+			  
+			</div>
+			<div class="modal-footer">
+			  <button type="button" class="btn btn-success" data-dismiss="modal" id="ok">OK</button>
+			  <button type="button" class="btn btn-default" data-dismiss="modal" id="close">Close</button>
+			</div>
+		  </div>
+		  
+		</div>
+	  </div>
+
+	  <button style="display: none;" type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal" id="ringring"></button>
+	
+	</div>
+{% endblock content %}
+{% block js %}
+	<script src="{% static 'peer/jquery.js' %}"></script>
+	<script src="{% static 'peer/peer.js' %}"></script>
+
+	<script src="{% static 'videocall/menu.js' %}"></script>
+	<script src="{% static 'peer/RTCMultiConnection.min.js' %}"></script>
+	<script src="{% static 'videocall/adapter.js' %}"></script>
+	<script src="http://192.168.100.22:9002/socket.io/socket.io.js"></script>
+	<link rel="stylesheet" href="{% static 'videocall/getHTMLMediaElement.css' %}">
+	<script src="{% static 'videocall/getHTMLMediaElement.js' %}"></script>
+	<script src="{% static 'videocall/FileBufferReader.js' %}"></script>
+
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+	
+
+{% endblock %}

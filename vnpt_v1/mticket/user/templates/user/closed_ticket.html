@@ -27,8 +27,8 @@
                         <th>Dịch vụ</th>
                         <th>Loại sự cố</th>
                         <th>Nội dung sự cố</th>
+                        <th>Ghi chú</th>
                         <th>Ngày tạo</th>
-                        <th>Ngày đóng</th>
                         <th>Đúng hạn</th>
                         <th>Người xử lý</th>
                         <th>Tùy chọn</th>
@@ -43,6 +43,40 @@
       </div>
     </section>
   </div>
+  <div class="modal fade" id="all_note" role="dialog">
+    <div  class="modal-dialog modal-lg">
+      <!-- Modal content-->
+      <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title" id="title_comment">Ghi chú</h4>
+        </div>
+        <div class="modal-body" >
+            <div id="note_content">
+                <input type="hidden" name="comment_ticketid" id="comment_ticketid">
+                <input type="hidden" name="type" id="type">
+                <table style="width:100%;" id="list_comment" class="table table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th>Thòi gian</th>
+                        <th>Nhân viên cập nhật</th>
+                        <th>Nội dung</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                  </tbody>
+              </table>
+            </div>
+            <textarea class="form-comtrol" id="new_text" style="width:100%" rows="5"></textarea>
+        </div>
+          <div class="modal-footer">
+              {% comment %} <button class="btn btn-primary" id="new_comment">Thêm mới</button>
+              <button type="button" class="btn btn-primary" id="save_comment">Cập nhật</button>
+              <button type="button" class="btn btn-danger" id="cancel_comment">Hủy</button> {% endcomment %}
+              <button type="button" class="btn btn-default" data-dismiss="modal">Đóng</button>
+         </div>
+      </div>
+    </div>
+</div>
 {% endblock %}
 {% block js %}
     <script src="{% static 'js/user/closed_ticket.js' %}"></script>

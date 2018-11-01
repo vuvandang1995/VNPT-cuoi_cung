@@ -210,6 +210,10 @@ def homeuser(request):
                                          action='đóng yêu cầu',
                                          date=timezone.now().date(),
                                          time=timezone.now().time())
+                CommentsLog.objects.create(date=timezone.now(),
+                                           ticketid=ticket,
+                                           agentid=user,
+                                           action=request.POST['comment'])
                 try:
                     tkag = TicketAgent.objects.filter(ticketid=request.POST['tkid']).values('agentid')
                 except ObjectDoesNotExist:
@@ -356,6 +360,10 @@ def another_user(request, username):
                                          action='đóng yêu cầu',
                                          date=timezone.now().date(),
                                          time=timezone.now().time())
+                CommentsLog.objects.create(date=timezone.now(),
+                                           ticketid=ticket,
+                                           agentid=user_this,
+                                           action=request.POST['comment'])
                 try:
                     tkag = TicketAgent.objects.filter(ticketid=request.POST['tkid']).values('agentid')
                 except ObjectDoesNotExist:
@@ -405,6 +413,10 @@ def another_user(request, username):
                                          action='xử lý lại yêu cầu',
                                          date=timezone.now().date(),
                                          time=timezone.now().time())
+                CommentsLog.objects.create(date=timezone.now(),
+                                           ticketid=ticket,
+                                           agentid=user_this,
+                                           action=request.POST['comment'])
             elif 'tkid_comment' in request.POST:
                 ticket = Tickets.objects.get(id=request.POST['tkid_comment'])
                 CommentsLog.objects.create(date=timezone.now(),
@@ -417,41 +429,6 @@ def another_user(request, username):
             elif 'noti_chat' in request.POST:
                 user_this.noti_chat = 0
                 user_this.save()
-            else:
-                form = CreateNewTicketForm(request.POST, request.FILES)
-                if form.is_valid():
-                    ticket = Tickets()
-                    ticket.client = form.cleaned_data['client']
-                    ticket.info_client = form.cleaned_data['info_client']
-                    ticket.loai_su_co = form.cleaned_data['loai_su_co']
-                    ticket.thong_so_kt = form.cleaned_data['thong_so_kt']
-                    service = Services.objects.get(name=request.POST['service'])
-                    ticket.serviceid = service
-                    ticket.lv_priority = int(request.POST['lv_priority'])
-                    ticket.content = form.cleaned_data['content']
-                    ticket.sender = user
-                    ticket.datestart = timezone.now()
-                    ticket.dateend = (timezone.now() + timezone.timedelta(minutes=service.downtime))
-                    if request.FILES.get('attach') is not None:
-                        if request.FILES['attach']._size < MAX_UPLOAD_SIZE:
-                            ticket.attach = request.FILES['attach']
-                            handle_uploaded_file(request.FILES['attach'])
-                        else:
-                            return render(request, 'user/home_user.html', content)
-                    if request.POST['kind'] == 'tu_xu_ly':
-                        ticket.status = 1
-                        ticket.save()
-                        TicketAgent.objects.create(agentid=user, ticketid=ticket)
-                        action = 'tạo mới và tự xử lý yêu cầu'
-                    else:
-                        ticket.save()
-                        action = 'tạo mới yêu cầu'
-                    TicketLog.objects.create(agentid=user,
-                                             ticketid=ticket,
-                                             action=action,
-                                             date=timezone.now().date(),
-                                             time=timezone.now().time())
-                return redirect("/user")
         return render(request, 'user/another_user.html', content)
     else:
         return redirect("/")
@@ -697,9 +674,8 @@ def closed_ticket_data(request):
             handler += '</p>'
             option = '''<a type="button" target=_blank class="btn btn-warning" href="/user/history_'''+str(tk.id)+ '''" data-toggle="tooltip" title="dòng thời gian"><i class="fa fa-history"></i></a>'''
             datestart = tk.datestart + timezone.timedelta(hours=7)
-            dateclosed = str(datestart)[:-16]
-            data.append([tk.id, client, tk.serviceid.name, loai_su_co, content, str(datestart)[:-16],
-                         dateclosed, overdue, handler, option])
+            note = r'<a data-toggle="modal" data-target="#all_note" data-title="new" id="' + str(tk.id)+'"><i class="fa fa-pencil-square-o"></i></a>'
+            data.append([tk.id, client, tk.serviceid.name, loai_su_co, content, note, str(datestart)[:-16], overdue, handler, option])
         ticket = {"data": data}
         tickets = json.loads(json.dumps(ticket))
         return JsonResponse(tickets, safe=False)
@@ -774,7 +750,7 @@ def history(request, id):
 
 
 def comment_data(request, id):
-    if (request.session.has_key('user') and (Agents.objects.get(username=request.session['user'])).status == 1) or ((request.session.has_key('agent')and(Agents.objects.get(username=request.session['agent'])).status == 1)):
+    if (request.session.has_key('user') and (Agents.objects.get(username=request.session['user'])).status == 1) or ((request.session.has_key('agent')and(Agents.objects.get(username=request.session['agent'])).status == 1)) or request.session.has_key('leader')and(Agents.objects.get(username=request.session['leader'])).status == 1:
         data = []
         if id == '0':
             pass

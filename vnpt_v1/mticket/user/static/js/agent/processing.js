@@ -344,8 +344,24 @@ $(document).ready(function(){
                 data: {'tkid_comment':id, 'csrfmiddlewaretoken':token, 'comment': escapeHtml(comment)},
                 success: function(){
                     $('#list_comment').DataTable().ajax.reload(null,false);
+                    var userName = $('#user'+id).val();
 
-                }
+                    var Socket1 = new WebSocket(
+                        'ws://' + window.location.host +
+                        '/ws/user/' + userName + '/');
+
+                    message = 'Yêu cầu số '+id+' vừa được nhật ghi chú!'
+                    var date = formatAMPM(new Date());
+                    Socket1.onopen = function (event) {
+                        setTimeout(function(){
+                            Socket1.send(JSON.stringify({
+                                'message' : message,
+                                'time' : date
+                            }));
+                            Socket1.close();
+                        }, 1000);
+                    };
+                }   
             });
         }else if(type=="re-process"){
             $("#all_note").modal("hide");

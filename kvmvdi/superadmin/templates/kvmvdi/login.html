@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+<head>
+    {% load staticfiles %}
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Home</title>
+  <!-- Tell the browser to be responsive to screen width -->
+  <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+  <!-- Bootstrap 3.3.7 -->
+  <link rel="stylesheet" href="{% static 'user_interface/bower_components/bootstrap/dist/css/bootstrap.min.css' %}">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="{% static 'user_interface/dist/css/AdminLTE.min.css' %}">
+</head>
+<body class="hold-transition login-page">
+<div class="container" id="info_user">
+    <div class="login-box">
+      <div class="login-logo">
+          <a href="/"><b>OPS-VDI</b></a>
+      </div>
+      <!-- /.login-logo -->
+      <div class="login-box-body">
+        <ul class="nav nav-tabs">
+          <li class="active"><a data-toggle="tab" href="#home">Login</a></li>
+          <li><a data-toggle="tab" href="#menu2">Register</a></li>
+        </ul>
+
+        <div class="tab-content">
+          <div id="home" class="tab-pane fade in active">
+            <br>
+            <form method="POST">
+                {% csrf_token %}
+                <div class="form-group has-feedback">
+                  <label for="uname"><b>Username</b></label>
+                  <input class="form-control" type="text" placeholder="Username" name="agentname" required>
+                  <div class="invalid-msg"></div>
+                  <span class="glyphicon glyphicon-user form-control-feedback"></span>
+                </div>
+                <div class="form-group has-feedback">
+                  <label for="psw"><b>Password</b></label>
+                  <input  class="form-control" type="password" placeholder="Password" name="agentpass" required>
+                  <div class="invalid-msg1"></div>
+                  <span class="glyphicon glyphicon-lock form-control-feedback"></span>
+                </div>
+
+                <button type="submit" class="btn btn-primary" value="OK" id="login">Login</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal" data-toggle="modal" data-target="#id03">Forgot your password?</button>
+                <br>
+                <br>
+                <font color="red" size="4">{{ mess }}</font>
+                <font color="red" size="4">{{ error }}</font>
+            </form>
+
+          </div>
+          
+          <div id="menu2" class="tab-pane fade">
+            <br>
+            <form method="POST">
+              {% csrf_token %}
+              <div class="form-group has-feedback">
+                <label for="fullname"><b>Full name</b></label>
+                <input class="form-control inputText" type="text" placeholder="Fullname" name="fullname" required>
+                <div class="invalid-msg"></div>
+                <span class="glyphicon glyphicon-font form-control-feedback"></span>
+              </div>
+
+              <div class="form-group has-feedback">
+                <label for="username"><b>Username</b></label>
+                <input class="form-control inputText" type="text" placeholder="Username" name="username" id="username_" required>
+                <div class="invalid-msg"></div>
+                <span class="glyphicon glyphicon-user form-control-feedback"></span>
+              </div>
+
+              <div class="form-group has-feedback">
+                <label for="email"><b>Email</b></label></br>
+                <input class="form-control inputText" type="text" placeholder="Email" name="email" id="email_" required>
+                <div class="invalid-msg"></div>
+                <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
+              </div>
+
+              <div class="form-group has-feedback">
+                <label for="psw"><b>Password</b></label>
+                <input class="form-control inputText" type="password" placeholder="Password" name="password" id="p1" required>
+                <div class="invalid-msg"></div>
+                <span class="glyphicon glyphicon-lock form-control-feedback"></span>
+              </div>
+              <div class="form-group has-feedback">
+                <label for="psw-repeat"><b>Repeat Password</b></label>
+                <input class="form-control inputText" type="password" placeholder="Repeat Password" name="password2" id="p2" required>
+                <div class="invalid-msg"></div>
+                <span class="glyphicon glyphicon-repeat form-control-feedback"></span>
+              </div>
+                <button type="submit" class="btn btn-primary" value="OK" id="register">Register</button>
+                <br>
+                <br>
+                <font color="red" size="4">{{ mess }}</font>
+                <font color="red" size="4">{{ error }}</font>
+          </form>
+          </div>
+        </div>
+      </div>
+      <!-- /.login-box-body -->
+    </div>
+</div>
+<div class="modal fade" id="id03" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Reset password</h4>
+            </div>
+            <div class="modal-body form-group">
+                <form method="POST">
+                    {% csrf_token %}
+                    <label for="uname"><b>Your email</b></label><br/>
+                    <input class="form-control" type="text" name="uemail" placeholder="Your email" required><br/>
+                    <div class="invalid-msg"></div><br/>
+                    <button type="submit" class="btn btn-primary" value="OK" id="uemail" >Submit</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<!-- jQuery 3 -->
+<script src="{% static 'user_interface/bower_components/jquery/dist/jquery.min.js' %}"></script>
+<!-- Bootstrap 3.3.7 -->
+<script src="{% static 'user_interface/bower_components/bootstrap/dist/js/bootstrap.min.js' %}"></script>
+<!-- iCheck -->
+<script src="{% static 'user_interface/plugins/iCheck/icheck.min.js' %}"></script>
+
+<!-- <script src="{% static 'js/validate.js' %}"></script> -->
+</body>
+</html>
