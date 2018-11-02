@@ -1,0 +1,114 @@
+.content {
+    width: ;
+    height: 500px;
+    /*background: yellow;*/
+
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+
+    -webkit-justify-content: center;
+    -ms-flex-pack: center;
+    justify-content: center;
+
+    -webkit-align-items: center;
+    -ms-flex-align: center;
+    align-items: center;
+}
+
+.home_conten {
+    width: auto;
+    height: auto;
+    /*background: blue;*/
+}
+
+.summary a{
+	text-decoration: none;
+	color: inherit;
+}
+.fl-table {
+	width: 100%;
+    max-width: 100%;
+    border: 0;
+    border-collapse: collapse;
+    border-spacing: 0;
+    text-align: left;
+    background-color: #fff;
+    table-layout: fixed;
+}
+.fl-table tr{
+	border-bottom: 1px solid #ececec;
+    margin: 0;
+    -ms-box-orient: horizontal;
+    display: -webkit-box;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: -moz-flex;
+    display: -webkit-flex;
+    display: flex;
+   
+    padding-left: 24px;
+}
+.summary{
+	background-color: #ffffff;
+    padding-top: 20px;
+    padding-left: 20px;
+    padding-right: 20px;
+    margin-top: 10px;
+    margin-left: 0px;
+    width: 100%;
+    max-width: 920px;
+    box-sizing: border-box;
+}
+.fl-table button {
+	background: none;
+	/*font-size: 14px;*/
+}
+.fl-table button:hover {
+	background: rgb(204, 204, 204);
+}
+.fl-table .v-middle{
+	vertical-align: middle;
+	display: flex;
+    align-items: center;
+    -webkit-flex: 1;
+    flex: 1;
+   }
+.fl-table tr td{
+	height: 48px;
+    overflow: hidden;
+    opacity: .87;
+    padding-right: 24px;
+}
+.dashboard-card-left{
+	background-color: #ffffff;
+    padding-top: 20px;
+    padding-left: 20px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    margin-left: 0px;
+    width: 100%;
+    max-width: 920px;
+    box-sizing: border-box;
+}
+.md-card-title{
+	margin-bottom: 25px;
+}
+.md-card-conten p:first-child{
+	font-size: 25px;
+}
+.md-card-actions button{
+	color: #21a9e1;
+	background: none;
+
+}
+.md-card-actions button:hover{
+	background-color: rgb(204, 204, 204);
+	color: #21a9e1;
+
+}
+.md-card-actions{
+	float: right;
+	margin-right: 15px;
+    margin-bottom: 15px;
+}

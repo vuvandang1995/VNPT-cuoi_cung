@@ -1,0 +1,79 @@
+{% extends "client/base.html" %}
+{% load staticfiles %}
+
+{% block content %}
+{% if user.is_authenticated %}
+{% comment %} <div class="col-md-10 content">
+    <div class="col-md-10 ">
+        <div class="row">
+            <div class="card-title">
+                <h4>List your VMs</h4><br>
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-title="192.168.40.146"
+                    data-project="{{user.username}}" data-target="#id02">
+                    <i class="fa fa-plus"></i> Create VMs
+                </button>
+
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="display nowrap table table-hover table-striped table-bordered list_vm_client" width="100%">
+                        <thead>
+                            <tr align="center">
+                                <th>Name</th>
+                                <th>IP Address</th>
+                                <th>Ram (MB)</th>
+                                <th>VCPUs</th>
+                                <th>Disk (GB)</th>
+                                <th>Status</th>
+                                <th>Time since created</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody align="center">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div> {% endcomment %}
+
+
+<div class="col-md-10 content">
+    <div class="col-md-10 home_conten" style="margin-left: 10%;">
+        <div class="web_content">
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="display nowrap table table-hover table-striped table-bordered list_vm_client" width="100%">
+                        <thead>
+                            <tr align="center">
+                                <th>Name</th>
+                                <th>IP Address</th>
+                                <th>Ram (MB)</th>
+                                <th>VCPUs</th>
+                                <th>Disk (GB)</th>
+                                <th>Status</th>
+                                <th>Time since created</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody align="center">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="add">
+        <img src="img/arrow.png" alt="">
+    </div>
+    <div class="add" data-toggle="tooltip" data-placement="left" title="Create Instances!">
+        <i class="fa fa-plus"></i>
+    </div>
+</div>
+<script src="{% static 'js/base-js/datatables.min.js' %}"></script>
+<script src="{% static 'js/client/home_client.js' %}"></script>
+
+{% endif %}
+{% endblock content %}
+

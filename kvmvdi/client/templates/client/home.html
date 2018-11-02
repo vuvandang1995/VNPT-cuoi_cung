@@ -1,0 +1,100 @@
+{% extends "client/base.html" %}
+{% load staticfiles %}
+{% block content %}
+        {% if user.is_authenticated %}
+        <link href="{% static 'css/portal/home.css' %}" rel="stylesheet" type="text/css">
+            <div class="col-md-10 content">
+                    <div class="col-md-10 home_conten">
+                        <div class="row home_billing">
+                            <span>Billing</span>
+                            <div class="row dashboard-card-left">
+                                <p class="md-card-title">
+                                    Up to date credit
+                                </p>
+                                <div class="md-card-conten">
+                                    <p>
+                                        158,923.98 EUR
+                                    </p>
+                                    <p>
+                                        -222222.00 IRR
+                                    </p>
+                                </div>
+                                <div class="md-card-actions">
+                                    <button class="btn">
+                                        <b>ADD CREDIT</b>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="dashboard-container">
+                                <span>
+                                    Summary
+                                </span>
+                                <div class="row summary">
+                                    <table class="fl-table">
+                                        <tbody>
+                                            <tr>
+                                                <td class="v-middle">
+                                                    <a ""="" href="">
+                                                        0 instances
+                                                    </a>
+                                                </td>
+                                                <td class="v-middle">
+                                                    <button class="btn">
+                                                        <strong>
+                                                        CREATE INSTANCES
+                                                        </strong>
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="v-middle">
+                                                    <a ""="" href="">
+                                                        No images
+                                                    </a>
+                                                </td>
+                                                <td class="v-middle">
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="v-middle">
+                                                    <a ""="" href="">
+                                                        1 volume
+                                                    </a>
+                                                </td>
+                                                <td class="v-middle">
+                                                    <button class="btn">
+                                                        <strong>
+                                                        CREATE VOLUME
+                                                        </strong>
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="v-middle">
+                                                    <a ""="" href="">
+                                                        5 SSH keys
+                                                    </a>
+                                                </td>
+                                                <td class="v-middle">
+                                                    <button class="btn">
+                                                        <strong>
+                                                        ADD SSH KEY
+                                                        </strong>
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+            </div>
+		{% endif %}
+{% endblock content %}
+
+{% block js %}
+    <script src="{% static 'js/client/home_client.js' %}"></script>
+{% endblock %}

@@ -51,6 +51,13 @@ class check_ping(threading.Thread):
 def home(request):
     user = request.user
     if user.is_authenticated and user.is_adminkvm == False:
+        return render(request, 'client/home.html',{'username': mark_safe(json.dumps(user.username))})
+    else:
+        return HttpResponseRedirect('/')
+
+def instances(request):
+    user = request.user
+    if user.is_authenticated and user.is_adminkvm == False:
         if request.method == 'POST':
             if 'image' in request.POST:
                 if Ops.objects.get(ip=request.POST['ops']):
@@ -179,7 +186,7 @@ def home(request):
                 connect.backup_vm(svid=svid, backup_name=backup_name, backup_type=backup_type, rotation=rotation)
                 # server = Server.objects.get(name=request.POST['svname'])
                 # server.delete()
-        return render(request, 'client/index.html',{'username': mark_safe(json.dumps(user.username))})
+        return render(request, 'client/instances.html',{'username': mark_safe(json.dumps(user.username))})
     else:
         return HttpResponseRedirect('/')
 
