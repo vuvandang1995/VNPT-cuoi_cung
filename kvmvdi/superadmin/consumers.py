@@ -49,13 +49,12 @@ class adminConsumer(AsyncWebsocketConsumer):
                 project_domain_id = ops.projectdomain
 
                 connect = nova(ip=ip, username=username, password=password, project_name=project_name, user_domain_id=user_domain_id, project_domain_id=project_domain_id)
-
                 await self.channel_layer.group_send(
                     self.room_group_name,
                     {
                         'type': 'chat_message',
                         'message': connect.list_images(),
-                        'network': connect.list_networks(),
+                        'network': connect.list_flavor(),
                     }
                 )
         else:

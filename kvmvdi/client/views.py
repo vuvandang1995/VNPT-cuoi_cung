@@ -72,28 +72,35 @@ def instances(request):
                     connect = nova(ip=ip, username=username, password=password, project_name=project_name, user_domain_id=user_domain_id, project_domain_id=project_domain_id)
 
                     svname = request.POST['svname']
-                    description = request.POST['description']
+                    # description = request.POST['description']
                     image = request.POST['image']
-                    network = request.POST['network']
-                    ram = int(float(request.POST['ram']) * 1024)
-                    vcpus = int(request.POST['vcpus'])
-                    disk = int(request.POST['disk'])
+                    flavor = request.POST['flavor']
+                    # ram = int(float(request.POST['ram']) * 1024)
+                    # vcpus = int(request.POST['vcpus'])
+                    # disk = int(request.POST['disk'])
                     count = int(request.POST['count'])
 
-                    if [ram, vcpus, disk] in connect.list_flavor():
-                        fl = connect.find_flavor(ram=ram, vcpus=vcpus, disk=disk)
-                        im = connect.find_image(image)
-                        net = connect.find_network(network)
-                        connect.createVM(svname=svname, flavor=fl, image=im, network_id=net, max_count=count)
-                    else:
-                        connect.createFlavor(svname=svname, ram=ram, vcpus=vcpus, disk=disk)
-                        check = False
-                        while check == False:
-                            if connect.find_flavor(ram=ram, vcpus=vcpus, disk=disk):
-                                check = True
-                        connect.createVM(svname=svname, flavor=connect.find_flavor(ram=ram, vcpus=vcpus, disk=disk), image=connect.find_image(image), network_id=connect.find_network(network), max_count=count)
-                    Server.objects.create(project=user.username, description=description, name=svname, ram=ram, vcpus=vcpus, disk=disk, owner=user)
-                    Oders.objects.create(service='cloud', price=int(request.POST['price']), created=timezone.now(), owner=user, server=Server.objects.get(name=svname))
+                    # if [ram, vcpus, disk] in connect.list_flavor():
+                    #     fl = connect.find_flavor(ram=ram, vcpus=vcpus, disk=disk)
+                    #     im = connect.find_image(image)
+                    #     net = connect.find_network(network)
+                    #     connect.createVM(svname=svname, flavor=fl, image=im, network_id=net, max_count=count)
+                    # else:
+                    #     connect.createFlavor(svname=svname, ram=ram, vcpus=vcpus, disk=disk)
+                    #     check = False
+                    #     while check == False:
+                    #         if connect.find_flavor(ram=ram, vcpus=vcpus, disk=disk):
+                    #             check = True
+                    #     connect.createVM(svname=svname, flavor=connect.find_flavor(ram=ram, vcpus=vcpus, disk=disk), image=connect.find_image(image), network_id=connect.find_network(network), max_count=count)
+
+
+                    fl = connect.find_flavor(ram=int(flavor.split(',')[0]), vcpus=int(flavor.split(',')[1]), disk=int(flavor.split(',')[2]))
+                    im = connect.find_image(image)
+                    net = connect.find_network('public')
+                    connect.createVM(svname=svname, flavor=fl, image=im, network_id=net, max_count=count)
+
+                    Server.objects.create(project=user.username, description='test', name=svname, ram=flavor.split(',')[0], vcpus=flavor.split(',')[1], disk=flavor.split(',')[2], owner=user)
+                    Oders.objects.create(service='cloud', price=12, created=timezone.now(), owner=user, server=Server.objects.get(name=svname))
                 else:
                     return HttpResponseRedirect('/')
             elif 'delete' in request.POST:
@@ -219,6 +226,7 @@ def home_data(request, ops_ip):
                 data = []
                 for item in connect.list_server():
                     # print(item._info)
+                    print(dir(item))
                     try:
                         name = '<p>'+item._info['name']+'</p>'
                     except:
@@ -250,7 +258,7 @@ def home_data(request, ops_ip):
                                         <button data-batch-action="true" class="data-table-action btn-danger btn control" name="'''+ops_ip+'''_'''+item._info['name']+'''" id="del_'''+item._info['id']+'''" type="submit"> Delete Instance</button>
                                     </li>
                                     <li>
-                                        <button data-batch-action="true" data-toggle="modal" data-target="#backup" class="data-table-action btn-danger btn control" name="'''+ops_ip+'''_'''+item._info['name']+'''" id="backup_'''+item._info['id']+'''" type="submit">Backup</button>
+                                        <button data-batch-action="true" data-toggle="modal" data-target="#backup" class="data-table-action btn-danger btn control" name="'''+ops_ip+'''_'''+item._info['name']+'''" id="backup_'''+item._info['id']+'''" type="submit" data-backdrop="false">Backup</button>
                                     </li>
                                     <li>
                                         <button data-batch-action="true" class="data-table-action btn-danger btn console" data-title="console" id="'''+item.get_console_url("novnc")["console"]["url"]+'''" type="submit"> Console Instance</button>
@@ -275,7 +283,7 @@ def home_data(request, ops_ip):
                                         <button data-batch-action="true" class="data-table-action btn-danger btn control" name="'''+ops_ip+'''_'''+item._info['name']+'''" id="del_'''+item._info['id']+'''" type="submit"> Delete Instance</button>
                                     </li>
                                     <li>
-                                        <button data-batch-action="true" data-toggle="modal" data-target="#backup" class="data-table-action btn-danger btn control" name="'''+ops_ip+'''_'''+item._info['name']+'''" id="backup_'''+item._info['id']+'''" type="submit">Backup</button>
+                                        <button data-batch-action="true" data-toggle="modal" data-target="#backup" class="data-table-action btn-danger btn control" name="'''+ops_ip+'''_'''+item._info['name']+'''" id="backup_'''+item._info['id']+'''" type="submit" data-backdrop="false">Backup</button>
                                     </li>
                                     <li>
                                         <button data-batch-action="true" class="data-table-action btn-danger btn control" name="'''+ops_ip+'''_'''+item._info['name']+'''" id="reboot_'''+item._info['id']+'''" type="submit"> Reboot Instance</button>
@@ -297,7 +305,7 @@ def home_data(request, ops_ip):
                                         <button data-batch-action="true" class="data-table-action btn-danger btn control" name="'''+ops_ip+'''_'''+item._info['name']+'''" id="del_'''+item._info['id']+'''" type="submit"> Delete Instance</button>
                                     </li>
                                     <li>
-                                        <button data-batch-action="true" data-toggle="modal" data-target="#snapshot" class="data-table-action btn-danger btn control" name="'''+ops_ip+'''_'''+item._info['name']+'''" id="snapshot_'''+item._info['id']+'''" type="submit"> Create Snapshot</button>
+                                        <button data-batch-action="true" data-toggle="modal" data-target="#snapshot" class="data-table-action btn-danger btn control" name="'''+ops_ip+'''_'''+item._info['name']+'''" id="snapshot_'''+item._info['id']+'''" type="submit" data-backdrop="false"> Create Snapshot</button>
                                     </li>
                                     <li>
                                         <button data-batch-action="true" class="data-table-action btn-danger btn control" name="'''+ops_ip+'''_'''+item._info['name']+'''" id="start_'''+item._info['id']+'''" type="submit"> Start Instance</button>
@@ -305,6 +313,17 @@ def home_data(request, ops_ip):
                                 </ul>
                             <div>
                             '''
+                    # elif item._info['status'] == 'SHUTOFF':
+                    #     status = '<span class="label label-danger">'+item._info['status']+'</span>'
+                    #     actions = '''
+                    #         <select id='social' style='width: 200px;'>
+                    #             <option value='facebook'>Facebook</option>
+                    #             <option value='twitter'>Twitter</option>
+                    #             <option value='linkedin'>Linkedin</option>
+                    #             <option value='google_plus'>Google Plus</option>
+                    #             <option value='vimeo'>Vimeo</option>
+                    #         </select>
+                    #         '''
             
                             
                     created = '<p>'+item._info['created']+'</p>'

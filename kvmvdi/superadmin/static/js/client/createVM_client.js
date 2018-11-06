@@ -6,7 +6,7 @@ $(document).ready(function(){
         var image = document.getElementById("mySelect_image").value;
         var ops = $("input[name=svip]").val();
         var project = $("input[name=project]").val();
-        var network = document.getElementById("mySelect").value;
+        var flavor = document.getElementById("mySelect").value;
         var ram = $("input[name=ram]").val();
         var vcpus = $("input[name=vcpus]").val();
         var disk = $("input[name=disk]").val();
@@ -15,7 +15,7 @@ $(document).ready(function(){
         $.ajax({
             type:'POST',
             url:location.href,
-            data: {'svname': svname, 'price': price,'ops': ops, 'description': description, 'csrfmiddlewaretoken':token, 'image': image, 'network': network, 'ram': ram, 'vcpus': vcpus,'disk': disk, 'count': count, 'project': project},
+            data: {'svname': svname, 'price': price,'ops': ops, 'description': description, 'csrfmiddlewaretoken':token, 'image': image, 'flavor': flavor, 'ram': ram, 'vcpus': vcpus,'disk': disk, 'count': count, 'project': project},
         });
         document.getElementById("close_modal").click();
         setTimeout(function(){
@@ -42,6 +42,7 @@ $(document).ready(function(){
             'message' : ip,
         }));
     });
+
 
     $('body .price').change(function(){
         var ram = $("body input[name=ram]").val();

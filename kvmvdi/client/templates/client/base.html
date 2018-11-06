@@ -6,11 +6,14 @@
             Meditech
         </title>
         <link rel="stylesheet" href="{% static 'css/portal/main.css' %}" rel="stylesheet" type="text/css">
-            <link href="{% static 'css/portal/bootstrap/dist/css/bootstrap.min.css' %}" rel="stylesheet" type="text/css">
+            <!-- <link href="{% static 'css/portal/bootstrap/dist/css/bootstrap.min.css' %}" rel="stylesheet" type="text/css"> -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
                 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
                 <link href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css" rel="stylesheet">
-                    <script src="https://code.jquery.com/jquery-1.11.1.min.js">
-                    </script>
+                    <!-- <script src="https://code.jquery.com/jquery-1.11.1.min.js"></script> -->
+                    <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script> -->
             {% comment %} <link rel="stylesheet" href="static 'css/portal/addinstances.css'" type="text/css"> {% endcomment %}
             <!-- <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css"> -->
     </head>
@@ -82,7 +85,7 @@
                                 </li>
                                 <ul class="sub-menu collapse" id="products">
                                     <li class="item-nav">
-                                        <a href="#">
+                                        <a href="{% url 'client:home' %}">
                                             <img alt="" src="{% static 'images/portal/img/Services.png' %}"/>
                                             Services
                                         </a>
@@ -94,7 +97,7 @@
                                         </a>
                                     </li>
                                     <li class="item-nav">
-                                        <a href="#">
+                                        <a href="{% url 'client:oders' %}">
                                             <img alt="" src="{% static 'images/portal/img/Orderservices.png' %}"/>
                                             Order Services
                                         </a>
@@ -226,14 +229,150 @@
                         </div>
                     </div>
                 </div>
-
+                {% csrf_token %}
                 {% block content %}
                 {% endblock %}
+
+
+                <!-- <div class="modal" id="id02">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content ">
+                                <div class="modal-header">
+                                    <h4 class="modal-title">Create VMs</h4>
+                                </div>
+                                <div class="modal-body form-group">
+                                    <input type="hidden" value="" name="svip">
+                                    <input type="hidden" value="" name="project">
+                                    <label><b>Instance Name</b></label>
+                                    <input class="form-control" type="text" placeholder="Instance Name" name="svname" required>
+                                    <br>
+                                    <label><b>Description</b></label>
+                                    <input class="form-control" type="text" placeholder="Description" name="description" required>
+                                    <br>
+                                    <label><b>Select Image</b></label>
+                                    <select name="image" class="form-control" id="mySelect_image">
+                                        
+                                    </select>
+                                    <br>
+                                    <label><b>Select Network</b></label>
+                                    <select name="network" class="form-control" id="mySelect">
+                                    </select>
+                                    <br>
+        
+                                    <b> Ram </b><input class="price" type="number" name="ram" min="0" max="100" step="0.5" value="0.5" style="width: 60px" required>
+                                    <b> Vcpus </b><input class="price" type="number" name="vcpus" min="0" max="100" required value="1" style="width: 60px">
+                                    <b> Disk (Gb) </b><input class="price" type="number" name="disk" min="0" max="1000" step="5" value="20" style="width: 60px" required>
+                                    <br>
+                                    <br>
+                                    
+                                    <label><b>Instance Count</b></label>
+                                    <input type="number" class="price" name="count" min="1" max="50" required value="1" style="width: 60px">
+
+                                    <b>Price</b>
+                                    <input type="text" name="price" style="width: 60px" disabled> USD/MONTH
+                                    
+                                    <div><font id="invalid-msg" color="red" size="5"></font></div>
+        
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="submit" class="btn btn-primary" value="OK" id="i_submit" >Create</button>
+                                    <button type="button" class="btn btn-default" data-dismiss="modal" id="close_modal">Close</button>
+                                </div>
+                        </div>
+                    </div>
+                </div> -->
+
+                <div class="modal" id="snapshot">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content ">
+                                <div class="modal-header">
+                                    <h4 class="modal-title">Create Snapshot</h4>
+                                </div>
+                                <div class="modal-body form-group">
+                                    <input type="hidden" value="" name="svip">
+                                    <input type="hidden" value="" name="project">
+                                    <label><b>Snapshot Name</b></label>
+                                    <input class="form-control" type="text" placeholder="Snapshot Name" name="snapshotname" required>
+                            
+                                    <div><font id="invalid-msg" color="red" size="5"></font></div>
+        
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="submit" class="btn btn-primary" value="OK" id="snapshot_submit" >Create</button>
+                                    <button type="button" class="btn btn-default" data-dismiss="modal" id="close_modal_snapshot">Close</button>
+                                </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal" id="backup">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content ">
+                                <div class="modal-header">
+                                    <h4 class="modal-title">Backup name</h4>
+                                </div>
+                                <div class="modal-body form-group">
+                                    <input type="hidden" value="" name="svip">
+                                    <input type="hidden" value="" name="project">
+                                    <label><b>Backup Name</b></label>
+                                    <input class="form-control" type="text" placeholder="Backup Name" name="backupname" required>
+                                    <br>
+                                    <label><b>Backup Type</b></label>
+                                    <select name="backup_type" class="form-control" id="mySelect_backup_type">
+                                        <option value="daily">Daily</option>
+                                        <option value="weekly">Weekly</option>
+                                        <option value="monthly">Monthly</option>
+                                    </select>
+                                    <br>
+
+                                    <label><b>Count</b></label>
+                                    <input type="number" name="rotation" min="1" max="50" required value="1" style="width: 60px">
+                            
+                                    <div><font id="invalid-msg" color="red" size="5"></font></div>
+        
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="submit" class="btn btn-primary" value="OK" id="backup_submit" >Create</button>
+                                    <button type="button" class="btn btn-default" data-dismiss="modal" id="close_modal_backup">Close</button>
+                                </div>
+                        </div>
+                    </div>
+                </div> 
+
             </div>
         </div>
     </body>
 </html>
 <script src="{% static 'js/portal/main.js' %}" type="text/javascript">
 </script>
-<script src="{% static 'css/portal/bootstrap/dist/js/bootstrap.min.js' %}" type="text/javascript">
+<!-- <script src="{% static 'css/portal/bootstrap/dist/js/bootstrap.min.js' %}" type="text/javascript"></script> -->
+</script>
+<script>
+    var userName = {{ username }};
+    var opsSocket = new WebSocket(
+        'ws://' + window.location.host +
+        '/ws/' + userName + '/');
+
+    opsSocket.onmessage = function(e) {
+        var data = JSON.parse(e.data);
+        var message = data['message'];
+        var network = data['network'];
+        if (message[0] == 'image_list'){
+            $('#mySelect_image').find('option').remove();
+            var i;
+            for (i=1; i<message.length; i++){
+                var element = '<option value="'+message[i]+'">'+message[i]+'</option>';
+                $("#mySelect_image").append(element);
+            }
+        }
+        if (network){
+            $('#mySelect').find('option').remove();
+            var i;
+            for (i=1; i<network.length; i++){
+                var conten = 'Ram: '+network[i][0]+'Mb - VCPUs: '+network[i][1]+' - Disk: '+network[i][2]+'Gb';
+                var element = '<option value="'+network[i]+'">'+conten+'</option>';
+                $("#mySelect").append(element);
+            }
+        }
+    };
 </script>

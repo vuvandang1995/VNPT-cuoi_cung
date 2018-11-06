@@ -2,33 +2,39 @@
 {% load staticfiles %}
 {% block content %}
         {% if user.is_authenticated %}
-        <main class='main-content bgc-grey-100'>
-            <div class="row ">
-                {% for oder in oders%}
-                    <div class="col-xs-12 col-sm-2 col-md-2 col-lg-2">
-                        <div class="db-wrapper">
-                            <div class="db-pricing-seven">
-                                <ul>
-                                    <li class="price">
-                                        <i class="fa fa-cloud">
-                                        </i>
-                                        Service: {{oder.service}}
-                                    </li>
-                                    <li><b>Server name:</b> {{oder.server.name}}</li>
-                                    <li><b>Price: </b>{{oder.price}} USD/MONTH</li>
-                                    <li><b>Oder date: </b>{{oder.created}}</li>
-                                </ul>
-                                <div class="pricing-footer">
-                                    {% if oder.status == 1%}
-                                        <button class="btn btn-success btn-lg">PAID <i class="fa fa-check-circle"></i></button>
-                                    {% endif%}
+        <div class="col-md-10 content">
+            <div class="col-md-10 home_conten" style="margin-left: 10%;">
+                <div class="web_content">
+                    <main class='main-content bgc-grey-100'>
+                        <div class="row ">
+                            {% for oder in oders%}
+                                <div class="col-xs-12 col-sm-2 col-md-2 col-lg-2">
+                                    <div class="db-wrapper">
+                                        <div class="db-pricing-seven">
+                                            <ul>
+                                                <li class="price">
+                                                    <i class="fa fa-cloud">
+                                                    </i>
+                                                    Service: {{oder.service}}
+                                                </li>
+                                                <li><b>Server name:</b> {{oder.server.name}}</li>
+                                                <li><b>Price: </b>{{oder.price}} USD/MONTH</li>
+                                                <li><b>Oder date: </b>{{oder.created}}</li>
+                                            </ul>
+                                            <div class="pricing-footer">
+                                                {% if oder.status == 1%}
+                                                    <button class="btn btn-success btn-lg">PAID <i class="fa fa-check-circle"></i></button>
+                                                {% endif%}
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
+                            {% endfor%}
                         </div>
-                    </div>
-                {% endfor%}
+                    </main>
+                </div>
             </div>
-        </main>
+        </div>
         
         {% endif %}
 {% endblock content %}

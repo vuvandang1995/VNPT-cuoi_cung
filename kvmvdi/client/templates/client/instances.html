@@ -67,12 +67,126 @@
     <div class="add">
         <img src="img/arrow.png" alt="">
     </div>
-    <div class="add" data-toggle="tooltip" data-placement="left" title="Create Instances!">
+    <div class="add" data-toggle="modal" data-target="#id02" data-placement="left" title="Create Instances!" data-title="192.168.40.146" data-project="{{user.username}}" data-backdrop="false" id="create_vm">
         <i class="fa fa-plus"></i>
     </div>
 </div>
+
+<link href="{% static 'css/portal/addinstances.css' %}" rel="stylesheet" type="text/css">
+<div class="modal" id="id02">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content ">
+            <div class="modal-header">
+                <h4 class="modal-title">Create a new Instance</h4>
+            </div>
+            <div class="modal-body form-group">
+                <div class="col-md-6 xxx">
+                    <input class="input" name="svname" placeholder="Instance Name *" type="text"/>
+                    <div class="boot">
+                        Select boot source :
+                        <div class="boot_select">
+                            <select name="image" class="form-control" id="mySelect_image">
+                            
+                            </select>
+                        </div>
+                    </div>
+                    <div class="boot">
+                        Selected flavor :
+                        <div class="boot_select">
+                            <select name="image" class="form-control" id="mySelect">
+                        
+                            </select>
+                        </div>
+                    </div>
+                    {% comment %} <div class="row">
+                        <div class="col-md-6 select_option">
+                            <select name="">
+                                <option value="">
+                                    Network Selection *
+                                </option>
+                            </select>
+                        </div>
+                        <div class="col-md-6 ">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 select_option">
+                            <select name="">
+                                <option value="">
+                                    SSH Key
+                                </option>
+                            </select>
+                        </div>
+                        <div class="col-md-6 select_option">
+                            ADD NEW KEY
+                        </div>
+                    </div> 
+                    <div class="row">
+                        <div class="col-md-6 rootpass">
+                            <input type="text" name="" placeholder="Root password *">
+                        </div>
+                        <div class="col-md-6 select_option">
+                            <i class="fa fa-eye">
+                            </i>
+                        </div>
+                    </div>{% endcomment %}
+
+                    <div class="row">
+                    Price:
+                        <input type="text" name="price" style="width: 60px" disabled> USD/MONTH
+                    </div>
+
+                    <div class="row">
+                        Instance Count:
+                        <input type="number" class="price" name="count" min="1" max="50" required value="1" style="width: 60px">
+                    </div>
+
+                    <div class="row add_btn">
+                        <button type="submit" class="btn btn-primary" value="OK" id="i_submit" >Create</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal" id="close_modal">Close</button>
+                    </div>
+                </div>
+                <div class="col-md-6" style="text-align: left;">
+                    <p>
+                        New OpenStack Instance
+                    </p>
+                    <p>
+                        You can create a new Instance by first choosing a name then
+                    selecting the Region where the instance will be located,
+                    the source to boot from, a configuration (flavor) and the authentication
+                    parameters.
+                    </p>
+                    <p>
+                        Boot Source Selection
+                    </p>
+                    <p>
+                        Select the image to boot from, from the list of available images.
+                    You can also boot from an instance snapshot if any is available.
+                    The option Create new volume while selecting an image will create a new
+                    volume from the selected image and will start the Instance with the volume as the main root disk
+                    You can also boot directly from an existing volume.
+                    </p>
+                    <p>
+                        Auto delete volume when instance is terminated will mark the volume to be
+                    automatically deleted when the Instance is terminated. If this option is not set, the volume
+                    will remain active even after you remove the instance and can be managed from the
+                    Volumes menu.
+                    </p>
+                    Select a configuration
+                        In order to create the new Instance you also need to select a configuration.
+                </div>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
+
 <script src="{% static 'js/base-js/datatables.min.js' %}"></script>
 <script src="{% static 'js/client/home_client.js' %}"></script>
+<script src="{% static 'js/client/createVM_client.js' %}"></script>
+<link href='https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.min.css' rel='stylesheet' type='text/css'>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js"></script>
 
 {% endif %}
 {% endblock content %}
