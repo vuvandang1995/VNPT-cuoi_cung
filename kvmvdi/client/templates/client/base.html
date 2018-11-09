@@ -38,14 +38,19 @@
                         
                     </div>
                     <div class="col-md-3 col-sm-3 login">
-                        <div>
-                            <p>
-                                Hello Demo
-                            </p>
+                        <div class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle text-muted"   data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="dot">
+                                </span></a>
+                                <div class="dropdown-menu dropdown-menu-right animated zoomIn" style="font-size: 14px;">
+                                    <ul class="dropdown-user">
+                                        <li><a href="{% url 'superadmin:profile' %}"><i class="ti-user"></i> Thông tin cá nhân</a></li>
+                                        <li><a href="{% url 'superadmin:logout' %}"><i class="fa fa-power-off"></i> Đăng xuất</a></li>
+                                    </ul>
+                                </div>
                         </div>
-                        <span class="dot">
-                        </span>
                     </div>
+
+                    
                 </div>
             </div>
             <div class="row">

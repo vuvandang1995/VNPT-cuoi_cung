@@ -63,8 +63,8 @@ def instances(request):
                 if Ops.objects.get(ip=request.POST['ops']):
                     ops = Ops.objects.get(ip=request.POST['ops'])
                     ip = ops.ip
-                    username = ops.username
-                    password = ops.password
+                    username = user.username
+                    password = user.username
                     project_name = user.username
                     user_domain_id = ops.userdomain
                     project_domain_id = ops.projectdomain
@@ -98,7 +98,6 @@ def instances(request):
                     im = connect.find_image(image)
                     net = connect.find_network('public')
                     connect.createVM(svname=svname, flavor=fl, image=im, network_id=net, max_count=count)
-
                     Server.objects.create(project=user.username, description='test', name=svname, ram=flavor.split(',')[0], vcpus=flavor.split(',')[1], disk=flavor.split(',')[2], owner=user)
                     Oders.objects.create(service='cloud', price=12, created=timezone.now(), owner=user, server=Server.objects.get(name=svname))
                 else:
@@ -215,8 +214,8 @@ def home_data(request, ops_ip):
             if thread.run():
                 ops = Ops.objects.get(ip=ops_ip)
                 ip = ops.ip
-                username = ops.username
-                password = ops.password
+                username = user.username
+                password = user.username
                 project_name = user.username
                 user_domain_id = ops.userdomain
                 project_domain_id = ops.projectdomain
@@ -226,7 +225,7 @@ def home_data(request, ops_ip):
                 data = []
                 for item in connect.list_server():
                     # print(item._info)
-                    print(dir(item))
+                    # print(dir(item))
                     try:
                         name = '<p>'+item._info['name']+'</p>'
                     except:
@@ -350,8 +349,6 @@ def user_profile(request):
         return render(request, 'client/profile.html', {'username': mark_safe(json.dumps(user.username))})
     else:
         return HttpResponseRedirect('/')
-    
-
 
 def user_oders(request):
     user = request.user

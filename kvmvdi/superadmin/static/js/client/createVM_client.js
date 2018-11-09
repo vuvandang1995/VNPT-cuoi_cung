@@ -20,7 +20,7 @@ $(document).ready(function(){
         document.getElementById("close_modal").click();
         setTimeout(function(){
             $('.list_vm_client').DataTable().ajax.reload(null,false);
-        }, 8000);
+        }, 10000);
     });
 
 
