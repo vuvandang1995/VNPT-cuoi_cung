@@ -20,6 +20,9 @@ class nova(opsutils.Base):
     def list_server(self):
         return self.servers
 
+    def get_server(self, serverid):
+        return self.nova.servers.get(serverid)
+
     def list_hypervisor(self):
         return self.hypervisors
 

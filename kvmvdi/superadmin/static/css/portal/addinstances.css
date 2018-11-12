@@ -1,7 +1,9 @@
 .content{
   overflow: scroll;
 }
-
+.open .dropdown-menu{
+  position: relative !important;
+}
 .choose_boot{
 	height: -webkit-fill-available;
 	background-color: white;

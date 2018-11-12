@@ -6,6 +6,7 @@ app_name = 'client'
 urlpatterns = [
     path('', views.home, name='home'),
     path('/instances', views.instances, name='instances'),
+    path('/show_instances/<str:serverid>', views.show_instances, name='show_instances'),
     path('/profile', views.user_profile, name='profile'),
     path('/oders', views.user_oders, name='oders'),
     path('/logout', views.user_logout, name='logout'),

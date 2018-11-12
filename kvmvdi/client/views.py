@@ -55,6 +55,52 @@ def home(request):
     else:
         return HttpResponseRedirect('/')
 
+def show_instances(request, serverid):
+    user = request.user
+    if user.is_authenticated and user.is_adminkvm == False:
+        if Ops.objects.get(ip='192.168.40.146'):
+            thread = check_ping(host='192.168.40.146')
+            if thread.run():
+                ops = Ops.objects.get(ip='192.168.40.146')
+                ip = ops.ip
+                username = user.username
+                password = user.username
+                project_name = user.username
+                user_domain_id = ops.userdomain
+                project_domain_id = ops.projectdomain
+
+                connect = nova(ip=ip, username=username, password=password, project_name=project_name, user_domain_id=user_domain_id, project_domain_id=project_domain_id)
+                sv = connect.get_server(serverid=serverid)
+                # snapshot = 
+        if request.method == 'POST':
+            if 'snapshot' in request.POST:
+                ops = Ops.objects.get(ip=request.POST['ops'])
+                ip = ops.ip
+                username = ops.username
+                password = ops.password
+                project_name = ops.project
+                user_domain_id = ops.userdomain
+                project_domain_id = ops.projectdomain
+
+                connect = nova(ip=ip, username=username, password=password, project_name=project_name, user_domain_id=user_domain_id, project_domain_id=project_domain_id)
+                svid = request.POST['snapshot']
+                snapshotname = request.POST['snapshotname']
+                # print(request.POST)
+                connect.snapshot_vm(svid=svid, snapshotname=snapshotname)
+
+        return render(request, 'client/show_instances.html',{'username': mark_safe(json.dumps(user.username)),
+                                                                'servername': sv._info['name'],
+                                                                'serverid': sv._info['id'],
+                                                                'console': sv.get_console_url("novnc")["console"]["url"],
+                                                                'serverip': next(iter(sv.networks.values()))[0],
+                                                                'ram': str(connect.find_flavor(id=sv._info['flavor']['id']).ram),
+                                                                'vcpus': str(connect.find_flavor(id=sv._info['flavor']['id']).vcpus),
+                                                                'disk': str(connect.find_flavor(id=sv._info['flavor']['id']).disk),
+                                                                'status': sv._info['status']
+                                                                })
+    else:
+        return HttpResponseRedirect('/')
+
 def instances(request):
     user = request.user
     if user.is_authenticated and user.is_adminkvm == False:
@@ -227,7 +273,7 @@ def home_data(request, ops_ip):
                     # print(item._info)
                     # print(dir(item))
                     try:
-                        name = '<p>'+item._info['name']+'</p>'
+                        name = '''<a href="/client/show_instances/'''+item._info['id']+'''"><p>'''+item._info['name']+'''</p></a>'''
                     except:
                         name = '<p></p>'
 
@@ -252,7 +298,7 @@ def home_data(request, ops_ip):
                             <div>
                                 <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
                                 Actions <span class="caret"></span></button>
-                                <ul class="dropdown-menu dropdown-menu-right" role="menu" id= "nav_ul">
+                                <ul class="dropdown-menu dropdown-menu-right" role="menu" id= "nav_ul" style="position: relative !important;">
                                     <li>
                                         <button data-batch-action="true" class="data-table-action btn-danger btn control" name="'''+ops_ip+'''_'''+item._info['name']+'''" id="del_'''+item._info['id']+'''" type="submit"> Delete Instance</button>
                                     </li>
@@ -277,7 +323,7 @@ def home_data(request, ops_ip):
                             <div>
                                 <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
                                 Actions <span class="caret"></span></button>
-                                <ul class="dropdown-menu dropdown-menu-right" role="menu" id= "nav_ul">
+                                <ul class="dropdown-menu dropdown-menu-right" role="menu" id= "nav_ul" style="position: relative !important;">
                                     <li>
                                         <button data-batch-action="true" class="data-table-action btn-danger btn control" name="'''+ops_ip+'''_'''+item._info['name']+'''" id="del_'''+item._info['id']+'''" type="submit"> Delete Instance</button>
                                     </li>

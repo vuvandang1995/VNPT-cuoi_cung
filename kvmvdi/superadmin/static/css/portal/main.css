@@ -1,4 +1,6 @@
-
+.open>.dropdown-menu{
+  position: relative !important;
+}
 .add img{
   margin-top: -141px;
     margin-left: -305px;
