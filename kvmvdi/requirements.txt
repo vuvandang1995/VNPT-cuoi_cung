@@ -7,5 +7,6 @@ mysqlclient
 python-novaclient
 python-neutronclient
 python-keystoneclient
+python-cinderclient
 django-cryptography
 cryptography
