@@ -110,5 +110,20 @@ $(document).ready(function(){
         }
     });
 
+    $("#mySelect_image").select2({
+        templateResult: formatState
+    });
+
+    $("#mySelect").select2({
+        templateResult: formatState
+    });
+    
+    function formatState (state) {
+        if (!state.id) { return state.text; }
+        var $state = $(
+        '<span>' + state.text + '</span>'
+        );
+        return $state;
+    }
 
 });

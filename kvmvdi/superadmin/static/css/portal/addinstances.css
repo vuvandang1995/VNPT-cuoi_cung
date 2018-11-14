@@ -1,0 +1,94 @@
+.content{
+  overflow: scroll;
+}
+.open .dropdown-menu{
+  position: relative !important;
+}
+.choose_boot{
+	height: -webkit-fill-available;
+	background-color: white;
+}
+
+.add_btn{
+	margin-top: 20px;
+}
+.select_option select{
+  	width: -webkit-fill-available;
+  	border:none;
+  	 border-bottom: 1px solid #7b7f81;
+  	 height: 40px;
+}
+.select_option{
+	margin-top: 15px;
+}
+.select_option{
+	margin-top: 15px;
+}
+
+.boot_select select{
+	width: -webkit-fill-available;
+  border:none;
+  border-bottom: 1px solid #7b7f81;
+  height: 40px;
+}
+.boot button{
+	border: none;
+  background-color: white;
+  color: #f48363;
+}
+.boot button:hover{
+	border: none;
+    background-color: #21a9e1;
+    color: white;
+    
+}
+.boot{
+	text-align: left;
+}
+textarea:focus, input:focus{
+    outline: none;
+}
+
+.boot_select{
+	margin-top: 10px;
+	margin-bottom: 10px;
+	border:solid 1px black;
+  padding-top: 25px;
+  padding-bottom: 25px;
+	text-align:center;
+}
+.xxx input{
+	width: 100%;
+  /*padding: 12px 20px;*/
+  margin: 8px 0;
+  box-sizing: border-box;
+  border: none;
+  border-bottom: 2px solid #7b7f81;
+  margin-top: 30px;
+  height: auto
+}
+.rootpass input{
+  width: 100%;
+  margin: 8px 0;
+  box-sizing: border-box;
+  border: none;
+  border-bottom:1px solid black;
+  margin-top: 30px;
+  height: auto 
+}
+.create{
+	background-color: white;
+	margin: 0;
+  position: absolute;
+  left: 11%;
+  padding-bottom: 40px;
+  display: block;
+  height: 650px;
+  margin-bottom: 100px;
+}
+.head_create{
+	padding-top: 20px;
+	text-align: left;
+	margin-bottom: 10px;
+	font-size: 20px;
+}

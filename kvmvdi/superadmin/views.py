@@ -266,8 +266,13 @@ def user_login(request):
                     check = False
                     while check == False:
                         if connect.find_project(user.username):
+                            connect.create_user(name=user.username, domain='default', project=user.username, password=user.username, email=request.POST['email'])
                             check = True
-                    connect.add_user_to_project(user.username)
+                    check1 = False
+                    while check1 == False:
+                        if connect.find_user(user.username):
+                            check1 = True
+                    connect.add_user_to_project(user=user.username, project=user.username)
                     return redirect('/')
                 else:
                     error = ''

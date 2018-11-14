@@ -1,0 +1,403 @@
+{% extends "client/base.html" %}
+{% load staticfiles %}
+
+{% block content %}
+{% if user.is_authenticated %}
+<link href="{% static 'css/portal/showInstance.css' %}" rel="stylesheet" type="text/css">
+<div class="col-md-10 content">
+    <div class="col-md-10 home_conten" style="margin-left: 10%;">
+        <div class="web_content">
+            <div class="row show_instance">
+                <div class="row infor">
+                <div class="col-md-12 head_show">
+                    <div class="col-md-1">
+                        <img src="{% static 'images/portal/img/cloud.png' %}" alt="">
+                    </div>
+                    <div  class="col-md-3 name">
+                        <div class="row">
+                            Instances Names: {{servername}}
+                        </div>
+                        <div class="row">
+                            {{vcpus}} vCPU/{{ram}}MB/{{disk}}G <label class="label label-primary">{{status}}</label>
+                        </div>
+                    </div>  
+                </div>
+            </div>  
+            <div class="row ip">
+                <div class="col-md-2">
+                    PIv4 : {{serverip}}
+                </div>
+                <div class="col-md-2">
+                </div>
+                <div class="col-md-2">
+                </div>
+                <div class="col-md-4">
+                    
+                </div>
+                <div class="col-md-2 console" data-title="console" id="{{console}}">
+                    <img src="{% static 'images/portal/img/PCconsole.png' %}" alt="">
+                    Console
+                </div>
+
+            </div>
+            <div class="row control">
+                <div class="col-md-2 control" data-toggle="modal" data-target="#snapshot" name="192.168.40.146_{{servername}}" id="snapshot_{{serverid}}" type="submit" data-backdrop="false">
+                    <img src="{% static 'images/portal/img/snapshot.png' %}"> Snapshot
+                </div>
+                <div class="col-md-2">
+                    <img src="{% static 'images/portal/img/resetroot.png' %}"> Reset root Password
+                </div>
+                <div class="col-md-2">
+                    <img src="{% static 'images/portal/img/hardreboot.png' %}"> Hard Reboot
+                </div>
+                <div class="col-md-2">
+                    <img src="{% static 'images/portal/img/rebuild.png' %}"> Rebuild
+                </div>
+                <div class="col-md-2">
+                    <img src="{% static 'images/portal/img/upgrade.png' %}"> Upgrade 
+                </div>
+                <div class="col-md-2">
+                    <img src="{% static 'images/portal/img/cancel.png' %}"> Cancel
+                </div>
+
+            </div>
+            <div class="row">
+                <div class="Grap">
+                    <strong> Monitor </strong> 
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div id="chart" style="min-width: 220px; height: 220px; margin: 0 auto">
+                            <iframe src="http://192.168.20.54:3000/d-solo/mqyja-omk/vms?refresh=10s&orgId=1&var-compute=compute2&var-uuid=38c8238a-142b-4be6-94b8-84a4a1fdb0bf&var-virt=virt-instance-00000031&var-interface=if_octets-fa_16_3e_90_0b_b1&var-diskrw=disk_octets-vda&var-diskops=disk_ops-vda&var-vcpu=All&panelId=13&from=1541981337087&to=1541992137088" width="100%" height="200" frameborder="0"></iframe>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div id="chart1" style="min-width: 220px; height: 220px; margin: 0 auto">
+                            <iframe src="http://192.168.20.54:3000/d-solo/mqyja-omk/vms?refresh=10s&orgId=1&var-compute=compute2&var-uuid=38c8238a-142b-4be6-94b8-84a4a1fdb0bf&var-virt=virt-instance-00000031&var-interface=if_octets-fa_16_3e_90_0b_b1&var-diskrw=disk_octets-vda&var-diskops=disk_ops-vda&var-vcpu=All&panelId=11&from=1541981389839&to=1541992189839" width="100%" height="200" frameborder="0"></iframe>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div id="chart2" style="min-width: 220px; height: 220px; margin: 0 auto">
+                            <iframe src="http://192.168.20.54:3000/d-solo/mqyja-omk/vms?refresh=10s&orgId=1&var-compute=compute2&var-uuid=38c8238a-142b-4be6-94b8-84a4a1fdb0bf&var-virt=virt-instance-00000031&var-interface=if_octets-fa_16_3e_90_0b_b1&var-diskrw=disk_octets-vda&var-diskops=disk_ops-vda&var-vcpu=All&panelId=3&from=1541981427463&to=1541992227464" width="100%" height="200" frameborder="0"></iframe>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div id="chart3" style="min-width: 220px; height: 220px; margin: 0 auto">
+                            <iframe src="http://192.168.20.54:3000/d-solo/mqyja-omk/vms?refresh=10s&orgId=1&var-compute=compute2&var-uuid=38c8238a-142b-4be6-94b8-84a4a1fdb0bf&var-virt=virt-instance-00000031&var-interface=if_octets-fa_16_3e_90_0b_b1&var-diskrw=disk_octets-vda&var-diskops=disk_ops-vda&var-vcpu=All&panelId=5&from=1541981450749&to=1541992250749" width="100%" height="200" frameborder="0"></iframe>
+                        </div>
+                    </div>
+                </div>
+               
+            </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="https://code.highcharts.com/modules/exporting.js"></script>
+<script src="https://code.highcharts.com/modules/export-data.js"></script>
+<script src="{% static 'js/client/home_client.js' %}"></script>
+<link href='https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.min.css' rel='stylesheet' type='text/css'>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js"></script>
+
+<script type="text/javascript">
+    /*Highcharts.chart('chart', {
+  chart: {
+    type: 'area'
+  },
+  title: {
+    text: 'US and USSR nuclear stockpiles'
+  },
+  subtitle: {
+    text: 'Sources: <a href="https://thebulletin.org/2006/july/global-nuclear-stockpiles-1945-2006">' +
+      'thebulletin.org</a> &amp; <a href="https://www.armscontrol.org/factsheets/Nuclearweaponswhohaswhat">' +
+      'armscontrol.org</a>'
+  },
+  xAxis: {
+    allowDecimals: false,
+    labels: {
+      formatter: function () {
+        return this.value; // clean, unformatted number for year
+      }
+    }
+  },
+  yAxis: {
+    title: {
+      text: 'Nuclear weapon states'
+    },
+    labels: {
+      formatter: function () {
+        return this.value / 1000 + 'k';
+      }
+    }
+  },
+  tooltip: {
+    pointFormat: '{series.name} had stockpiled <b>{point.y:,.0f}</b><br/>warheads in {point.x}'
+  },
+  plotOptions: {
+    area: {
+      pointStart: 1940,
+      marker: {
+        enabled: false,
+        symbol: 'circle',
+        radius: 2,
+        states: {
+          hover: {
+            enabled: true
+          }
+        }
+      }
+    }
+  },
+  series: [{
+    name: 'USA',
+    data: [
+      null, null, null, null, null, 6, 11, 32, 110, 235,
+      369, 640, 1005, 1436, 2063, 3057, 4618, 6444, 9822, 15468,
+      20434, 24126, 27387, 29459, 31056, 31982, 32040, 31233, 29224, 27342,
+      26662, 26956, 27912, 28999, 28965, 27826, 25579, 25722, 24826, 24605,
+      24304, 23464, 23708, 24099, 24357, 24237, 24401, 24344, 23586, 22380,
+      21004, 17287, 14747, 13076, 12555, 12144, 11009, 10950, 10871, 10824,
+      10577, 10527, 10475, 10421, 10358, 10295, 10104, 9914, 9620, 9326,
+      5113, 5113, 4954, 4804, 4761, 4717, 4368, 4018
+    ]
+  }, {
+    name: 'USSR/Russia',
+    data: [null, null, null, null, null, null, null, null, null, null,
+      5, 25, 50, 120, 150, 200, 426, 660, 869, 1060,
+      1605, 2471, 3322, 4238, 5221, 6129, 7089, 8339, 9399, 10538,
+      11643, 13092, 14478, 15915, 17385, 19055, 21205, 23044, 25393, 27935,
+      30062, 32049, 33952, 35804, 37431, 39197, 45000, 43000, 41000, 39000,
+      37000, 35000, 33000, 31000, 29000, 27000, 25000, 24000, 23000, 22000,
+      21000, 20000, 19000, 18000, 18000, 17000, 16000, 15537, 14162, 12787,
+      12600, 11400, 5500, 4512, 4502, 4502, 4500, 4500
+    ]
+  }]
+    });
+    Highcharts.chart('chart1', {
+  chart: {
+    type: 'area'
+  },
+  title: {
+    text: 'US and USSR nuclear stockpiles'
+  },
+  subtitle: {
+    text: 'Sources: <a href="https://thebulletin.org/2006/july/global-nuclear-stockpiles-1945-2006">' +
+      'thebulletin.org</a> &amp; <a href="https://www.armscontrol.org/factsheets/Nuclearweaponswhohaswhat">' +
+      'armscontrol.org</a>'
+  },
+  xAxis: {
+    allowDecimals: false,
+    labels: {
+      formatter: function () {
+        return this.value; // clean, unformatted number for year
+      }
+    }
+  },
+  yAxis: {
+    title: {
+      text: 'Nuclear weapon states'
+    },
+    labels: {
+      formatter: function () {
+        return this.value / 1000 + 'k';
+      }
+    }
+  },
+  tooltip: {
+    pointFormat: '{series.name} had stockpiled <b>{point.y:,.0f}</b><br/>warheads in {point.x}'
+  },
+  plotOptions: {
+    area: {
+      pointStart: 1940,
+      marker: {
+        enabled: false,
+        symbol: 'circle',
+        radius: 2,
+        states: {
+          hover: {
+            enabled: true
+          }
+        }
+      }
+    }
+  },
+  series: [{
+    name: 'USA',
+    data: [
+      null, null, null, null, null, 6, 11, 32, 110, 235,
+      369, 640, 1005, 1436, 2063, 3057, 4618, 6444, 9822, 15468,
+      20434, 24126, 27387, 29459, 31056, 31982, 32040, 31233, 29224, 27342,
+      26662, 26956, 27912, 28999, 28965, 27826, 25579, 25722, 24826, 24605,
+      24304, 23464, 23708, 24099, 24357, 24237, 24401, 24344, 23586, 22380,
+      21004, 17287, 14747, 13076, 12555, 12144, 11009, 10950, 10871, 10824,
+      10577, 10527, 10475, 10421, 10358, 10295, 10104, 9914, 9620, 9326,
+      5113, 5113, 4954, 4804, 4761, 4717, 4368, 4018
+    ]
+  }, {
+    name: 'USSR/Russia',
+    data: [null, null, null, null, null, null, null, null, null, null,
+      5, 25, 50, 120, 150, 200, 426, 660, 869, 1060,
+      1605, 2471, 3322, 4238, 5221, 6129, 7089, 8339, 9399, 10538,
+      11643, 13092, 14478, 15915, 17385, 19055, 21205, 23044, 25393, 27935,
+      30062, 32049, 33952, 35804, 37431, 39197, 45000, 43000, 41000, 39000,
+      37000, 35000, 33000, 31000, 29000, 27000, 25000, 24000, 23000, 22000,
+      21000, 20000, 19000, 18000, 18000, 17000, 16000, 15537, 14162, 12787,
+      12600, 11400, 5500, 4512, 4502, 4502, 4500, 4500
+    ]
+  }]
+    });
+    Highcharts.chart('chart3', {
+  chart: {
+    type: 'area'
+  },
+  title: {
+    text: 'US and USSR nuclear stockpiles'
+  },
+  subtitle: {
+    text: 'Sources: <a href="https://thebulletin.org/2006/july/global-nuclear-stockpiles-1945-2006">' +
+      'thebulletin.org</a> &amp; <a href="https://www.armscontrol.org/factsheets/Nuclearweaponswhohaswhat">' +
+      'armscontrol.org</a>'
+  },
+  xAxis: {
+    allowDecimals: false,
+    labels: {
+      formatter: function () {
+        return this.value; // clean, unformatted number for year
+      }
+    }
+  },
+  yAxis: {
+    title: {
+      text: 'Nuclear weapon states'
+    },
+    labels: {
+      formatter: function () {
+        return this.value / 1000 + 'k';
+      }
+    }
+  },
+  tooltip: {
+    pointFormat: '{series.name} had stockpiled <b>{point.y:,.0f}</b><br/>warheads in {point.x}'
+  },
+  plotOptions: {
+    area: {
+      pointStart: 1940,
+      marker: {
+        enabled: false,
+        symbol: 'circle',
+        radius: 2,
+        states: {
+          hover: {
+            enabled: true
+          }
+        }
+      }
+    }
+  },
+  series: [{
+    name: 'USA',
+    data: [
+      null, null, null, null, null, 6, 11, 32, 110, 235,
+      369, 640, 1005, 1436, 2063, 3057, 4618, 6444, 9822, 15468,
+      20434, 24126, 27387, 29459, 31056, 31982, 32040, 31233, 29224, 27342,
+      26662, 26956, 27912, 28999, 28965, 27826, 25579, 25722, 24826, 24605,
+      24304, 23464, 23708, 24099, 24357, 24237, 24401, 24344, 23586, 22380,
+      21004, 17287, 14747, 13076, 12555, 12144, 11009, 10950, 10871, 10824,
+      10577, 10527, 10475, 10421, 10358, 10295, 10104, 9914, 9620, 9326,
+      5113, 5113, 4954, 4804, 4761, 4717, 4368, 4018
+    ]
+  }, {
+    name: 'USSR/Russia',
+    data: [null, null, null, null, null, null, null, null, null, null,
+      5, 25, 50, 120, 150, 200, 426, 660, 869, 1060,
+      1605, 2471, 3322, 4238, 5221, 6129, 7089, 8339, 9399, 10538,
+      11643, 13092, 14478, 15915, 17385, 19055, 21205, 23044, 25393, 27935,
+      30062, 32049, 33952, 35804, 37431, 39197, 45000, 43000, 41000, 39000,
+      37000, 35000, 33000, 31000, 29000, 27000, 25000, 24000, 23000, 22000,
+      21000, 20000, 19000, 18000, 18000, 17000, 16000, 15537, 14162, 12787,
+      12600, 11400, 5500, 4512, 4502, 4502, 4500, 4500
+    ]
+  }]
+    });
+    Highcharts.chart('chart2', {
+  chart: {
+    type: 'area'
+  },
+  title: {
+    text: 'US and USSR nuclear stockpiles'
+  },
+  subtitle: {
+    text: 'Sources: <a href="https://thebulletin.org/2006/july/global-nuclear-stockpiles-1945-2006">' +
+      'thebulletin.org</a> &amp; <a href="https://www.armscontrol.org/factsheets/Nuclearweaponswhohaswhat">' +
+      'armscontrol.org</a>'
+  },
+  xAxis: {
+    allowDecimals: false,
+    labels: {
+      formatter: function () {
+        return this.value; // clean, unformatted number for year
+      }
+    }
+  },
+  yAxis: {
+    title: {
+      text: 'Nuclear weapon states'
+    },
+    labels: {
+      formatter: function () {
+        return this.value / 1000 + 'k';
+      }
+    }
+  },
+  tooltip: {
+    pointFormat: '{series.name} had stockpiled <b>{point.y:,.0f}</b><br/>warheads in {point.x}'
+  },
+  plotOptions: {
+    area: {
+      pointStart: 1940,
+      marker: {
+        enabled: false,
+        symbol: 'circle',
+        radius: 2,
+        states: {
+          hover: {
+            enabled: true
+          }
+        }
+      }
+    }
+  },
+  series: [{
+    name: 'USA',
+    data: [
+      null, null, null, null, null, 6, 11, 32, 110, 235,
+      369, 640, 1005, 1436, 2063, 3057, 4618, 6444, 9822, 15468,
+      20434, 24126, 27387, 29459, 31056, 31982, 32040, 31233, 29224, 27342,
+      26662, 26956, 27912, 28999, 28965, 27826, 25579, 25722, 24826, 24605,
+      24304, 23464, 23708, 24099, 24357, 24237, 24401, 24344, 23586, 22380,
+      21004, 17287, 14747, 13076, 12555, 12144, 11009, 10950, 10871, 10824,
+      10577, 10527, 10475, 10421, 10358, 10295, 10104, 9914, 9620, 9326,
+      5113, 5113, 4954, 4804, 4761, 4717, 4368, 4018
+    ]
+  }, {
+    name: 'USSR/Russia',
+    data: [null, null, null, null, null, null, null, null, null, null,
+      5, 25, 50, 120, 150, 200, 426, 660, 869, 1060,
+      1605, 2471, 3322, 4238, 5221, 6129, 7089, 8339, 9399, 10538,
+      11643, 13092, 14478, 15915, 17385, 19055, 21205, 23044, 25393, 27935,
+      30062, 32049, 33952, 35804, 37431, 39197, 45000, 43000, 41000, 39000,
+      37000, 35000, 33000, 31000, 29000, 27000, 25000, 24000, 23000, 22000,
+      21000, 20000, 19000, 18000, 18000, 17000, 16000, 15537, 14162, 12787,
+      12600, 11400, 5500, 4512, 4502, 4502, 4500, 4500
+    ]
+  }]
+    });*/
+</script>
+
+{% endif %}
+{% endblock content %}
+

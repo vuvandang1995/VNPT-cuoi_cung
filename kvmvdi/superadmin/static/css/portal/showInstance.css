@@ -1,0 +1,34 @@
+.content .show_instance{
+	padding: 20px 30px 0px 45px;
+    background-color: white;
+    height: auto;
+    margin-bottom: 100px;
+}
+.content .name{
+	margin-left: 30px;
+    margin-top: 15px;
+}
+.content .ip{
+	margin-top: 15px;
+    margin-bottom: 15px;
+    border-top: solid 1px #9c9b9b;
+    border-bottom: solid 1px #9c9b9b;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+.content .console {
+	    text-align: right;
+}
+.content .control {
+	margin-bottom: 20px;
+}
+.Grap{
+	font-size: 18px;
+}
+.content{
+    overflow: scroll;
+}
+.open .dropdown-menu{
+    position: relative !important;
+    
+  }

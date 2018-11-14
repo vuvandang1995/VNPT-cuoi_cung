@@ -1,0 +1,167 @@
+{% extends "client/base.html" %}
+{% load staticfiles %}
+
+{% block content %}
+{% if user.is_authenticated %}
+{% comment %} <div class="col-md-10 content">
+    <div class="col-md-10 ">
+        <div class="row">
+            <div class="card-title">
+                <h4>List your VMs</h4><br>
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-title="192.168.40.146"
+                    data-project="{{user.username}}" data-target="#id02">
+                    <i class="fa fa-plus"></i> Create VMs
+                </button>
+
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="display nowrap table table-hover table-striped table-bordered list_vm_client" width="100%">
+                        <thead>
+                            <tr align="center">
+                                <th>Name</th>
+                                <th>IP Address</th>
+                                <th>Ram (MB)</th>
+                                <th>VCPUs</th>
+                                <th>Disk (GB)</th>
+                                <th>Status</th>
+                                <th>Time since created</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody align="center">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div> {% endcomment %}
+
+
+<div class="col-md-10 content">
+    <div class="col-md-10 home_conten" style="margin-left: 10%;">
+        <div class="web_content">
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="display nowrap table table-hover table-striped table-bordered list_vm_client" width="100%">
+                        <thead>
+                            <tr align="center">
+                                <th>Name</th>
+                                <th>IP Address</th>
+                                <th>Ram (MB)</th>
+                                <th>VCPUs</th>
+                                <th>Disk (GB)</th>
+                                <th>Status</th>
+                                <th>Time since created</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody align="center">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="add">
+        <img src="img/arrow.png" alt="">
+    </div>
+    <div class="add" data-toggle="modal" data-target="#id02" data-placement="left" title="Create Instances!" data-title="192.168.40.146" data-project="{{user.username}}" data-backdrop="false" id="create_vm">
+        <i class="fa fa-plus"></i>
+    </div>
+</div>
+
+<link href="{% static 'css/portal/addinstances.css' %}" rel="stylesheet" type="text/css">
+<div class="modal" id="id02">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content ">
+            <div class="modal-header">
+                <h4 class="modal-title">Create a new Instance</h4>
+            </div>
+            <div class="modal-body form-group">
+                <div class="col-md-6 xxx">
+                    <input class="input" name="svname" placeholder="Instance Name *" type="text"/>
+                    <div class="boot">
+                        Select boot source :
+                        <div class="boot_select">
+                            <select name="image" class="form-control" id="mySelect_image">
+                            
+                            </select>
+                        </div>
+                    </div>
+                    <div class="boot">
+                        Selected flavor :
+                        <div class="boot_select">
+                            <select name="image" class="form-control" id="mySelect">
+                        
+                            </select>
+                        </div>
+                    </div>
+                    {% comment %} <div class="row">
+                        <div class="col-md-6 select_option">
+                            <select name="">
+                                <option value="">
+                                    Network Selection *
+                                </option>
+                            </select>
+                        </div>
+                        <div class="col-md-6 ">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 select_option">
+                            <select name="">
+                                <option value="">
+                                    SSH Key
+                                </option>
+                            </select>
+                        </div>
+                        <div class="col-md-6 select_option">
+                            ADD NEW KEY
+                        </div>
+                    </div> 
+                    <div class="row">
+                        <div class="col-md-6 rootpass">
+                            <input type="text" name="" placeholder="Root password *">
+                        </div>
+                        <div class="col-md-6 select_option">
+                            <i class="fa fa-eye">
+                            </i>
+                        </div>
+                    </div>{% endcomment %}
+
+                    <div class="row">
+                    Price:
+                        <input type="text" name="price" style="width: 60px" disabled> USD/MONTH
+                    </div>
+
+                    <div class="row">
+                        Instance Count:
+                        <input type="number" class="price" name="count" min="1" max="50" required value="1" style="width: 60px">
+                    </div>
+
+                    <div class="row add_btn">
+                        <button type="submit" class="btn btn-primary" value="OK" id="i_submit" >Create</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal" id="close_modal">Close</button>
+                    </div>
+                </div>
+                <div class="col-md-6" style="text-align: left;">
+                    <img src="{% static 'images/portal/img/Openstack.png' %}">
+                </div>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="{% static 'js/base-js/datatables.min.js' %}"></script>
+<script src="{% static 'js/client/home_client.js' %}"></script>
+<script src="{% static 'js/client/createVM_client.js' %}"></script>
+<link href='https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.min.css' rel='stylesheet' type='text/css'>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js"></script>
+
+{% endif %}
+{% endblock content %}
+

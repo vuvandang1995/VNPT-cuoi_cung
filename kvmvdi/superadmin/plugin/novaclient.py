@@ -9,13 +9,19 @@ class nova(opsutils.Base):
         self.neutron = client_neutron.Client(session=self.sess)
         self.network = self.neutron.list_networks()["networks"]
         self.servers = self.nova.servers.list()
-        self.services = self.nova.services.list()
-        self.flavors = self.nova.flavors.list()
-        self.images = self.nova.glance.list()
-        self.hypervisors = self.nova.hypervisors.list()
+        try:
+            self.services = self.nova.services.list()
+            self.flavors = self.nova.flavors.list()
+            self.images = self.nova.glance.list()
+            self.hypervisors = self.nova.hypervisors.list()
+        except:
+            pass
     
     def list_server(self):
         return self.servers
+
+    def get_server(self, serverid):
+        return self.nova.servers.get(serverid)
 
     def list_hypervisor(self):
         return self.hypervisors
@@ -40,7 +46,8 @@ class nova(opsutils.Base):
         return flavor_list
 
     def createVM(self, svname, flavor, image, network_id, max_count):
-        self.nova.servers.create(svname, flavor=flavor, image=image, nics = [{'net-id':network_id}], max_count=max_count, availability_zone='nova:compute2')
+        # self.nova.servers.create(svname, flavor=flavor, image=image, nics = [{'net-id':network_id}], max_count=max_count, availability_zone='nova:compute2')
+        self.nova.servers.create(svname, flavor=flavor, image=image, nics = [{'net-id':network_id}], max_count=max_count)
 
     def createFlavor(self, svname, ram, vcpus, disk):
         self.nova.flavors.create(svname, ram, vcpus, disk, flavorid='auto', ephemeral=0, swap=0, rxtx_factor=1.0, is_public=True, description=None)
