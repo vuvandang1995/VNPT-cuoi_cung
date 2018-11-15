@@ -37,12 +37,23 @@ $(document).ready(function(){
         if (action == 'snapshot'){
             $("body").on('click', '#snapshot_submit', function(){
                 var snapshotname = $("input[name=snapshotname]").val();
+                $("#processing").modal({backdrop: false, keyboard: false});
                 $.ajax({
+                    xhr: function() {
+                        var xhr = new window.XMLHttpRequest();
+                        xhr.upload.addEventListener("progress", function(event){
+                            var percent = Math.round((event.loaded / event.total) * 100) + '%';
+                            $("#progressBar").attr("style","width:"+percent);
+                            $("#progressBar").text(percent);
+                        }, false);
+                        return xhr;
+                      },
                     type:'POST',
                     url:location.href,
                     data: {'snapshot':id, 'csrfmiddlewaretoken':token, 'ops':ops, 'svname': svname, 'snapshotname': snapshotname},
                     success: function(){
                         document.getElementById("close_modal_snapshot").click();
+                        $("#processing").modal('hide');
                     }
                 });
             });
@@ -51,57 +62,112 @@ $(document).ready(function(){
                 var backupname = $("input[name=backupname]").val();
                 var backup_type = document.getElementById("mySelect_backup_type").value;
                 var rotation = $("input[name=rotation]").val();
+                $("#processing").modal({backdrop: false, keyboard: false});
                 $.ajax({
+                    xhr: function() {
+                        var xhr = new window.XMLHttpRequest();
+                        xhr.upload.addEventListener("progress", function(event){
+                            var percent = Math.round((event.loaded / event.total) * 100) + '%';
+                            $("#progressBar").attr("style","width:"+percent);
+                            $("#progressBar").text(percent);
+                        }, false);
+                        return xhr;
+                      },
                     type:'POST',
                     url:location.href,
                     data: {'backup':id, 'csrfmiddlewaretoken':token, 'ops':ops, 'svname': svname, 'backupname': backupname, 'backup_type': backup_type, 'rotation': rotation},
                     success: function(){
                         document.getElementById("close_modal_backup").click();
+                        $("#processing").modal('hide');
                     }
                 });
             });
         }else if (confirm('Bạn có chắc ?')){
             if (action == 'del'){
+                $("#processing").modal({backdrop: false, keyboard: false});
                 $.ajax({
+                    xhr: function() {
+                        var xhr = new window.XMLHttpRequest();
+                        xhr.upload.addEventListener("progress", function(event){
+                            var percent = Math.round((event.loaded / event.total) * 100) + '%';
+                            $("#progressBar").attr("style","width:"+percent);
+                            $("#progressBar").text(percent);
+                        }, false);
+                        return xhr;
+                      },
                     type:'POST',
                     url:location.href,
                     data: {'delete':id, 'csrfmiddlewaretoken':token, 'ops':ops, 'svname': svname},
                     success: function(){
                         setTimeout(function(){
                             $('.list_vm_client').DataTable().ajax.reload(null,false);
+                            $("#processing").modal('hide');
                         }, 4000);
                     }
                 });
             }else if (action == 'start'){
+                $("#processing").modal({backdrop: false, keyboard: false});
                 $.ajax({
+                    xhr: function() {
+                        var xhr = new window.XMLHttpRequest();
+                        xhr.upload.addEventListener("progress", function(event){
+                            var percent = Math.round((event.loaded / event.total) * 100) + '%';
+                            $("#progressBar").attr("style","width:"+percent);
+                            $("#progressBar").text(percent);
+                        }, false);
+                        return xhr;
+                      },
                     type:'POST',
                     url:location.href,
                     data: {'start':id, 'csrfmiddlewaretoken':token, 'ops':ops, 'svname': svname},
                     success: function(){
                         setTimeout(function(){
                             $('.list_vm_client').DataTable().ajax.reload(null,false);
+                            $("#processing").modal('hide');
                         }, 4000);
                     }
                 });
             }else if (action == 'reboot'){
+                $("#processing").modal({backdrop: false, keyboard: false});
                 $.ajax({
+                    xhr: function() {
+                        var xhr = new window.XMLHttpRequest();
+                        xhr.upload.addEventListener("progress", function(event){
+                            var percent = Math.round((event.loaded / event.total) * 100) + '%';
+                            $("#progressBar").attr("style","width:"+percent);
+                            $("#progressBar").text(percent);
+                        }, false);
+                        return xhr;
+                      },
                     type:'POST',
                     url:location.href,
                     data: {'reboot':id, 'csrfmiddlewaretoken':token, 'ops':ops, 'svname': svname},
                     success: function(){
                         setTimeout(function(){
                             $('.list_vm_client').DataTable().ajax.reload(null,false);
+                            $("#processing").modal('hide');
                         }, 4000);
                     }
                 });
             }else if (action == 'stop'){
+                $("#processing").modal({backdrop: false, keyboard: false});
                 $.ajax({
+                    xhr: function() {
+                        var xhr = new window.XMLHttpRequest();
+                        xhr.upload.addEventListener("progress", function(event){
+                            var percent = Math.round((event.loaded / event.total) * 100) + '%';
+                            $("#progressBar").attr("style","width:"+percent);
+                            $("#progressBar").text(percent);
+                        }, false);
+                        return xhr;
+                      },
                     type:'POST',
                     url:location.href,
                     data: {'stop':id, 'csrfmiddlewaretoken':token, 'ops':ops, 'svname': svname},
                     success: function(){
                         setTimeout(function(){
                             $('.list_vm_client').DataTable().ajax.reload(null,false);
+                            $("#processing").modal('hide');
                         }, 4000);
                     }
                 });

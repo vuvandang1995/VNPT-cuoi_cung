@@ -6,6 +6,7 @@ from django.contrib.auth import logout
 import uuid
 import random
 
+from django.utils import timezone
 from django.utils.safestring import mark_safe
 import json
 from django.contrib.auth.models import User
@@ -23,6 +24,9 @@ import os
 from .plugin.novaclient import nova
 from .plugin.keystoneclient import keystone
 from .plugin.neutronclient import neutron
+from .plugin.get_tokens import getToken
+from kvmvdi.settings import OPS_ADMIN, OPS_IP, OPS_PASSWORD, OPS_PROJECT
+from django.utils import timezone
 
                 
 class EmailThread(threading.Thread):
@@ -35,7 +39,6 @@ class EmailThread(threading.Thread):
         self.email.send()
         
 
-
 class check_ping(threading.Thread):
     def __init__(self, host):
         threading.Thread.__init__(self)
@@ -43,7 +46,7 @@ class check_ping(threading.Thread):
         self.host = host
 
     def run(self):
-        response = os.system("ping -c 1 " + self.host)
+        response = os.system("ping -n 1 " + self.host)
         if response == 0:
             return True
         else:
@@ -58,14 +61,14 @@ def home(request):
             if 'image' in request.POST:
                 if Ops.objects.get(ip=request.POST['ops']):
                     ops = Ops.objects.get(ip=request.POST['ops'])
-                    ip = ops.ip
-                    username = ops.username
-                    password = ops.password
-                    project_name = ops.project
-                    user_domain_id = ops.userdomain
-                    project_domain_id = ops.projectdomain
-
-                    connect = nova(ip=ip, username=username, password=password, project_name=project_name, user_domain_id=user_domain_id, project_domain_id=project_domain_id)
+                    if not user.check_expired():
+                        user.token_expired = timezone.datetime.now() + timezone.timedelta(hours=1)
+                        user.token_id = getToken(ip=ops.ip, username=user.username, password=user.username,
+                                                 project_name=user.username, user_domain_id='default',
+                                                 project_domain_id='default')
+                        user.save()
+                    connect = nova(ip=ops.ip, token_id=user.token_id, project_name=user.username,
+                                   project_domain_id=ops.projectdomain)
 
                     svname = request.POST['svname']
                     image = request.POST['image']
@@ -91,14 +94,14 @@ def home(request):
                     return HttpResponseRedirect('/')
             elif 'delete' in request.POST:
                 ops = Ops.objects.get(ip=request.POST['ops'])
-                ip = ops.ip
-                username = ops.username
-                password = ops.password
-                project_name = ops.project
-                user_domain_id = ops.userdomain
-                project_domain_id = ops.projectdomain
-
-                connect = nova(ip=ip, username=username, password=password, project_name=project_name, user_domain_id=user_domain_id, project_domain_id=project_domain_id)
+                if not user.check_expired():
+                    user.token_expired = timezone.datetime.now() + timezone.timedelta(hours=1)
+                    user.token_id = getToken(ip=ops.ip, username=user.username, password=user.username,
+                                             project_name=user.username, user_domain_id='default',
+                                             project_domain_id='default')
+                    user.save()
+                connect = nova(ip=ops.ip, token_id=user.token_id, project_name=user.username,
+                               project_domain_id=ops.projectdomain)
                 svid = request.POST['delete']
                 connect.delete_vm(svid=svid)
             elif 'ipsv' in request.POST:
@@ -114,21 +117,22 @@ def home(request):
     else:
         return HttpResponseRedirect('/')
 
+
 def home_data(request, ops_ip):
     user = request.user
     if user.is_authenticated  and user.is_adminkvm:
         if Ops.objects.get(ip=ops_ip):
             thread = check_ping(host=ops_ip)
             if thread.run():
-                ops = Ops.objects.get(ip=ops_ip)
-                ip = ops.ip
-                username = ops.username
-                password = ops.password
-                project_name = ops.project
-                user_domain_id = ops.userdomain
-                project_domain_id = ops.projectdomain
-
-                connect = nova(ip=ip, username=username, password=password, project_name=project_name, user_domain_id=user_domain_id, project_domain_id=project_domain_id)
+                ops = Ops.objects.get(ip=request.POST['ops'])
+                if not user.check_expired():
+                    user.token_expired = timezone.datetime.now() + timezone.timedelta(hours=1)
+                    user.token_id = getToken(ip=ops.ip, username=user.username, password=user.username,
+                                             project_name=user.username, user_domain_id='default',
+                                             project_domain_id='default')
+                    user.save()
+                connect = nova(ip=ops.ip, token_id=user.token_id, project_name=user.username,
+                               project_domain_id=ops.projectdomain)
                 # print(thread.list_networks())
                 data = []
                 for item in connect.list_server():
@@ -201,7 +205,6 @@ def home_data(request, ops_ip):
                 json_data = json.loads(json.dumps(big_data))
                 return JsonResponse(json_data)
 
-            
 
 def user_login(request):
     user = request.user
@@ -246,6 +249,12 @@ def user_login(request):
                         return HttpResponseRedirect('/home')
                     elif user.is_active and user.is_adminkvm == False:
                         login(request, user)
+                        if user.token_id is None or user.check_expired() == False:
+                            user.token_expired = timezone.datetime.now() + timezone.timedelta(hours=1)
+                            user.token_id = getToken(ip=OPS_IP, username=user.username, password=user.username,
+                                                     project_name=user.username, user_domain_id='default',
+                                                     project_domain_id='default')
+                            user.save()
                         return HttpResponseRedirect('/client')
                     else:
                         return render(request, 'kvmvdi/login.html',{'error':'Your account is blocked!'})
@@ -255,18 +264,14 @@ def user_login(request):
                 user_form = UserForm(request.POST)
                 if user_form.is_valid():
                     user = user_form.save()
-                    ip = '192.168.40.146'
-                    username = 'admin'
-                    password = 'ok123'
-                    project_name = 'admin'
-                    user_domain_id = 'default'
-                    project_domain_id = 'default'
-                    connect = keystone(ip=ip, username=username, password=password, project_name=project_name, user_domain_id=user_domain_id, project_domain_id=project_domain_id)
+                    connect = keystone(ip=OPS_IP, username=OPS_ADMIN, password=OPS_PASSWORD, project_name=OPS_PROJECT,
+                                       user_domain_id='default', project_domain_id='default')
                     connect.create_project(name=user.username, domain='default')
                     check = False
                     while check == False:
                         if connect.find_project(user.username):
-                            connect.create_user(name=user.username, domain='default', project=user.username, password=user.username, email=request.POST['email'])
+                            connect.create_user(name=user.username, domain='default', project=user.username,
+                                                password=user.username, email=request.POST['email'])
                             check = True
                     check1 = False
                     while check1 == False:
@@ -301,6 +306,7 @@ def resetpwd(request, uidb64, token):
     else:
         return HttpResponse('Link is invalid!')
 
+
 def user_logout(request):
     logout(request)
     return HttpResponseRedirect('/')
@@ -312,4 +318,4 @@ def user_profile(request):
         return render(request, 'kvmvdi/profile.html', {'username': mark_safe(json.dumps(user.username))})
     else:
         return HttpResponseRedirect('/')
-    
+

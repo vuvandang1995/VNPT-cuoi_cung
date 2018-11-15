@@ -1,10 +1,13 @@
 from superadmin.plugin import opsutils
+from keystoneauth1.identity import v3
+from keystoneauth1 import session
 from novaclient import client
 from neutronclient.v2_0 import client as client_neutron #dòng này có nghĩa là thay tên cho "client" cần được import vào để tránh trùng với dùng thứ 3
 
-class nova(opsutils.Base):
-    def __init__ (self, ip, username, password, project_name, user_domain_id, project_domain_id):
-        super().__init__(ip, username, password, project_name, user_domain_id, project_domain_id)
+class nova():
+    def __init__(self, ip, token_id, project_name, project_domain_id):
+        self.auth = v3.Token(auth_url="http://"+ip+":5000/v3", token=token_id, project_domain_id=project_domain_id, project_name=project_name, reauthenticate=False)
+        self.sess = session.Session(auth=self.auth)
         self.nova = client.Client(2, session=self.sess)
         self.neutron = client_neutron.Client(session=self.sess)
         self.network = self.neutron.list_networks()["networks"]

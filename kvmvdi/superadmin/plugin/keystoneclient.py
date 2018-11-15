@@ -4,6 +4,7 @@ from keystoneclient.v3 import client
 class keystone(opsutils.Base):
     def __init__ (self, ip, username, password, project_name, user_domain_id, project_domain_id):
         super().__init__(ip, username, password, project_name, user_domain_id, project_domain_id)
+        self.token_id = self.sess.get_token(self.auth)
         self.keystone = client.Client(session=self.sess)
 
     def create_project(self, name, domain):

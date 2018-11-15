@@ -22,8 +22,10 @@ import os
 from superadmin.plugin.novaclient import nova
 from superadmin.plugin.neutronclient import neutron
 from superadmin.plugin.keystoneclient import keystone
+from superadmin.plugin.get_tokens import getToken
 
 from django.utils import timezone
+from kvmvdi.settings import OPS_ADMIN, OPS_IP, OPS_PASSWORD, OPS_PROJECT
 
                 
 class EmailThread(threading.Thread):
@@ -42,7 +44,7 @@ class check_ping(threading.Thread):
         self.host = host
 
     def run(self):
-        response = os.system("ping -c 1 " + self.host)
+        response = os.system("ping -n 1 " + self.host)
         if response == 0:
             return True
         else:
@@ -55,34 +57,32 @@ def home(request):
     else:
         return HttpResponseRedirect('/')
 
+
 def show_instances(request, serverid):
     user = request.user
     if user.is_authenticated and user.is_adminkvm == False:
-        if Ops.objects.get(ip='192.168.40.146'):
-            thread = check_ping(host='192.168.40.146')
+        if Ops.objects.get(ip=OPS_IP):
+            thread = check_ping(host=OPS_IP)
             if thread.run():
-                ops = Ops.objects.get(ip='192.168.40.146')
-                ip = ops.ip
-                username = user.username
-                password = user.username
-                project_name = user.username
-                user_domain_id = ops.userdomain
-                project_domain_id = ops.projectdomain
-
-                connect = nova(ip=ip, username=username, password=password, project_name=project_name, user_domain_id=user_domain_id, project_domain_id=project_domain_id)
+                ops = Ops.objects.get(ip=OPS_IP)
+                if not user.check_expired():
+                    user.token_expired = timezone.datetime.now() + timezone.timedelta(hours=1)
+                    user.token_id = getToken(ip=ops.ip, username=user.username, password=user.username,
+                                             project_name=user.username, user_domain_id='default',
+                                             project_domain_id='default')
+                    user.save()
+                connect = nova(ip=ops.ip, token_id=user.token_id, project_name=user.username, project_domain_id=ops.projectdomain)
                 sv = connect.get_server(serverid=serverid)
-                # snapshot = 
         if request.method == 'POST':
             if 'snapshot' in request.POST:
                 ops = Ops.objects.get(ip=request.POST['ops'])
-                ip = ops.ip
-                username = ops.username
-                password = ops.password
-                project_name = ops.project
-                user_domain_id = ops.userdomain
-                project_domain_id = ops.projectdomain
-
-                connect = nova(ip=ip, username=username, password=password, project_name=project_name, user_domain_id=user_domain_id, project_domain_id=project_domain_id)
+                if not user.check_expired():
+                    user.token_expired = timezone.datetime.now() + timezone.timedelta(hours=1)
+                    user.token_id = getToken(ip=ops.ip, username=user.username, password=user.username,
+                                             project_name=user.username, user_domain_id='default',
+                                             project_domain_id='default')
+                    user.save()
+                connect = nova(ip=ops.ip, token_id=user.token_id, project_name=user.username, project_domain_id=ops.projectdomain)
                 svid = request.POST['snapshot']
                 snapshotname = request.POST['snapshotname']
                 # print(request.POST)
@@ -101,6 +101,7 @@ def show_instances(request, serverid):
     else:
         return HttpResponseRedirect('/')
 
+
 def instances(request):
     user = request.user
     if user.is_authenticated and user.is_adminkvm == False:
@@ -108,15 +109,15 @@ def instances(request):
             if 'image' in request.POST:
                 if Ops.objects.get(ip=request.POST['ops']):
                     ops = Ops.objects.get(ip=request.POST['ops'])
-                    ip = ops.ip
-                    username = user.username
-                    password = user.username
-                    project_name = user.username
-                    user_domain_id = ops.userdomain
-                    project_domain_id = ops.projectdomain
-
-                    connect = nova(ip=ip, username=username, password=password, project_name=project_name, user_domain_id=user_domain_id, project_domain_id=project_domain_id)
-
+                    if not user.check_expired():
+                        user.token_expired = timezone.datetime.now() + timezone.timedelta(hours=1)
+                        user.token_id = getToken(ip=ops.ip, username=user.username, password=user.username,
+                                                 project_name=user.username, user_domain_id='default',
+                                                 project_domain_id='default')
+                        user.save()
+                    connect = nova(ip=ops.ip, token_id=user.token_id, project_name=user.username,
+                                   project_domain_id=ops.projectdomain)
+                    print(request.POST)
                     svname = request.POST['svname']
                     # description = request.POST['description']
                     image = request.POST['image']
@@ -150,70 +151,71 @@ def instances(request):
                     return HttpResponseRedirect('/')
             elif 'delete' in request.POST:
                 ops = Ops.objects.get(ip=request.POST['ops'])
-                ip = ops.ip
-                username = ops.username
-                password = ops.password
-                project_name = ops.project
-                user_domain_id = ops.userdomain
-                project_domain_id = ops.projectdomain
+                if not user.check_expired():
+                    user.token_expired = timezone.datetime.now() + timezone.timedelta(hours=1)
+                    user.token_id = getToken(ip=ops.ip, username=user.username, password=user.username,
+                                             project_name=user.username, user_domain_id='default',
+                                             project_domain_id='default')
+                    user.save()
+                connect = nova(ip=ops.ip, token_id=user.token_id, project_name=user.username,
+                               project_domain_id=ops.projectdomain)
 
-                connect = nova(ip=ip, username=username, password=password, project_name=project_name, user_domain_id=user_domain_id, project_domain_id=project_domain_id)
                 svid = request.POST['delete']
                 connect.delete_vm(svid=svid)
                 server = Server.objects.get(name=request.POST['svname'])
                 server.delete()
             elif 'start' in request.POST:
                 ops = Ops.objects.get(ip=request.POST['ops'])
-                ip = ops.ip
-                username = ops.username
-                password = ops.password
-                project_name = ops.project
-                user_domain_id = ops.userdomain
-                project_domain_id = ops.projectdomain
-
-                connect = nova(ip=ip, username=username, password=password, project_name=project_name, user_domain_id=user_domain_id, project_domain_id=project_domain_id)
+                if not user.check_expired():
+                    user.token_expired = timezone.datetime.now() + timezone.timedelta(hours=1)
+                    user.token_id = getToken(ip=ops.ip, username=user.username, password=user.username,
+                                             project_name=user.username, user_domain_id='default',
+                                             project_domain_id='default')
+                    user.save()
+                connect = nova(ip=ops.ip, token_id=user.token_id, project_name=user.username,
+                               project_domain_id=ops.projectdomain)
                 svid = request.POST['start']
                 connect.start_vm(svid=svid)
                 # server = Server.objects.get(name=request.POST['svname'])
                 # server.delete()
             elif 'reboot' in request.POST:
                 ops = Ops.objects.get(ip=request.POST['ops'])
-                ip = ops.ip
-                username = ops.username
-                password = ops.password
-                project_name = ops.project
-                user_domain_id = ops.userdomain
-                project_domain_id = ops.projectdomain
-
-                connect = nova(ip=ip, username=username, password=password, project_name=project_name, user_domain_id=user_domain_id, project_domain_id=project_domain_id)
+                if not user.check_expired():
+                    user.token_expired = timezone.datetime.now() + timezone.timedelta(hours=1)
+                    user.token_id = getToken(ip=ops.ip, username=user.username, password=user.username,
+                                             project_name=user.username, user_domain_id='default',
+                                             project_domain_id='default')
+                    user.save()
+                connect = nova(ip=ops.ip, token_id=user.token_id, project_name=user.username,
+                               project_domain_id=ops.projectdomain)
                 svid = request.POST['reboot']
                 connect.reboot_vm(svid=svid)
                 # server = Server.objects.get(name=request.POST['svname'])
                 # server.delete()
             elif 'stop' in request.POST:
                 ops = Ops.objects.get(ip=request.POST['ops'])
-                ip = ops.ip
-                username = ops.username
-                password = ops.password
-                project_name = ops.project
-                user_domain_id = ops.userdomain
-                project_domain_id = ops.projectdomain
-
-                connect = nova(ip=ip, username=username, password=password, project_name=project_name, user_domain_id=user_domain_id, project_domain_id=project_domain_id)
+                if not user.check_expired():
+                    user.token_expired = timezone.datetime.now() + timezone.timedelta(hours=1)
+                    user.token_id = getToken(ip=ops.ip, username=user.username, password=user.username,
+                                             project_name=user.username, user_domain_id='default',
+                                             project_domain_id='default')
+                    user.save()
+                connect = nova(ip=ops.ip, token_id=user.token_id, project_name=user.username,
+                               project_domain_id=ops.projectdomain)
                 svid = request.POST['stop']
                 connect.stop_vm(svid=svid)
                 # server = Server.objects.get(name=request.POST['svname'])
                 # server.delete()
             elif 'snapshot' in request.POST:
                 ops = Ops.objects.get(ip=request.POST['ops'])
-                ip = ops.ip
-                username = ops.username
-                password = ops.password
-                project_name = ops.project
-                user_domain_id = ops.userdomain
-                project_domain_id = ops.projectdomain
-
-                connect = nova(ip=ip, username=username, password=password, project_name=project_name, user_domain_id=user_domain_id, project_domain_id=project_domain_id)
+                if not user.check_expired():
+                    user.token_expired = timezone.datetime.now() + timezone.timedelta(hours=1)
+                    user.token_id = getToken(ip=ops.ip, username=user.username, password=user.username,
+                                             project_name=user.username, user_domain_id='default',
+                                             project_domain_id='default')
+                    user.save()
+                connect = nova(ip=ops.ip, token_id=user.token_id, project_name=user.username,
+                               project_domain_id=ops.projectdomain)
                 svid = request.POST['snapshot']
                 snapshotname = request.POST['snapshotname']
                 # print(request.POST)
@@ -222,14 +224,14 @@ def instances(request):
                 # server.delete()
             elif 'backup' in request.POST:
                 ops = Ops.objects.get(ip=request.POST['ops'])
-                ip = ops.ip
-                username = ops.username
-                password = ops.password
-                project_name = ops.project
-                user_domain_id = ops.userdomain
-                project_domain_id = ops.projectdomain
-
-                connect = nova(ip=ip, username=username, password=password, project_name=project_name, user_domain_id=user_domain_id, project_domain_id=project_domain_id)
+                if not user.check_expired():
+                    user.token_expired = timezone.datetime.now() + timezone.timedelta(hours=1)
+                    user.token_id = getToken(ip=ops.ip, username=user.username, password=user.username,
+                                             project_name=user.username, user_domain_id='default',
+                                             project_domain_id='default')
+                    user.save()
+                connect = nova(ip=ops.ip, token_id=user.token_id, project_name=user.username,
+                               project_domain_id=ops.projectdomain)
                 svid = request.POST['backup']
                 backup_name = request.POST['backupname']
                 backup_type = request.POST['backup_type']
@@ -245,7 +247,7 @@ def instances(request):
 def home_data(request, ops_ip):
     user = request.user
 
-    # ip = '192.168.40.146'
+    # ip = OPS_IP
     # username = 'admin'
     # password = 'ok123'
     # project_name = 'admin'
@@ -259,14 +261,14 @@ def home_data(request, ops_ip):
             thread = check_ping(host=ops_ip)
             if thread.run():
                 ops = Ops.objects.get(ip=ops_ip)
-                ip = ops.ip
-                username = user.username
-                password = user.username
-                project_name = user.username
-                user_domain_id = ops.userdomain
-                project_domain_id = ops.projectdomain
-
-                connect = nova(ip=ip, username=username, password=password, project_name=project_name, user_domain_id=user_domain_id, project_domain_id=project_domain_id)
+                if not user.check_expired():
+                    user.token_expired = timezone.datetime.now() + timezone.timedelta(hours=1)
+                    user.token_id = getToken(ip=ops.ip, username=user.username, password=user.username,
+                                             project_name=user.username, user_domain_id='default',
+                                             project_domain_id='default')
+                    user.save()
+                connect = nova(ip=ops.ip, token_id=user.token_id, project_name=user.username,
+                               project_domain_id=ops.projectdomain)
                 # print(connect.find_hypervisor('2'))
                 data = []
                 for item in connect.list_server():
