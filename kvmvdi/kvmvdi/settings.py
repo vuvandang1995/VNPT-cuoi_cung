@@ -141,3 +141,9 @@ EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_HOST_USER = 'ticketmdtpro@gmail.com'
 EMAIL_HOST_PASSWORD = 'meditech2018'
 EMAIL_PORT = 587
+
+
+OPS_IP = '192.168.40.146'
+OPS_ADMIN = 'admin'
+OPS_PASSWORD = 'admin'
+OPS_PROJECT = 'admin'

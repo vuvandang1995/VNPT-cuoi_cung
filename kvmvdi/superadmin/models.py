@@ -2,8 +2,8 @@ from django.db import models
 from django.contrib.auth.models import (
     BaseUserManager, AbstractBaseUser
 )
+from django.utils import timezone
 from django_cryptography.fields import encrypt
-
 
 
 class MyUserManager(BaseUserManager):
@@ -55,6 +55,8 @@ class MyUser(AbstractBaseUser):
     is_active = models.BooleanField(default=True)
     is_admin = models.BooleanField(default=False)
     is_adminkvm = models.BooleanField(default=False)
+    token_id = models.CharField(max_length=255, null=True)
+    token_expired = models.DateTimeField(null=True)
 
     objects = MyUserManager()
 
@@ -78,6 +80,10 @@ class MyUser(AbstractBaseUser):
         "Is the user a member of staff?"
         # Simplest possible answer: All admins are staff
         return self.is_admin
+
+    def check_expired(self):
+        time = self.token_expired - timezone.datetime.now(timezone.utc)
+        return time > timezone.timedelta(seconds=10)
 
 
 class Server(models.Model):
