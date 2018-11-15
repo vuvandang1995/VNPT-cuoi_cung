@@ -1,8 +1,8 @@
 .content {
-    width: ;
     height: 500px;
     /*background: yellow;*/
-
+    position: absolute;
+    z-index:10;
     display: -webkit-flex;
     display: -ms-flexbox;
     display: flex;

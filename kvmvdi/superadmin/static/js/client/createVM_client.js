@@ -12,25 +12,20 @@ $(document).ready(function(){
         var disk = $("input[name=disk]").val();
         var count = $("input[name=count]").val();
         var price = $("input[name=price]").val();
-        $("#processing").modal({backdrop: false, keyboard: false});
+        swal({
+            type: 'info',
+            title: "Please wait...",
+            showConfirmButton: false
+        });
         $.ajax({
-            xhr: function() {
-                var xhr = new window.XMLHttpRequest();
-                xhr.upload.addEventListener("progress", function(event){
-                    var percent = Math.round((event.loaded / event.total) * 100) + '%';
-                    $("#progressBar").attr("style","width:"+percent);
-                    $("#progressBar").text(percent);
-                }, false);
-                return xhr;
-              },
             type:'POST',
             url:location.href,
             data: {'svname': svname, 'price': price,'ops': ops, 'description': description, 'csrfmiddlewaretoken':token, 'image': image, 'flavor': flavor, 'ram': ram, 'vcpus': vcpus,'disk': disk, 'count': count, 'project': project},
             success: function(){
                 document.getElementById("close_modal").click();
                 setTimeout(function(){
-                    $("#processing").modal('hide');
                     $('.list_vm_client').DataTable().ajax.reload(null,false);
+                    swal.close();
                 }, 10000);
              },
         });

@@ -302,19 +302,19 @@ def home_data(request, ops_ip):
                                 Actions <span class="caret"></span></button>
                                 <ul class="dropdown-menu dropdown-menu-right" role="menu" id= "nav_ul" style="position: relative !important;">
                                     <li>
-                                        <button data-batch-action="true" class="data-table-action btn-danger btn control" name="'''+ops_ip+'''_'''+item._info['name']+'''" id="del_'''+item._info['id']+'''" type="submit"> Delete Instance</button>
+                                        <a data-batch-action="true" class="data-table-action control" name="'''+ops_ip+'''_'''+item._info['name']+'''" id="del_'''+item._info['id']+'''" type="submit"> Delete Instance</a>
                                     </li>
                                     <li>
-                                        <button data-batch-action="true" data-toggle="modal" data-target="#backup" class="data-table-action btn-danger btn control" name="'''+ops_ip+'''_'''+item._info['name']+'''" id="backup_'''+item._info['id']+'''" type="submit" data-backdrop="false">Backup</button>
+                                        <a data-batch-action="true" data-toggle="modal" data-target="#backup" class="data-table-action control" name="'''+ops_ip+'''_'''+item._info['name']+'''" id="backup_'''+item._info['id']+'''" type="submit" data-backdrop="false">Backup</a>
                                     </li>
                                     <li>
-                                        <button data-batch-action="true" class="data-table-action btn-danger btn console" data-title="console" id="'''+item.get_console_url("novnc")["console"]["url"]+'''" type="submit"> Console Instance</button>
+                                        <a data-batch-action="true" class="data-table-action console" data-title="console" id="'''+item.get_console_url("novnc")["console"]["url"]+'''" type="submit"> Console Instance</a>
                                     </li>
                                     <li>
-                                        <button data-batch-action="true" class="data-table-action btn-danger btn control" name="'''+ops_ip+'''_'''+item._info['name']+'''" id="reboot_'''+item._info['id']+'''" type="submit"> Reboot Instance</button>
+                                        <a data-batch-action="true" class="data-table-action  control" name="'''+ops_ip+'''_'''+item._info['name']+'''" id="reboot_'''+item._info['id']+'''" type="submit"> Reboot Instance</a>
                                     </li>
                                     <li>
-                                        <button data-batch-action="true" class="data-table-action btn-danger btn control" name="'''+ops_ip+'''_'''+item._info['name']+'''" id="stop_'''+item._info['id']+'''" type="submit"> Stop Instance</button>
+                                        <a data-batch-action="true" class="data-table-action control" name="'''+ops_ip+'''_'''+item._info['name']+'''" id="stop_'''+item._info['id']+'''" type="submit"> Stop Instance</a>
                                     </li>
 
                                 </ul>
@@ -327,16 +327,16 @@ def home_data(request, ops_ip):
                                 Actions <span class="caret"></span></button>
                                 <ul class="dropdown-menu dropdown-menu-right" role="menu" id= "nav_ul" style="position: relative !important;">
                                     <li>
-                                        <button data-batch-action="true" class="data-table-action btn-danger btn control" name="'''+ops_ip+'''_'''+item._info['name']+'''" id="del_'''+item._info['id']+'''" type="submit"> Delete Instance</button>
+                                        <a data-batch-action="true" class="data-table-action control" name="'''+ops_ip+'''_'''+item._info['name']+'''" id="del_'''+item._info['id']+'''" type="submit"> Delete Instance</a>
                                     </li>
                                     <li>
-                                        <button data-batch-action="true" data-toggle="modal" data-target="#backup" class="data-table-action btn-danger btn control" name="'''+ops_ip+'''_'''+item._info['name']+'''" id="backup_'''+item._info['id']+'''" type="submit" data-backdrop="false">Backup</button>
+                                        <a data-batch-action="true" data-toggle="modal" data-target="#backup" class="data-table-action control" name="'''+ops_ip+'''_'''+item._info['name']+'''" id="backup_'''+item._info['id']+'''" type="submit" data-backdrop="false">Backup</a>
                                     </li>
                                     <li>
-                                        <button data-batch-action="true" class="data-table-action btn-danger btn control" name="'''+ops_ip+'''_'''+item._info['name']+'''" id="reboot_'''+item._info['id']+'''" type="submit"> Reboot Instance</button>
+                                        <a data-batch-action="true" class="data-table-action control" name="'''+ops_ip+'''_'''+item._info['name']+'''" id="reboot_'''+item._info['id']+'''" type="submit"> Reboot Instance</a>
                                     </li>
                                     <li>
-                                        <button data-batch-action="true" class="data-table-action btn-danger btn control" name="'''+ops_ip+'''_'''+item._info['name']+'''" id="stop_'''+item._info['id']+'''" type="submit"> Stop Instance</button>
+                                        <a data-batch-action="true" class="data-table-action control" name="'''+ops_ip+'''_'''+item._info['name']+'''" id="stop_'''+item._info['id']+'''" type="submit"> Stop Instance</a>
                                     </li>
                                 </ul>
                             <div>
@@ -344,18 +344,18 @@ def home_data(request, ops_ip):
                     elif item._info['status'] == 'SHUTOFF':
                         status = '<span class="label label-danger">'+item._info['status']+'</span>'
                         actions = '''
-                            <div>
-                                <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+                            <div class='nav-item'>
+                                <button type="button" class="btn btn-primary dropdown-toggle nav-link" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 Actions <span class="caret"></span></button>
                                 <ul class="dropdown-menu dropdown-menu-right" role="menu" id= "nav_ul">
                                     <li>
-                                        <button data-batch-action="true" class="data-table-action btn-danger btn control" name="'''+ops_ip+'''_'''+item._info['name']+'''" id="del_'''+item._info['id']+'''" type="submit"> Delete Instance</button>
+                                        <a data-batch-action="true" class="data-table-action control" name="'''+ops_ip+'''_'''+item._info['name']+'''" id="del_'''+item._info['id']+'''" type="submit"> Delete Instance</a>
                                     </li>
                                     <li>
-                                        <button data-batch-action="true" data-toggle="modal" data-target="#snapshot" class="data-table-action btn-danger btn control" name="'''+ops_ip+'''_'''+item._info['name']+'''" id="snapshot_'''+item._info['id']+'''" type="submit" data-backdrop="false"> Create Snapshot</button>
+                                        <a data-batch-action="true" data-toggle="modal" data-target="#snapshot" class="data-table-action control" name="'''+ops_ip+'''_'''+item._info['name']+'''" id="snapshot_'''+item._info['id']+'''" type="submit" data-backdrop="false"> Create Snapshot</a>
                                     </li>
                                     <li>
-                                        <button data-batch-action="true" class="data-table-action btn-danger btn control" name="'''+ops_ip+'''_'''+item._info['name']+'''" id="start_'''+item._info['id']+'''" type="submit"> Start Instance</button>
+                                        <a data-batch-action="true" class="data-table-action control" name="'''+ops_ip+'''_'''+item._info['name']+'''" id="start_'''+item._info['id']+'''" type="submit"> Start Instance</a>
                                     </li>
                                 </ul>
                             <div>
