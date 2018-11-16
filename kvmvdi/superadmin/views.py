@@ -46,7 +46,8 @@ class check_ping(threading.Thread):
         self.host = host
 
     def run(self):
-        response = os.system("ping -n 1 " + self.host)
+        # response = os.system("ping -n 1 " + self.host)
+        response = os.system("ping -c 1 " + self.host)
         if response == 0:
             return True
         else:

@@ -21,12 +21,19 @@ $(document).ready(function(){
             type:'POST',
             url:location.href,
             data: {'svname': svname, 'price': price,'ops': ops, 'description': description, 'csrfmiddlewaretoken':token, 'image': image, 'flavor': flavor, 'ram': ram, 'vcpus': vcpus,'disk': disk, 'count': count, 'project': project},
-            success: function(){
-                document.getElementById("close_modal").click();
-                setTimeout(function(){
-                    $('.list_vm_client').DataTable().ajax.reload(null,false);
-                    swal.close();
-                }, 10000);
+            success: function(msg){
+                if (msg == "Vui long nap them tien vao tai khoan!"){
+                    swal({
+                        type: 'warning',
+                        title: msg,
+                    });
+                }else{
+                    document.getElementById("close_modal").click();
+                    setTimeout(function(){
+                        $('.list_vm_client').DataTable().ajax.reload(null,false);
+                        swal.close();
+                    }, 10000);
+                }
              },
         });
 
@@ -46,7 +53,6 @@ $(document).ready(function(){
         $("input[name=vcpus]").val("1");
         $("input[name=disk]").val("20");
         $("input[name=count]").val("1");
-        $("input[name=price]").val("23.5");
         opsSocket.send(JSON.stringify({
             'message' : ip,
         }));
@@ -54,11 +60,12 @@ $(document).ready(function(){
 
 
     $('body .price').change(function(){
-        var ram = $("body input[name=ram]").val();
-        var vcpus = $("body input[name=vcpus]").val();
-        var disk = $("body input[name=disk]").val();
+        var flavor = document.getElementById("mySelect").value;
+        var ram = flavor.split(',')[0];
+        var vcpus = flavor.split(',')[1];
+        var disk = flavor.split(',')[2];
         var count = $("body input[name=count]").val();
-        var price_new = (parseInt(ram) * 3 + parseInt(vcpus) * 2 + parseInt(disk) * 1) * parseInt(count);
+        var price_new = ((parseInt(ram)/1024) * 3 + parseInt(vcpus) * 2 + parseInt(disk) * 1) * parseInt(count);
         $("body input[name=price]").val(price_new);
     });
 });

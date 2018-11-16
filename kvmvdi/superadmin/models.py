@@ -7,7 +7,7 @@ from django_cryptography.fields import encrypt
 
 
 class MyUserManager(BaseUserManager):
-    def create_user(self, email, username, fullname, key, password):
+    def create_user(self, email, username, fullname, key, password, money):
         """
         Creates and saves a User with the given email, date of
         birth and password.
@@ -19,14 +19,15 @@ class MyUserManager(BaseUserManager):
             email=self.normalize_email(email),
             username=username,
             fullname=fullname,
-            key=key
+            key=key,
+            money=money
         )
 
         user.set_password(password)
         user.save(using=self._db)
         return user
     
-    def create_superuser(self, email, username, fullname, key, password):
+    def create_superuser(self, email, username, fullname, key, password, money):
         """
         Creates and saves a superuser with the given email, date of
         birth and password.
@@ -36,7 +37,8 @@ class MyUserManager(BaseUserManager):
             password=password,
             username=username,
             fullname=fullname,
-            key=key
+            key=key,
+            money=money
         )
         user.is_admin = True
         user.save(using=self._db)
@@ -57,6 +59,7 @@ class MyUser(AbstractBaseUser):
     is_adminkvm = models.BooleanField(default=False)
     token_id = models.CharField(max_length=255, null=True)
     token_expired = models.DateTimeField(null=True)
+    money=models.CharField(max_length=100, default="10000")
 
     objects = MyUserManager()
 
@@ -108,7 +111,7 @@ class Oders(models.Model):
     service = models.CharField(max_length=255)
     server = models.ForeignKey('Server', models.CASCADE, db_column='server')
     ip = models.CharField(max_length=255,null=True)
-    price = models.IntegerField()
+    price = models.CharField(max_length=255)
     status = models.IntegerField(default=1)
     owner = models.ForeignKey('Myuser', models.CASCADE, db_column='owner')
     created = models.DateTimeField()

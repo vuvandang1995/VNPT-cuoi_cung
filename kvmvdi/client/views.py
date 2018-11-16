@@ -44,7 +44,8 @@ class check_ping(threading.Thread):
         self.host = host
 
     def run(self):
-        response = os.system("ping -n 1 " + self.host)
+        # response = os.system("ping -n 1 " + self.host)
+        response = os.system("ping -c 1 " + self.host)
         if response == 0:
             return True
         else:
@@ -53,7 +54,10 @@ class check_ping(threading.Thread):
 def home(request):
     user = request.user
     if user.is_authenticated and user.is_adminkvm == False:
-        return render(request, 'client/home.html',{'username': mark_safe(json.dumps(user.username))})
+        return render(request, 'client/home.html',{'username': mark_safe(json.dumps(user.username)),
+                                                    'money': user.money,
+                                                    'count_sv': Oders.objects.filter(owner=user).count()
+                                                    })
     else:
         return HttpResponseRedirect('/')
 
@@ -140,13 +144,18 @@ def instances(request):
                     #             check = True
                     #     connect.createVM(svname=svname, flavor=connect.find_flavor(ram=ram, vcpus=vcpus, disk=disk), image=connect.find_image(image), network_id=connect.find_network(network), max_count=count)
 
-
-                    fl = connect.find_flavor(ram=int(flavor.split(',')[0]), vcpus=int(flavor.split(',')[1]), disk=int(flavor.split(',')[2]))
-                    im = connect.find_image(image)
-                    net = connect.find_network('public')
-                    connect.createVM(svname=svname, flavor=fl, image=im, network_id=net, max_count=count)
-                    Server.objects.create(project=user.username, description='test', name=svname, ram=flavor.split(',')[0], vcpus=flavor.split(',')[1], disk=flavor.split(',')[2], owner=user)
-                    Oders.objects.create(service='cloud', price=12, created=timezone.now(), owner=user, server=Server.objects.get(name=svname))
+                    price = ((int(flavor.split(',')[0])/1024) * 3 + int(flavor.split(',')[1]) * 2 + int(flavor.split(',')[2])) * count
+                    if price <= float(user.money):
+                        user.money = str(float(user.money) - float(price))
+                        user.save()
+                        fl = connect.find_flavor(ram=int(flavor.split(',')[0]), vcpus=int(flavor.split(',')[1]), disk=int(flavor.split(',')[2]))
+                        im = connect.find_image(image)
+                        net = connect.find_network('public')
+                        connect.createVM(svname=svname, flavor=fl, image=im, network_id=net, max_count=count)
+                        Server.objects.create(project=user.username, description='test', name=svname, ram=flavor.split(',')[0], vcpus=flavor.split(',')[1], disk=flavor.split(',')[2], owner=user)
+                        Oders.objects.create(service='cloud', price=price, created=timezone.now(), owner=user, server=Server.objects.get(name=svname))
+                    else:
+                        return HttpResponse("Vui long nap them tien vao tai khoan!")
                 else:
                     return HttpResponseRedirect('/')
             elif 'delete' in request.POST:

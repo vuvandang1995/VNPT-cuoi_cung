@@ -330,6 +330,13 @@
                 var element = '<option value="'+network[i]+'">'+conten+'</option>';
                 $("#mySelect").append(element);
             }
+            var flavor = document.getElementById("mySelect").value;
+            var ram = flavor.split(',')[0];
+            var vcpus = flavor.split(',')[1];
+            var disk = flavor.split(',')[2];
+            var count = $("body input[name=count]").val();
+            var price_new = ((parseInt(ram)/1024) * 3 + parseInt(vcpus) * 2 + parseInt(disk) * 1) * parseInt(count);
+            $("body input[name=price]").val(price_new);
         }
     };
 </script>
