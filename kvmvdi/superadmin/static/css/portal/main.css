@@ -24,8 +24,11 @@
   bottom: 10%;
 }
 .web_content{
-  margin-top: 10px;
-  text-align: center;
+    border-top: solid 3px #21a9e1;
+      margin-top: 80px;
+      padding: 20px;
+      background-color: #ffffff;
+
 }
 .content{
     width: 100%;
@@ -48,14 +51,11 @@
     top: 80px;
 }
 .dot {
-  height: 25px;
-  width: 25px;
-  background-color: #f1582d;
+  height: 40px;
+  width: 40px;
+  background-color: #FFFFFF;
   border-radius: 50%;
   display: inline-block;
-  position: absolute;
-  right: -2%;
-  top: 25%;
 }
 .login{
     margin-left: -37px;
@@ -64,7 +64,6 @@
 }
 .login div{
   color: white;
-    padding: 4%;
     float: right;
     font-size: 20px;
 }
@@ -101,13 +100,33 @@
 }
 
 .link{
-  padding: 10px;
-  border-left: solid 2px;
-  text-align: center;
-  /*margin-left: -50px;*/
-  font-size: 20px;
+  height: 30px;
+  margin-top: 15px;
+  margin-bottom: 15px;
+  margin-left: -30px;
   color: white;
-  /*padding-top: 24px;*/
+  border-left: solid 0.5px;
+}
+
+.lung{
+  margin-left: 20px;
+  color: white;
+    font-size: 20px;
+}
+
+.lang-left{
+    float:right;
+    margin-top: 15px;
+    margin-bottom: 15px;
+    margin-right: 15px;
+    color: white;
+    font-size: 20px;
+}
+.lang-right{
+    float:right;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    margin-right: 10px;
 }
 .link .fa{
       font-size: 14px;
@@ -124,12 +143,11 @@
    
 }
 #nac{
-
     float: left;
-    font-size: 30px;
+    font-size: 20px;
     color: white;
-    padding-top: 11px;
-    margin-left: 10px;
+    margin-top: 21px;
+    margin-left: 15px;
 }
 .arrow{
   float: right;
@@ -296,4 +314,12 @@ body {
 .content{
     /*overflow: scroll;*/
     height: -webkit-fill-available;
+}
+
+.control{
+    cursor: pointer;
+}
+
+#nac{
+    cursor: pointer;
 }

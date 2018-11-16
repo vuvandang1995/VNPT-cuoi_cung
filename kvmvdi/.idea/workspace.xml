@@ -2,17 +2,33 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="d5c28f8c-2a89-4c31-b7e9-d306174b4935" name="Default" comment="">
+      <change afterPath="$PROJECT_DIR$/client/templates/client/base3.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/superadmin/static/vendors/datatables.net-bs/.bower.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/superadmin/static/vendors/datatables.net-bs/License.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/superadmin/static/vendors/datatables.net-bs/Readme.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/superadmin/static/vendors/datatables.net-bs/bower.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/superadmin/static/vendors/datatables.net-bs/css/dataTables.bootstrap.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/superadmin/static/vendors/datatables.net-bs/css/dataTables.bootstrap.min.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/superadmin/static/vendors/datatables.net-bs/js/dataTables.bootstrap.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/superadmin/static/vendors/datatables.net-bs/js/dataTables.bootstrap.min.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/superadmin/static/vendors/datatables.net/.bower.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/superadmin/static/vendors/datatables.net/License.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/superadmin/static/vendors/datatables.net/Readme.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/superadmin/static/vendors/datatables.net/bower.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/superadmin/static/vendors/datatables.net/js/jquery.dataTables.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/superadmin/static/vendors/datatables.net/js/jquery.dataTables.min.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/templates/client/base.html" beforeDir="false" afterPath="$PROJECT_DIR$/client/templates/client/base.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/templates/client/home.html" beforeDir="false" afterPath="$PROJECT_DIR$/client/templates/client/home.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/client/templates/client/instances.html" beforeDir="false" afterPath="$PROJECT_DIR$/client/templates/client/instances.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/client/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/client/views.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/kvmvdi/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/kvmvdi/settings.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/superadmin/consumers.py" beforeDir="false" afterPath="$PROJECT_DIR$/superadmin/consumers.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/superadmin/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/superadmin/models.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/superadmin/plugin/get_tokens.py" beforeDir="false" afterPath="$PROJECT_DIR$/superadmin/plugin/get_tokens.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/superadmin/plugin/keystoneclient.py" beforeDir="false" afterPath="$PROJECT_DIR$/superadmin/plugin/keystoneclient.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/superadmin/plugin/novaclient.py" beforeDir="false" afterPath="$PROJECT_DIR$/superadmin/plugin/novaclient.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/superadmin/static/css/portal/addinstances.css" beforeDir="false" afterPath="$PROJECT_DIR$/superadmin/static/css/portal/addinstances.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/superadmin/static/css/portal/home.css" beforeDir="false" afterPath="$PROJECT_DIR$/superadmin/static/css/portal/home.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/superadmin/static/css/portal/main.css" beforeDir="false" afterPath="$PROJECT_DIR$/superadmin/static/css/portal/main.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/superadmin/static/images/portal/img/MediTech.png" beforeDir="false" afterPath="$PROJECT_DIR$/superadmin/static/images/portal/img/MediTech.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/superadmin/static/js/client/createVM_client.js" beforeDir="false" afterPath="$PROJECT_DIR$/superadmin/static/js/client/createVM_client.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/superadmin/static/js/client/home_client.js" beforeDir="false" afterPath="$PROJECT_DIR$/superadmin/static/js/client/home_client.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/superadmin/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/superadmin/views.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/superadmin/static/js/portal/main.js" beforeDir="false" afterPath="$PROJECT_DIR$/superadmin/static/js/portal/main.js" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -23,53 +39,33 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="models.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/superadmin/models.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="264">
-              <caret line="85" column="52" lean-forward="true" selection-start-line="83" selection-start-column="4" selection-end-line="85" selection-end-column="52" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="settings.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/kvmvdi/settings.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="320">
-              <caret line="148" column="21" lean-forward="true" selection-start-line="145" selection-end-line="148" selection-end-column="21" />
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file leaf-file-name="views.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/superadmin/views.py">
+        <entry file="file://$PROJECT_DIR$/client/views.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="339">
-              <caret line="282" column="30" lean-forward="true" selection-start-line="282" selection-start-column="30" selection-end-line="282" selection-end-column="30" />
+            <state relative-caret-position="268">
+              <caret line="304" column="93" selection-start-line="304" selection-start-column="93" selection-end-line="304" selection-end-column="93" />
               <folding>
                 <element signature="e#0#64#0" expanded="true" />
+                <element signature="e#18623#18882#0" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="consumers.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/superadmin/consumers.py">
+      <file leaf-file-name="main.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/superadmin/static/js/portal/main.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="880">
-              <caret line="40" column="43" selection-start-line="40" selection-start-column="43" selection-end-line="40" selection-end-column="43" />
-              <folding>
-                <element signature="e#120#181#0" expanded="true" />
-              </folding>
+            <state relative-caret-position="399">
+              <caret line="25" column="58" lean-forward="true" selection-start-line="25" selection-start-column="4" selection-end-line="25" selection-end-column="58" />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="home_client.js" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/superadmin/static/js/client/home_client.js">
+      <file leaf-file-name="main.css" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/superadmin/static/css/portal/main.css">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="54">
-              <caret line="152" column="75" lean-forward="true" selection-start-line="152" selection-start-column="16" selection-end-line="152" selection-end-column="75" />
+            <state relative-caret-position="594">
+              <caret line="27" column="19" selection-start-line="27" selection-start-column="19" selection-end-line="27" selection-end-column="19" />
             </state>
           </provider>
         </entry>
@@ -77,41 +73,66 @@
       <file leaf-file-name="instances.html" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/client/templates/client/instances.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="240">
-              <caret line="164" column="34" selection-start-line="164" selection-start-column="34" selection-end-line="164" selection-end-column="34" />
+            <state relative-caret-position="-400">
+              <caret line="12" column="31" selection-start-line="12" selection-start-column="31" selection-end-line="12" selection-end-column="31" />
               <folding>
-                <element signature="n#div#2;n#!!top" />
-                <element signature="n#style#0;n#input#0;n#div#5;n#div#0;n#div#1;n#div#0;n#div#0;n#div#2;n#!!top" expanded="true" />
-                <element signature="n#style#0;n#input#0;n#div#6;n#div#0;n#div#1;n#div#0;n#div#0;n#div#2;n#!!top" expanded="true" />
-                <element signature="n#style#0;n#div#1;n#div#1;n#div#0;n#div#0;n#div#2;n#!!top" expanded="true" />
-                <element signature="n#style#0;n#div#0;n#div#0;n#div#0;n#div#0;n#div#0;n#div#0;n#div#3;n#!!top" expanded="true" />
+                <element signature="e#1704#5211#0" />
+                <element signature="e#4301#4320#0" expanded="true" />
+                <element signature="e#4555#4574#0" expanded="true" />
+                <element signature="e#4973#4998#0" expanded="true" />
+                <element signature="e#5212#5753#0" />
+                <element signature="e#5510#5526#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="show_instances.html" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/client/templates/client/show_instances.html">
-          <provider selected="true" editor-type-id="text-editor" />
-        </entry>
-      </file>
-      <file leaf-file-name="get_tokens.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/superadmin/plugin/get_tokens.py">
+      <file leaf-file-name="base.html" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/client/templates/client/base.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="22">
-              <caret line="1" column="33" lean-forward="true" selection-end-line="1" selection-end-column="33" />
+            <state relative-caret-position="264">
+              <caret line="18" selection-start-line="18" selection-end-line="18" />
               <folding>
-                <element signature="e#0#37#0" expanded="true" />
+                <element signature="n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" />
+                <element signature="n#style#0;n#div#0;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#ul#0;n#div#0;n#div#3;n#div#0;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+                <element signature="n#a#0;n#li#0;n#ul#0;n#div#0;n#div#0;n#div#0;n#div#1;n#div#0;n#body#0;n#html#0;n#!!top" />
+                <element signature="n#ul#0;n#ul#0;n#div#0;n#div#0;n#div#0;n#div#1;n#div#0;n#body#0;n#html#0;n#!!top" />
+                <element signature="n#li#1;n#ul#0;n#div#0;n#div#0;n#div#0;n#div#1;n#div#0;n#body#0;n#html#0;n#!!top" />
+                <element signature="n#li#2;n#ul#0;n#div#0;n#div#0;n#div#0;n#div#1;n#div#0;n#body#0;n#html#0;n#!!top" />
+                <element signature="n#ul#2;n#ul#0;n#div#0;n#div#0;n#div#0;n#div#1;n#div#0;n#body#0;n#html#0;n#!!top" />
+                <element signature="n#li#3;n#ul#0;n#div#0;n#div#0;n#div#0;n#div#1;n#div#0;n#body#0;n#html#0;n#!!top" />
+                <element signature="n#ul#3;n#ul#0;n#div#0;n#div#0;n#div#0;n#div#1;n#div#0;n#body#0;n#html#0;n#!!top" />
+                <element signature="n#div#1;n#body#0;n#html#0;n#!!top" />
+                <element signature="n#div#2;n#body#0;n#html#0;n#!!top" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="createVM_client.js" pinned="false" current-in-tab="false">
+      <file leaf-file-name="home.html" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/client/templates/client/home.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-858">
+              <caret line="15" column="44" lean-forward="true" selection-start-line="15" selection-start-column="44" selection-end-line="15" selection-end-column="44" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="home_client.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/superadmin/static/js/client/home_client.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="308">
+              <caret line="50" column="37" lean-forward="true" selection-start-line="50" selection-start-column="24" selection-end-line="50" selection-end-column="37" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="createVM_client.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/superadmin/static/js/client/createVM_client.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="374">
-              <caret line="29" column="47" lean-forward="true" selection-start-line="29" selection-start-column="16" selection-end-line="29" selection-end-column="47" />
+            <state relative-caret-position="-363">
+              <caret line="27" column="33" selection-start-line="27" selection-start-column="33" selection-end-line="27" selection-end-column="33" />
             </state>
           </provider>
         </entry>
@@ -127,6 +148,13 @@
       <find>nova</find>
       <find>timezone</find>
       <find>domain_name=ops.projectdomain</find>
+      <find>nac</find>
+      <find>dot</find>
+      <find>login</find>
+      <find>ma</find>
+      <find>control</find>
+      <find>w</find>
+      <find>block js</find>
     </findStrings>
     <replaceStrings>
       <replace>OPS_IP</replace>
@@ -146,11 +174,18 @@
         <option value="$PROJECT_DIR$/superadmin/plugin/get_tokens.py" />
         <option value="$PROJECT_DIR$/kvmvdi/settings.py" />
         <option value="$PROJECT_DIR$/superadmin/consumers.py" />
-        <option value="$PROJECT_DIR$/client/views.py" />
         <option value="$PROJECT_DIR$/superadmin/views.py" />
+        <option value="$PROJECT_DIR$/client/templates/client/base3.html" />
+        <option value="$PROJECT_DIR$/superadmin/static/css/portal/home.css" />
+        <option value="$PROJECT_DIR$/superadmin/static/css/portal/addinstances.css" />
         <option value="$PROJECT_DIR$/client/templates/client/instances.html" />
-        <option value="$PROJECT_DIR$/superadmin/static/js/client/createVM_client.js" />
+        <option value="$PROJECT_DIR$/client/templates/client/home.html" />
+        <option value="$PROJECT_DIR$/superadmin/static/css/portal/main.css" />
+        <option value="$PROJECT_DIR$/superadmin/static/js/portal/main.js" />
+        <option value="$PROJECT_DIR$/client/views.py" />
+        <option value="$PROJECT_DIR$/client/templates/client/base.html" />
         <option value="$PROJECT_DIR$/superadmin/static/js/client/home_client.js" />
+        <option value="$PROJECT_DIR$/superadmin/static/js/client/createVM_client.js" />
       </list>
     </option>
   </component>
@@ -219,6 +254,45 @@
               <item name="kvmvdi" type="462c0819:PsiDirectoryNode" />
               <item name="superadmin" type="462c0819:PsiDirectoryNode" />
               <item name="static" type="462c0819:PsiDirectoryNode" />
+              <item name="css" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="kvmvdi" type="b2602c69:ProjectViewProjectNode" />
+              <item name="kvmvdi" type="462c0819:PsiDirectoryNode" />
+              <item name="superadmin" type="462c0819:PsiDirectoryNode" />
+              <item name="static" type="462c0819:PsiDirectoryNode" />
+              <item name="css" type="462c0819:PsiDirectoryNode" />
+              <item name="portal" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="kvmvdi" type="b2602c69:ProjectViewProjectNode" />
+              <item name="kvmvdi" type="462c0819:PsiDirectoryNode" />
+              <item name="superadmin" type="462c0819:PsiDirectoryNode" />
+              <item name="static" type="462c0819:PsiDirectoryNode" />
+              <item name="images" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="kvmvdi" type="b2602c69:ProjectViewProjectNode" />
+              <item name="kvmvdi" type="462c0819:PsiDirectoryNode" />
+              <item name="superadmin" type="462c0819:PsiDirectoryNode" />
+              <item name="static" type="462c0819:PsiDirectoryNode" />
+              <item name="images" type="462c0819:PsiDirectoryNode" />
+              <item name="portal" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="kvmvdi" type="b2602c69:ProjectViewProjectNode" />
+              <item name="kvmvdi" type="462c0819:PsiDirectoryNode" />
+              <item name="superadmin" type="462c0819:PsiDirectoryNode" />
+              <item name="static" type="462c0819:PsiDirectoryNode" />
+              <item name="images" type="462c0819:PsiDirectoryNode" />
+              <item name="portal" type="462c0819:PsiDirectoryNode" />
+              <item name="img" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="kvmvdi" type="b2602c69:ProjectViewProjectNode" />
+              <item name="kvmvdi" type="462c0819:PsiDirectoryNode" />
+              <item name="superadmin" type="462c0819:PsiDirectoryNode" />
+              <item name="static" type="462c0819:PsiDirectoryNode" />
               <item name="js" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
@@ -235,20 +309,20 @@
               <item name="superadmin" type="462c0819:PsiDirectoryNode" />
               <item name="static" type="462c0819:PsiDirectoryNode" />
               <item name="js" type="462c0819:PsiDirectoryNode" />
+              <item name="portal" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="kvmvdi" type="b2602c69:ProjectViewProjectNode" />
+              <item name="kvmvdi" type="462c0819:PsiDirectoryNode" />
               <item name="superadmin" type="462c0819:PsiDirectoryNode" />
+              <item name="static" type="462c0819:PsiDirectoryNode" />
+              <item name="vendors" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="kvmvdi" type="b2602c69:ProjectViewProjectNode" />
               <item name="kvmvdi" type="462c0819:PsiDirectoryNode" />
               <item name="superadmin" type="462c0819:PsiDirectoryNode" />
               <item name="templates" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="kvmvdi" type="b2602c69:ProjectViewProjectNode" />
-              <item name="kvmvdi" type="462c0819:PsiDirectoryNode" />
-              <item name="superadmin" type="462c0819:PsiDirectoryNode" />
-              <item name="templates" type="462c0819:PsiDirectoryNode" />
-              <item name="kvmvdi" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
@@ -257,7 +331,7 @@
     </panes>
   </component>
   <component name="PropertiesComponent">
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../../Smart-class/SmartClass" />
   </component>
   <component name="PyConsoleOptionsProvider">
     <option name="myPythonConsoleState">
@@ -265,6 +339,12 @@
         <option name="useSoftWraps" value="true" />
       </console-settings>
     </option>
+  </component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="E:\Working\VNPT-cuoi_cung\kvmvdi\superadmin\static\vendors" />
+      <recent name="E:\Working\VNPT-cuoi_cung\kvmvdi\client\templates\client" />
+    </key>
   </component>
   <component name="RunDashboard">
     <option name="ruleStates">
@@ -293,15 +373,16 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="1361" y="-5" width="1930" height="1090" extended-state="6" />
+    <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.1406744" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.1406744" />
       <window_info anchor="bottom" id="TODO" order="6" />
       <window_info anchor="bottom" id="Event Log" order="8" sideWeight="0.50052685" side_tool="true" weight="0.32978722" />
       <window_info anchor="bottom" id="Run" order="2" />
       <window_info anchor="bottom" id="Version Control" order="7" weight="0.32978722" />
       <window_info anchor="bottom" id="Python Console" order="10" weight="0.34680852" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
-      <window_info active="true" anchor="bottom" id="Terminal" order="9" sideWeight="0.49947312" visible="true" weight="0.36276597" />
+      <window_info anchor="bottom" id="Terminal" order="9" sideWeight="0.49947312" visible="true" weight="0.36276597" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
@@ -312,65 +393,30 @@
       <window_info anchor="bottom" id="Find" order="1" />
       <window_info anchor="bottom" id="Message" order="0" />
     </layout>
+    <layout-to-restore>
+      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
+      <window_info anchor="bottom" id="Run" order="2" />
+      <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
+      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.1406744" />
+      <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
+      <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
+      <window_info anchor="bottom" id="TODO" order="6" />
+      <window_info anchor="bottom" id="Python Console" order="10" weight="0.34680852" />
+      <window_info anchor="bottom" id="Message" order="0" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
+      <window_info anchor="bottom" id="Terminal" order="9" sideWeight="0.49947312" visible="true" weight="0.36276597" />
+      <window_info anchor="bottom" id="Event Log" order="8" sideWeight="0.50052685" side_tool="true" weight="0.32978722" />
+      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
+      <window_info anchor="bottom" id="Version Control" order="7" weight="0.32978722" />
+      <window_info anchor="bottom" id="Find" order="1" />
+      <window_info id="Favorites" order="2" side_tool="true" />
+    </layout-to-restore>
   </component>
   <component name="VcsContentAnnotationSettings">
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/client/views.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="7788">
-          <caret line="354" column="289" selection-start-line="354" selection-start-column="268" selection-end-line="354" selection-end-column="289" />
-          <folding>
-            <element signature="e#0#64#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/superadmin/views.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="6050">
-          <caret line="275" column="10" selection-start-line="275" selection-start-column="10" selection-end-line="275" selection-end-column="10" />
-          <folding>
-            <element signature="e#0#64#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/kvmvdi/settings.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="3256">
-          <caret line="148" column="21" lean-forward="true" selection-start-line="148" selection-start-column="21" selection-end-line="148" selection-end-column="21" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/superadmin/consumers.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="880">
-          <caret line="40" column="43" selection-start-line="40" selection-start-column="43" selection-end-line="40" selection-end-column="43" />
-          <folding>
-            <element signature="e#120#181#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/superadmin/static/js/client/home_client.js">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/client/templates/client/instances.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1650">
-          <caret line="75" selection-start-line="75" selection-end-line="156" selection-end-column="6" />
-          <folding>
-            <element signature="n#div#2;n#!!top" />
-            <element signature="n#style#0;n#input#0;n#div#5;n#div#0;n#div#1;n#div#0;n#div#0;n#div#2;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#input#0;n#div#6;n#div#0;n#div#1;n#div#0;n#div#0;n#div#2;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#div#1;n#div#1;n#div#0;n#div#0;n#div#2;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#div#0;n#div#0;n#div#0;n#div#0;n#div#0;n#div#0;n#div#3;n#!!top" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/client/templates/client/show_instances.html">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
@@ -647,16 +693,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/client/views.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="144">
-          <caret line="359" column="37" lean-forward="true" selection-start-line="359" selection-start-column="37" selection-end-line="359" selection-end-column="37" />
-          <folding>
-            <element signature="e#0#64#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/superadmin/models.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="264">
@@ -674,16 +710,66 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/client/templates/client/base.1.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-6223" />
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/kvmvdi/settings.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="320">
-          <caret line="148" column="21" lean-forward="true" selection-start-line="145" selection-end-line="148" selection-end-column="21" />
+        <state relative-caret-position="124">
+          <caret line="119" column="53" lean-forward="true" selection-start-line="119" selection-start-column="53" selection-end-line="119" selection-end-column="53" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/client/templates/client/base3.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="264">
+          <caret line="39" column="55" selection-start-line="39" selection-start-column="50" selection-end-line="39" selection-end-column="55" />
+          <folding>
+            <element signature="n#style#0;n#div#0;n#div#0;n#div#3;n#div#0;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#div#2;n#div#0;n#body#0;n#html#0;n#!!top" />
+            <element signature="n#li#0;n#ul#0;n#div#0;n#div#0;n#div#0;n#div#2;n#div#0;n#body#0;n#html#0;n#!!top" />
+            <element signature="n#ul#0;n#ul#0;n#div#0;n#div#0;n#div#0;n#div#2;n#div#0;n#body#0;n#html#0;n#!!top" />
+            <element signature="n#li#1;n#ul#0;n#div#0;n#div#0;n#div#0;n#div#2;n#div#0;n#body#0;n#html#0;n#!!top" />
+            <element signature="n#ul#1;n#ul#0;n#div#0;n#div#0;n#div#0;n#div#2;n#div#0;n#body#0;n#html#0;n#!!top" />
+            <element signature="n#li#2;n#ul#0;n#div#0;n#div#0;n#div#0;n#div#2;n#div#0;n#body#0;n#html#0;n#!!top" />
+            <element signature="n#ul#2;n#ul#0;n#div#0;n#div#0;n#div#0;n#div#2;n#div#0;n#body#0;n#html#0;n#!!top" />
+            <element signature="n#div#1;n#div#2;n#div#0;n#body#0;n#html#0;n#!!top" />
+            <element signature="n#div#2;n#div#2;n#div#0;n#body#0;n#html#0;n#!!top" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/superadmin/static/css/portal/home.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="296">
+          <caret line="26" column="8" selection-start-line="26" selection-start-column="8" selection-end-line="26" selection-end-column="8" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/superadmin/static/css/portal/addinstances.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="22">
+          <caret line="1" selection-start-line="1" selection-end-line="1" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/client/templates/client/show_instances.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-66" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/superadmin/static/vendors/datatables.net-bs/js/dataTables.bootstrap.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="506">
+          <caret line="23" column="30" lean-forward="true" selection-start-line="23" selection-start-column="30" selection-end-line="23" selection-end-column="30" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/superadmin/views.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="339">
+        <state relative-caret-position="3177">
           <caret line="282" column="30" lean-forward="true" selection-start-line="282" selection-start-column="30" selection-end-line="282" selection-end-column="30" />
           <folding>
             <element signature="e#0#64#0" expanded="true" />
@@ -691,34 +777,88 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/superadmin/static/js/client/createVM_client.js">
+    <entry file="file://$PROJECT_DIR$/superadmin/static/css/portal/main.css">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="374">
-          <caret line="29" column="47" lean-forward="true" selection-start-line="29" selection-start-column="16" selection-end-line="29" selection-end-column="47" />
+        <state relative-caret-position="594">
+          <caret line="27" column="19" selection-start-line="27" selection-start-column="19" selection-end-line="27" selection-end-column="19" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/superadmin/static/images/portal/img/Instances.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/client/templates/client/home.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-858">
+          <caret line="15" column="44" lean-forward="true" selection-start-line="15" selection-start-column="44" selection-end-line="15" selection-end-column="44" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/client/templates/client/instances.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="240">
-          <caret line="164" column="34" selection-start-line="164" selection-start-column="34" selection-end-line="164" selection-end-column="34" />
+        <state relative-caret-position="-400">
+          <caret line="12" column="31" selection-start-line="12" selection-start-column="31" selection-end-line="12" selection-end-column="31" />
           <folding>
-            <element signature="n#div#2;n#!!top" />
-            <element signature="n#style#0;n#input#0;n#div#5;n#div#0;n#div#1;n#div#0;n#div#0;n#div#2;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#input#0;n#div#6;n#div#0;n#div#1;n#div#0;n#div#0;n#div#2;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#div#1;n#div#1;n#div#0;n#div#0;n#div#2;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#div#0;n#div#0;n#div#0;n#div#0;n#div#0;n#div#0;n#div#3;n#!!top" expanded="true" />
+            <element signature="e#1704#5211#0" />
+            <element signature="e#4301#4320#0" expanded="true" />
+            <element signature="e#4555#4574#0" expanded="true" />
+            <element signature="e#4973#4998#0" expanded="true" />
+            <element signature="e#5212#5753#0" />
+            <element signature="e#5510#5526#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/client/templates/client/show_instances.html">
-      <provider selected="true" editor-type-id="text-editor" />
+    <entry file="file://$PROJECT_DIR$/superadmin/static/js/portal/main.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="399">
+          <caret line="25" column="58" lean-forward="true" selection-start-line="25" selection-start-column="4" selection-end-line="25" selection-end-column="58" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/client/templates/client/base.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="264">
+          <caret line="18" selection-start-line="18" selection-end-line="18" />
+          <folding>
+            <element signature="n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" />
+            <element signature="n#style#0;n#div#0;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#ul#0;n#div#0;n#div#3;n#div#0;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#a#0;n#li#0;n#ul#0;n#div#0;n#div#0;n#div#0;n#div#1;n#div#0;n#body#0;n#html#0;n#!!top" />
+            <element signature="n#ul#0;n#ul#0;n#div#0;n#div#0;n#div#0;n#div#1;n#div#0;n#body#0;n#html#0;n#!!top" />
+            <element signature="n#li#1;n#ul#0;n#div#0;n#div#0;n#div#0;n#div#1;n#div#0;n#body#0;n#html#0;n#!!top" />
+            <element signature="n#li#2;n#ul#0;n#div#0;n#div#0;n#div#0;n#div#1;n#div#0;n#body#0;n#html#0;n#!!top" />
+            <element signature="n#ul#2;n#ul#0;n#div#0;n#div#0;n#div#0;n#div#1;n#div#0;n#body#0;n#html#0;n#!!top" />
+            <element signature="n#li#3;n#ul#0;n#div#0;n#div#0;n#div#0;n#div#1;n#div#0;n#body#0;n#html#0;n#!!top" />
+            <element signature="n#ul#3;n#ul#0;n#div#0;n#div#0;n#div#0;n#div#1;n#div#0;n#body#0;n#html#0;n#!!top" />
+            <element signature="n#div#1;n#body#0;n#html#0;n#!!top" />
+            <element signature="n#div#2;n#body#0;n#html#0;n#!!top" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/client/views.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="268">
+          <caret line="304" column="93" selection-start-line="304" selection-start-column="93" selection-end-line="304" selection-end-column="93" />
+          <folding>
+            <element signature="e#0#64#0" expanded="true" />
+            <element signature="e#18623#18882#0" />
+          </folding>
+        </state>
+      </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/superadmin/static/js/client/home_client.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="54">
-          <caret line="152" column="75" lean-forward="true" selection-start-line="152" selection-start-column="16" selection-end-line="152" selection-end-column="75" />
+        <state relative-caret-position="308">
+          <caret line="50" column="37" lean-forward="true" selection-start-line="50" selection-start-column="24" selection-end-line="50" selection-end-column="37" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/superadmin/static/js/client/createVM_client.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-363">
+          <caret line="27" column="33" selection-start-line="27" selection-start-column="33" selection-end-line="27" selection-end-column="33" />
         </state>
       </provider>
     </entry>

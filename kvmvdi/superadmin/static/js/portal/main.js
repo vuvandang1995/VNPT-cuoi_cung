@@ -19,3 +19,9 @@ $( ".add i" ).hover(
 $(document).ready(function(){
     $('[data-toggle="tooltip"]').tooltip();   
 });
+
+$("#nac").click(function(){
+    console.log('aha');
+    var pos = $('#nac1').outerWidth(true) + 'px';
+    var elem = $("#animation").animate({left:pos},"slow");
+});
