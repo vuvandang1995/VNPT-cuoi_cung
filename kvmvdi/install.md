@@ -15,3 +15,6 @@ export LC_ALL="en_US.UTF-8"
 export LC_CTYPE="en_US.UTF-8"
 sudo pip3 install -r requirements.txt
 ```
+
+### Lưu ý:
+- khi chỉnh sửa cụm OPS, nhớ sửa cả tên rule ở hàm `add_user_to_project` trong `keystoneclient.py`
