@@ -34,7 +34,7 @@
     width: 100%;
     height: -webkit-fill-available;
     position: absolute;
-    /* left: 212px; */
+    left: 212px;
     text-align: left;
 }
 .sort{

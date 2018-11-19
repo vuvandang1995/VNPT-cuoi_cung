@@ -4,7 +4,7 @@
 {% block content %}
 {% if user.is_authenticated %}
 <link href="{% static 'css/portal/showInstance.css' %}" rel="stylesheet" type="text/css">
-<div class="col-md-10 content">
+<div class="col-md-10 content" style="left: 0px;">
     <div class="col-md-10 home_conten">
         <div class="web_content">
             <div class="row show_instance">
@@ -41,19 +41,19 @@
 
             </div>
             <div class="row control">
-                <div class="col-md-2 control" data-toggle="modal" data-target="#snapshot" name="192.168.40.146_{{servername}}" id="snapshot_{{serverid}}" type="submit" data-backdrop="false">
+                <div class="col-md-2 control" data-toggle="modal" data-target="#snapshot" name="192.168.40.11_{{servername}}" id="snapshot_{{serverid}}" type="submit" data-backdrop="false">
                     <img src="{% static 'images/portal/img/snapshot.png' %}"> Snapshot
                 </div>
-                <div class="col-md-2">
-                    <img src="{% static 'images/portal/img/resetroot.png' %}"> Reset root Password
+                <div class="col-md-2 control" data-toggle="modal" data-target="#resetpass" name="192.168.40.11_{{servername}}" id="resetpass_{{serverid}}" type="submit">
+                    <img src="{% static 'images/portal/img/resetroot.png' %}"> Reset Password
                 </div>
-                <div class="col-md-2">
+                <div class="col-md-2 control" name="192.168.40.11_{{servername}}" id="hardreboot_{{serverid}}" type="submit">
                     <img src="{% static 'images/portal/img/hardreboot.png' %}"> Hard Reboot
                 </div>
-                <div class="col-md-2">
+                <div class="col-md-2 control" data-toggle="modal" data-target="#rebuild" name="192.168.40.11_{{servername}}" id="rebuild_{{serverid}}" type="submit">
                     <img src="{% static 'images/portal/img/rebuild.png' %}"> Rebuild
                 </div>
-                <div class="col-md-2">
+                <div class="col-md-2 control">
                     <img src="{% static 'images/portal/img/upgrade.png' %}"> Upgrade 
                 </div>
                 <div class="col-md-2">

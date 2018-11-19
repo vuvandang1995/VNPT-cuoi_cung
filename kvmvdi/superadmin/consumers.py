@@ -39,11 +39,12 @@ class adminConsumer(AsyncWebsocketConsumer):
     async def receive(self, text_data):
         text_data_json = json.loads(text_data)
         message = text_data_json['message']
-        if Ops.objects.get(ip=message):
-            thread = check_ping(host=message)
+        if Ops.objects.get(ip=message.split('abcxyz')[0]):
+            thread = check_ping(host=message.split('abcxyz')[0])
             if thread.run():
-                ops = Ops.objects.get(ip=message)
-                user = MyUser.objects.get(username='admin')
+                ops = Ops.objects.get(ip=message.split('abcxyz')[0])
+                user = MyUser.objects.get(username=message.split('abcxyz')[1])
+                # user = MyUser.objects.get(username='admin')
                 if user.token_id is None or not user.check_expired():
                     user.token_expired = timezone.datetime.now() + timezone.timedelta(hours=1)
                     user.token_id = getToken(ip=ops.ip, username=OPS_ADMIN, password=OPS_PASSWORD,
@@ -57,6 +58,7 @@ class adminConsumer(AsyncWebsocketConsumer):
                         'type': 'chat_message',
                         'message': connect.list_images(),
                         'network': connect.list_flavor(),
+                        'sshkey': connect.list_sshkey(),
                     }
                 )
         else:
@@ -73,10 +75,12 @@ class adminConsumer(AsyncWebsocketConsumer):
         message = event['message']
         try:
             network = event['network']
+            sshkey = event['sshkey']
             # Send message to WebSocket
             await self.send(text_data=json.dumps({
                 'message': message,
                 'network': network,
+                'sshkey': sshkey,
             }))
         except:
             # Send message to WebSocket

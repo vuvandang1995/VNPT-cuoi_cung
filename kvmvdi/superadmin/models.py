@@ -7,7 +7,7 @@ from django_cryptography.fields import encrypt
 
 
 class MyUserManager(BaseUserManager):
-    def create_user(self, email, username, fullname, key, password, money):
+    def create_user(self, email, username, fullname, key, password):
         """
         Creates and saves a User with the given email, date of
         birth and password.
@@ -20,14 +20,13 @@ class MyUserManager(BaseUserManager):
             username=username,
             fullname=fullname,
             key=key,
-            money=money
         )
 
         user.set_password(password)
         user.save(using=self._db)
         return user
     
-    def create_superuser(self, email, username, fullname, key, password, money):
+    def create_superuser(self, email, username, fullname, key, password):
         """
         Creates and saves a superuser with the given email, date of
         birth and password.
@@ -38,7 +37,6 @@ class MyUserManager(BaseUserManager):
             username=username,
             fullname=fullname,
             key=key,
-            money=money
         )
         user.is_admin = True
         user.save(using=self._db)
@@ -59,7 +57,7 @@ class MyUser(AbstractBaseUser):
     is_adminkvm = models.BooleanField(default=False)
     token_id = models.CharField(max_length=255, null=True)
     token_expired = models.DateTimeField(null=True)
-    money=models.CharField(max_length=100, default="10000")
+    money=models.CharField(max_length=100, default="0")
 
     objects = MyUserManager()
 

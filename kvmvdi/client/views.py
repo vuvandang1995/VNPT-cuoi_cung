@@ -91,7 +91,46 @@ def show_instances(request, serverid):
                 snapshotname = request.POST['snapshotname']
                 # print(request.POST)
                 connect.snapshot_vm(svid=svid, snapshotname=snapshotname)
-
+            elif 'resetpass' in request.POST:
+                ops = Ops.objects.get(ip=request.POST['ops'])
+                if not user.check_expired():
+                    user.token_expired = timezone.datetime.now() + timezone.timedelta(hours=1)
+                    user.token_id = getToken(ip=ops.ip, username=user.username, password=user.username,
+                                             project_name=user.username, user_domain_id='default',
+                                             project_domain_id='default')
+                    user.save()
+                connect = nova(ip=ops.ip, token_id=user.token_id, project_name=user.username,
+                               project_domain_id=ops.projectdomain)
+                svid = request.POST['resetpass']
+                newpass = request.POST['pass']
+                # print(request.POST)
+                connect.resetpass(svid=svid, newpass=newpass)
+            elif 'hardreboot' in request.POST:
+                print(request.POST)
+                ops = Ops.objects.get(ip=request.POST['ops'])
+                if not user.check_expired():
+                    user.token_expired = timezone.datetime.now() + timezone.timedelta(hours=1)
+                    user.token_id = getToken(ip=ops.ip, username=user.username, password=user.username,
+                                             project_name=user.username, user_domain_id='default',
+                                             project_domain_id='default')
+                    user.save()
+                connect = nova(ip=ops.ip, token_id=user.token_id, project_name=user.username,
+                               project_domain_id=ops.projectdomain)
+                svid = request.POST['hardreboot']
+                connect.reboot_vm_hard(svid=svid)
+            elif 'rebuild' in request.POST:
+                # print(request.POST)
+                ops = Ops.objects.get(ip=request.POST['ops'])
+                if not user.check_expired():
+                    user.token_expired = timezone.datetime.now() + timezone.timedelta(hours=1)
+                    user.token_id = getToken(ip=ops.ip, username=user.username, password=user.username,
+                                             project_name=user.username, user_domain_id='default',
+                                             project_domain_id='default')
+                    user.save()
+                connect = nova(ip=ops.ip, token_id=user.token_id, project_name=user.username,
+                               project_domain_id=ops.projectdomain)
+                svid = request.POST['rebuild']
+                connect.rebuild(svid=svid, image=connect.find_image(request.POST['image']), disk_config=request.POST['disk_partition'])
         return render(request, 'client/show_instances.html',{'username': mark_safe(json.dumps(user.username)),
                                                                 'servername': sv._info['name'],
                                                                 'serverid': sv._info['id'],
@@ -121,11 +160,19 @@ def instances(request):
                         user.save()
                     connect = nova(ip=ops.ip, token_id=user.token_id, project_name=user.username,
                                    project_domain_id=ops.projectdomain)
-                    print(request.POST)
+                    # print(request.POST)
                     svname = request.POST['svname']
                     # description = request.POST['description']
                     image = request.POST['image']
                     flavor = request.POST['flavor']
+                    try:
+                        rootpass = request.POST['rootpass']
+                    except:
+                        rootpass = None
+                    try:
+                        sshkey = request.POST['sshkey']
+                    except:
+                        sshkey = None
                     # ram = int(float(request.POST['ram']) * 1024)
                     # vcpus = int(request.POST['vcpus'])
                     # disk = int(request.POST['disk'])
@@ -146,12 +193,19 @@ def instances(request):
 
                     price = ((int(flavor.split(',')[0])/1024) * 3 + int(flavor.split(',')[1]) * 2 + int(flavor.split(',')[2])) * count
                     if price <= float(user.money):
-                        user.money = str(float(user.money) - float(price))
-                        user.save()
                         fl = connect.find_flavor(ram=int(flavor.split(',')[0]), vcpus=int(flavor.split(',')[1]), disk=int(flavor.split(',')[2]))
                         im = connect.find_image(image)
-                        net = connect.find_network('public')
-                        connect.createVM(svname=svname, flavor=fl, image=im, network_id=net, max_count=count)
+                        # net = connect.find_network('public')
+                        net = connect.find_network('provider')
+                        connect.create_volume(name=svname, size=flavor.split(',')[2], imageRef=im.id, volume_type=request.POST['type_disk'])
+                        check = False
+                        while check == False:
+                            if connect.check_volume(name=svname) == 'available':
+                                check = True
+                                volume_id = connect.find_volume(name=svname).id
+                        user.money = str(float(user.money) - float(price))
+                        user.save()
+                        connect.createVM(svname=svname, flavor=fl, image=im, network_id=net, volume_id=volume_id, key_name=sshkey, admin_pass=rootpass, max_count=count)
                         Server.objects.create(project=user.username, description='test', name=svname, ram=flavor.split(',')[0], vcpus=flavor.split(',')[1], disk=flavor.split(',')[2], owner=user)
                         Oders.objects.create(service='cloud', price=price, created=timezone.now(), owner=user, server=Server.objects.get(name=svname))
                     else:
@@ -249,6 +303,21 @@ def instances(request):
                 connect.backup_vm(svid=svid, backup_name=backup_name, backup_type=backup_type, rotation=rotation)
                 # server = Server.objects.get(name=request.POST['svname'])
                 # server.delete()
+            elif 'sshkeyname' in request.POST:
+                ops = Ops.objects.get(ip=request.POST['ops'])
+                if not user.check_expired():
+                    user.token_expired = timezone.datetime.now() + timezone.timedelta(hours=1)
+                    user.token_id = getToken(ip=ops.ip, username=user.username, password=user.username,
+                                             project_name=user.username, user_domain_id='default',
+                                             project_domain_id='default')
+                    user.save()
+                connect = nova(ip=ops.ip, token_id=user.token_id, project_name=user.username,
+                               project_domain_id=ops.projectdomain)
+                sshkeyname = request.POST['sshkeyname']
+                # print(request.POST)
+                connect.create_sshkey(sshkeyname=sshkeyname)
+                # server = Server.objects.get(name=request.POST['svname'])
+                # server.delete()
         return render(request, 'client/instances.html',{'username': mark_safe(json.dumps(user.username))})
     else:
         return HttpResponseRedirect('/')
@@ -270,6 +339,7 @@ def home_data(request, ops_ip):
             thread = check_ping(host=ops_ip)
             if thread.run():
                 ops = Ops.objects.get(ip=ops_ip)
+                print(user.check_expired())
                 if not user.check_expired():
                     user.token_expired = timezone.datetime.now() + timezone.timedelta(hours=1)
                     user.token_id = getToken(ip=ops.ip, username=user.username, password=user.username,
@@ -320,7 +390,7 @@ def home_data(request, ops_ip):
                                         <a data-batch-action="true" class="data-table-action console" data-title="console" id="'''+item.get_console_url("novnc")["console"]["url"]+'''" type="submit"> Console Instance</a>
                                     </li>
                                     <li>
-                                        <a data-batch-action="true" class="data-table-action  control" name="'''+ops_ip+'''_'''+item._info['name']+'''" id="reboot_'''+item._info['id']+'''" type="submit"> Reboot Instance</a>
+                                        <a data-batch-action="true" class="data-table-action control" name="'''+ops_ip+'''_'''+item._info['name']+'''" id="reboot_'''+item._info['id']+'''" type="submit"> Reboot Instance</a>
                                     </li>
                                     <li>
                                         <a data-batch-action="true" class="data-table-action control" name="'''+ops_ip+'''_'''+item._info['name']+'''" id="stop_'''+item._info['id']+'''" type="submit"> Stop Instance</a>

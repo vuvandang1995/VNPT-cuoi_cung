@@ -241,60 +241,138 @@
             {% csrf_token %}
         </div>
         <div class="modal" id="snapshot">
-                    <div class="modal-dialog modal-lg">
-                        <div class="modal-content ">
-                                <div class="modal-header">
-                                    <h4 class="modal-title">Create Snapshot</h4>
-                                </div>
-                                <div class="modal-body form-group">
-                                    <input type="hidden" value="" name="svip">
-                                    <input type="hidden" value="" name="project">
-                                    <label><b>Snapshot Name</b></label>
-                                    <input class="form-control" type="text" placeholder="Snapshot Name" name="snapshotname" required>
-
-                                    <div><font id="invalid-msg" color="red" size="5"></font></div>
-
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="submit" class="btn btn-primary" value="OK" id="snapshot_submit" >Create</button>
-                                    <button type="button" class="btn btn-default" data-dismiss="modal" id="close_modal_snapshot">Close</button>
-                                </div>
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content ">
+                        <div class="modal-header">
+                            <h4 class="modal-title">Create Snapshot</h4>
                         </div>
-                    </div>
+                        <div class="modal-body form-group">
+                            <input type="hidden" value="" name="svip">
+                            <input type="hidden" value="" name="project">
+                            <label><b>Snapshot Name</b></label>
+                            <input class="form-control" type="text" placeholder="Snapshot Name" name="snapshotname" required>
+
+                            <div><font id="invalid-msg" color="red" size="5"></font></div>
+
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-primary" value="OK" id="snapshot_submit" >Create</button>
+                            <button type="button" class="btn btn-default" data-dismiss="modal" id="close_modal_snapshot">Close</button>
+                        </div>
                 </div>
+            </div>
+        </div>
+
+        <div class="modal" id="sshkey">
+            <div class="modal-dialog modal-sm">
+                <div class="modal-content ">
+                        <div class="modal-header">
+                            <h4 class="modal-title">Create key pair</h4>
+                        </div>
+                        <div class="modal-body form-group">
+                            <input type="hidden" value="" name="svip">
+                            <input type="hidden" value="" name="project">
+                            <label><b>Key pair name</b></label>
+                            <input class="form-control" type="text" placeholder="key pair Name" name="sshkeyname" required>
+
+                            <div><font id="invalid-msg" color="red" size="5"></font></div>
+
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-primary" value="OK" id="sshkey_submit" >Create</button>
+                            <button type="button" class="btn btn-default" data-dismiss="modal" id="close_modal_sshkey">Close</button>
+                        </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal" id="resetpass">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content ">
+                        <div class="modal-header">
+                            <h4 class="modal-title">Update the admin password</h4>
+                        </div>
+                        <div class="modal-body form-group">
+                            <input type="hidden" value="" name="svip">
+                            <input type="hidden" value="" name="project">
+                            <label><b>New password</b></label>
+                            <input class="form-control" type="password" placeholder="New password" name="resetpass" required>
+
+                            <div><font id="invalid-msg" color="red" size="5"></font></div>
+
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-primary" value="OK" id="resetpass_submit" >Create</button>
+                            <button type="button" class="btn btn-default" data-dismiss="modal" id="close_modal_resetpass">Close</button>
+                        </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal" id="rebuild">
+            <div class="modal-dialog modal-sm">
+                <div class="modal-content ">
+                        <div class="modal-header">
+                            <h4 class="modal-title">Rebuild Instance</h4>
+                        </div>
+                        <div class="modal-body form-group">
+                            <input type="hidden" value="" name="svip">
+                            <input type="hidden" value="" name="project">
+                            <label><b>Select image</b></label><br>
+                                <select name="image" class="form-control" id="mySelect_image_rebuild">
+
+                                </select>
+
+                            <br>
+                            <label><b>Disk partition</b></label>
+                                <select name="mySelect_type" class="form-control" id="mySelect_type">
+                                    <option value="AUTO">Auto</option>
+                                    <option value="MANUAL">Manual</option>
+                                </select>
+
+                            <div><font id="invalid-msg" color="red" size="5"></font></div>
+
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-primary" value="OK" id="rebuild_submit" >Submit</button>
+                            <button type="button" class="btn btn-default" data-dismiss="modal" id="close_modal_rebuild">Close</button>
+                        </div>
+                </div>
+            </div>
+        </div>
         <div class="modal" id="backup">
-                    <div class="modal-dialog modal-lg">
-                        <div class="modal-content ">
-                                <div class="modal-header">
-                                    <h4 class="modal-title">Backup name</h4>
-                                </div>
-                                <div class="modal-body form-group">
-                                    <input type="hidden" value="" name="svip">
-                                    <input type="hidden" value="" name="project">
-                                    <label><b>Backup Name</b></label>
-                                    <input class="form-control" type="text" placeholder="Backup Name" name="backupname" required>
-                                    <br>
-                                    <label><b>Backup Type</b></label>
-                                    <select name="backup_type" class="form-control" id="mySelect_backup_type">
-                                        <option value="daily">Daily</option>
-                                        <option value="weekly">Weekly</option>
-                                        <option value="monthly">Monthly</option>
-                                    </select>
-                                    <br>
-
-                                    <label><b>Count</b></label>
-                                    <input type="number" name="rotation" min="1" max="50" required value="1" style="width: 60px">
-
-                                    <div><font id="invalid-msg" color="red" size="5"></font></div>
-
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="submit" class="btn btn-primary" value="OK" id="backup_submit" >Create</button>
-                                    <button type="button" class="btn btn-default" data-dismiss="modal" id="close_modal_backup">Close</button>
-                                </div>
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content ">
+                        <div class="modal-header">
+                            <h4 class="modal-title">Backup name</h4>
                         </div>
-                    </div>
+                        <div class="modal-body form-group">
+                            <input type="hidden" value="" name="svip">
+                            <input type="hidden" value="" name="project">
+                            <label><b>Backup Name</b></label>
+                            <input class="form-control" type="text" placeholder="Backup Name" name="backupname" required>
+                            <br>
+                            <label><b>Backup Type</b></label>
+                            <select name="backup_type" class="form-control" id="mySelect_backup_type">
+                                <option value="daily">Daily</option>
+                                <option value="weekly">Weekly</option>
+                                <option value="monthly">Monthly</option>
+                            </select>
+                            <br>
+
+                            <label><b>Count</b></label>
+                            <input type="number" name="rotation" min="1" max="50" required value="1" style="width: 60px">
+
+                            <div><font id="invalid-msg" color="red" size="5"></font></div>
+
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-primary" value="OK" id="backup_submit" >Create</button>
+                            <button type="button" class="btn btn-default" data-dismiss="modal" id="close_modal_backup">Close</button>
+                        </div>
                 </div>
+            </div>
+        </div>
     </body>
 </html>
 <script src="{% static 'js/portal/main.js' %}" type="text/javascript">
@@ -314,29 +392,96 @@
         var data = JSON.parse(e.data);
         var message = data['message'];
         var network = data['network'];
+        var sshkey = data['sshkey'];
         if (message[0] == 'image_list'){
-            $('#mySelect_image').find('option').remove();
+            $('.image_select').find('label').remove();
+            var i;
+            for (i=1; i<message.length; i++){
+                var element = `<label>
+                                    <input type="radio" name="image" value="`+message[i]+`">
+                                    <div class="all">
+                                    <img src="{% static 'images/portal/img/CentOS_logo.png' %}" alt="">
+                                    
+                                    <span class="create_checkbox_line2">
+                                        `+message[i]+`
+                                    </span>
+                                    </div>
+                                </label>`;
+                /*var element = '<option value="'+message[i]+'">'+message[i]+'</option>';*/
+                $(".image_select").append(element);
+            }
+
+            $('#mySelect_image_rebuild').find('option').remove();
             var i;
             for (i=1; i<message.length; i++){
                 var element = '<option value="'+message[i]+'">'+message[i]+'</option>';
-                $("#mySelect_image").append(element);
+                $("#mySelect_image_rebuild").append(element);
             }
         }
-        if (network){
-            $('#mySelect').find('option').remove();
+
+        if (sshkey){
+            $('.sshkey_select').find('label').remove();
             var i;
-            for (i=1; i<network.length; i++){
-                var conten = 'Ram: '+network[i][0]+'Mb - VCPUs: '+network[i][1]+' - Disk: '+network[i][2]+'Gb';
-                var element = '<option value="'+network[i]+'">'+conten+'</option>';
-                $("#mySelect").append(element);
+            for (i=1; i<sshkey.length; i++){
+                var element = `<label>
+                                    <input type="radio" name="image" value="`+sshkey[i]+`">
+                                    <div class="all">
+                                    <img src="{% static 'images/portal/img/baseline-vpn_key-24px.png' %}" alt="">
+                                    
+                                    <span class="create_checkbox_line2">
+                                        `+sshkey[i]+`
+                                    </span>
+                                    </div>
+                                </label>`;
+                /*var element = '<option value="'+message[i]+'">'+message[i]+'</option>';*/
+                $(".sshkey_select").append(element);
             }
-            var flavor = document.getElementById("mySelect").value;
+        }
+        
+        
+        if (network){
+            $('.flavor_select').find('label').remove();
+            var i;
+            for (i=0; i<network.length; i++){
+                var conten = 'Ram: '+network[i][0]+'Mb - VCPUs: '+network[i][1]+' - Disk: '+network[i][2]+'Gb';
+                var element = `<label>
+                                        <input type="radio" name="image" value="`+network[i]+`">
+                                        <div class="all flavor_">
+                                        <img src="{% static 'images/portal/img/CentOS_logo.png' %}" alt="">
+                                        <span class="create_checkbox_line2">
+                                            `+network[i][0]+` MB memory
+                                            <div class="deploylocationsoldoutmsg">
+                                                `+network[i][1]+` vitrual CPUs
+                                            </div>
+                                            <div class="deploylocationsoldoutmsg">
+                                                `+network[i][2]+` GB disk
+                                            </div>
+                                        </span>
+                                        </div>
+                                    </label>`
+                /*var element = '<option value="'+network[i]+'">'+conten+'</option>';*/
+                $(".flavor_select").append(element);
+            }
+            /*var flavor = document.getElementById("mySelect").value;
+            var ram = flavor.split(',')[0];
+            var vcpus = flavor.split(',')[1];
+            var disk = flavor.split(',')[2];
+            var count = $("body input[name=count]").val();
+            var price_new = ((parseInt(ram)/1024) * 3 + parseInt(vcpus) * 2 + parseInt(disk) * 1) * parseInt(count);*/
+            $("body input[name=price]").val(0);
+        }
+
+
+        $('body .flavor_').click(function(){
+            var flavor = $(this).prev().val();
             var ram = flavor.split(',')[0];
             var vcpus = flavor.split(',')[1];
             var disk = flavor.split(',')[2];
             var count = $("body input[name=count]").val();
             var price_new = ((parseInt(ram)/1024) * 3 + parseInt(vcpus) * 2 + parseInt(disk) * 1) * parseInt(count);
             $("body input[name=price]").val(price_new);
-        }
+        });
     };
+
+    
 </script>

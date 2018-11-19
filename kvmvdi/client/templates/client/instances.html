@@ -1,7 +1,7 @@
 {% extends "client/base.html" %}
 {% load staticfiles %}
 {% block css %}
-    <link href="{% static 'css/portal/addinstances.css' %}" rel="stylesheet" type="text/css">
+    <link href="{% static 'css/portal/createinstance.css' %}" rel="stylesheet" type="text/css">
 {% endblock %}
 {% block here %}
     <i class="fa fa-chevron-right">
@@ -36,14 +36,14 @@
         </div>
     </div>
     <div class="add">
-        <img src="img/arrow.png" alt="">
+        <img src="{% static 'images/portal/img/arrow.png' %}" alt="">
     </div>
-    <div class="add" data-toggle="modal" data-target="#id02" data-placement="left" title="Create Instances!" data-title="192.168.40.146" data-project="{{user.username}}" data-backdrop="false" id="create_vm">
+    <div class="add" data-toggle="modal" data-target="#id02" data-placement="left" title="Create Instances!" data-title="192.168.40.11" data-project="{{user.username}}" data-backdrop="false" id="create_vm">
         <i class="fa fa-plus"></i>
     </div>
 </div>
 
-<div class="modal" id="id02">
+{% comment %} <div class="modal" id="id02">
     <div class="modal-dialog modal-lg">
         <div class="modal-content ">
             <div class="modal-header">
@@ -68,39 +68,6 @@
                             </select>
                         </div>
                     </div>
-                    {% comment %} <div class="row">
-                        <div class="col-md-6 select_option">
-                            <select name="">
-                                <option value="">
-                                    Network Selection *
-                                </option>
-                            </select>
-                        </div>
-                        <div class="col-md-6 ">
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-6 select_option">
-                            <select name="">
-                                <option value="">
-                                    SSH Key
-                                </option>
-                            </select>
-                        </div>
-                        <div class="col-md-6 select_option">
-                            ADD NEW KEY
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-6 rootpass">
-                            <input type="text" name="" placeholder="Root password *">
-                        </div>
-                        <div class="col-md-6 select_option">
-                            <i class="fa fa-eye">
-                            </i>
-                        </div>
-                    </div>{% endcomment %}
-
                     <div class="row">
                     Price:
                         <input type="text" name="price" style="width: 60px" disabled> USD/MONTH
@@ -124,7 +91,185 @@
             </div>
         </div>
     </div>
+</div> {% endcomment %}
+
+
+<div class="modal" id="id02">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content ">
+            <div class="modal-header">
+                <h4 class="modal-title">Create a new Instance</h4>
+            </div>
+            <div class="modal-body form-group">
+                <div class="block1290">
+                    <div class="create_block" style="margin-top:10px;">
+                        <div class="create_block_step">
+                            1
+                        </div>
+                        <h3 style="font-size:19px;">
+                            Instance Name
+                        </h3>
+                        <input name="svname" type="text" style="width: 90%;height: 40px;">
+                        
+                    </div>
+                    <div class="create_block" style="margin-top:10px;">
+                        <div class="create_block_step">
+                            2
+                        </div>
+                        <h3 style="font-size:19px;">
+                            Server Loaction
+                        </h3>
+                        <input class="create_checkbox" id="DCID25" name="DCID" onclick="updateDCIDSelected();" type="radio" value="25">
+                            <label for="DCID25">
+                                <span class="create_checkbox_icon fonticon_jp" style="width:54px; margin-top:-18px;">
+                                </span>
+                                <span class="create_checkbox_checkmark">
+                                </span>
+                                <span class="create_checkbox_line1">
+                                    Hà Nội
+                                </span>
+                                <span class="create_checkbox_line2">
+                                    Việt Nam
+                                </span>
+                            </label>
+                        
+                        <input class="create_checkbox" id="DCID25" name="DCID" onclick="updateDCIDSelected();" type="radio" value="25">
+                            <label for="DCID25">
+                                <span class="create_checkbox_icon fonticon_jp" style="width:54px; margin-top:-18px;">
+                                </span>
+                                <span class="create_checkbox_checkmark">
+                                </span>
+                                <span class="create_checkbox_line1">
+                                    Hồ Chí Minh
+                                </span>
+                                <span class="create_checkbox_line2">
+                                    Việt Nam
+                                </span>
+                            </label>
+                        
+                    </div>
+                    <div class="create_block" style="margin-top:10px;">
+                        <div class="create_block_step">
+                            3
+                        </div>
+                        <h3 style="font-size:19px;">
+                            Select boot Source
+                        </h3>
+                        <form class="image_select">
+                            
+                        </form>
+
+                        
+                    </div>
+                    <div class="create_block" style="margin-top:10px;">
+                        <div class="create_block_step">
+                            4
+                        </div>
+                        <h3 style="font-size:19px;">
+                            Select a configuration
+                        </h3>
+                        <form class="flavor_select">
+                            
+                        </form>
+                        
+                        
+                    </div>
+                    <div class="create_block" style="margin-top:10px;">
+                        <div class="create_block_step">
+                            5
+                        </div>
+                        <h3 style="font-size:19px;">
+                            Select type disk
+                        </h3>
+                        <select class="js-example-basic-single" name="state" id="type_disk">
+                            <option value="ceph-ssd">SSD</option>
+                            <option value="ceph-hdd">HDD</option>
+                        </select>
+                        
+                    </div>
+                    {% comment %} <div class="create_block" style="margin-top:10px;">
+                        <div class="create_block_step">
+                            5
+                        </div>
+                        <h3 style="font-size:19px;">
+                            Network selection   
+                        </h3>
+                        <select class="js-example-basic-single" name="state">
+                            
+                        </select>
+                    </div> {% endcomment %}
+                    <div class="create_block" style="margin-top:10px;">
+                        <div class="create_block_step">
+                            6
+                        </div>
+                        <h3 style="font-size:19px;">
+                                SSH key   
+                        </h3>
+
+                        <form class="sshkey_select">
+                            
+                        </form>
+                        
+                        <span class="create_linkbox control" data-toggle="modal" data-target="#sshkey" name="192.168.40.11_servername" id="sshkey_serverid" type="submit">
+                            <span class="create_checkbox_icon fonticon_add"> <img src="{% static 'images/portal/img/baseline-add_circle_outline-24px.png' %}" alt="">
+                            </span>
+                            <span class="create_linkbox_line1">
+                                Add New
+                            </span>
+                        </span>
+                    </div>
+
+                    <div class="create_block" style="margin-top:10px;">
+                        <div class="create_block_step">
+                            7  
+                        </div>
+                        <h3 style="font-size:19px;">
+                            Root Password   
+                        </h3>
+                        <span>
+                            <input type="password" name="rootpass" style="width: 90%;height: 40px;" class="rootpass">
+                            <img src="{% static 'images/portal/img/Path69.png' %}" alt="" class="seepass">
+                        </span>
+                    </div>
+
+                    <div class="create_block" style="margin-top:10px;">
+                        <div class="create_block_step">
+                            8
+                        </div>
+                        <h3 style="font-size:19px;">
+                            Instance Count:
+                        </h3>
+                        <span>
+                            <input type="number" class="price rootpass" name="count" min="1" max="50" style="width: 90%;height: 40px;" required value="1" style="width: 60px">
+                        </span>
+                    </div>
+
+                    <div class="create_block" style="margin-top:10px;">
+                        <div class="create_block_step">
+                            9
+                        </div>
+                        <h3 style="font-size:19px;">
+                            Price:
+                        </h3>
+                        <span>
+                            <input type="text" name="price" class="price rootpass" style="width: 20%;height: 40px;" disabled required value="1" style="width: 60px"> USD/MONTH
+                        </span>
+                    </div>
+                    <div class="create_block" style="margin-top:10px; text-align:  center;">
+                        <button type="submit" class="btn btn-primary" value="OK" id="i_submit" >Create</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal" id="close_modal">Close</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
 </div>
+
+
+
 <div class="modal" id="processing">
   <div  class="modal-dialog">
     <!-- Modal content-->
@@ -145,8 +290,10 @@
 {% endblock content %}
 {% block js %}
 <script src="{% static 'js/base-js/datatables.min.js' %}"></script>
+<script src="{% static 'js/portal/createinstance.js' %}"></script>
 <script src="{% static 'js/client/home_client.js' %}"></script>
 <script src="{% static 'js/client/createVM_client.js' %}"></script>
 <link href='https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.min.css' rel='stylesheet' type='text/css'>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js"></script>
+
 {% endblock %}
