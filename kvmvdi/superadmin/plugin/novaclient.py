@@ -52,13 +52,13 @@ class nova():
 
     def createVM(self, svname, flavor, image, network_id, max_count, volume_id, key_name, admin_pass):
         # self.nova.servers.create(svname, flavor=flavor, image=image, nics = [{'net-id':network_id}], max_count=max_count, availability_zone='nova:compute2')
-        self.nova.servers.create(svname, flavor=flavor, image=image, nics = [{'net-id':network_id}], block_device_mapping = {'vda': volume_id}, key_name=key_name, admin_pass=admin_pass, max_count=max_count)
+        return self.nova.servers.create(svname, flavor=flavor, image=image, nics = [{'net-id':network_id}], block_device_mapping = {'vda': volume_id}, key_name=key_name, admin_pass=admin_pass, max_count=max_count)
 
     def createFlavor(self, svname, ram, vcpus, disk):
         self.nova.flavors.create(svname, ram, vcpus, disk, flavorid='auto', ephemeral=0, swap=0, rxtx_factor=1.0, is_public=True, description=None)
 
     def create_sshkey(self, sshkeyname):
-        self.nova.keypairs.create(name=sshkeyname)
+        return self.nova.keypairs.create(name=sshkeyname)
 
     def create_volume(self, name, imageRef, size, volume_type):
         if int(size) > 0:

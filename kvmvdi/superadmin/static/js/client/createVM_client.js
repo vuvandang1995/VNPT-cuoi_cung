@@ -56,7 +56,7 @@ $(document).ready(function(){
                     setTimeout(function(){
                         $('.list_vm_client').DataTable().ajax.reload(null,false);
                         swal.close();
-                    }, 10000);
+                    }, 0);
                 }
              },
         });

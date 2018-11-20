@@ -26,17 +26,23 @@ from superadmin.plugin.get_tokens import getToken
 
 from django.utils import timezone
 from kvmvdi.settings import OPS_ADMIN, OPS_IP, OPS_PASSWORD, OPS_PROJECT
+import time
 
                 
 class EmailThread(threading.Thread):
     def __init__(self, email):
         threading.Thread.__init__(self)
-        self._stop_event = threading.Event()
+        # self._stop_event = threading.Event()
         self.email = email
 
     def run(self):
-        self.email.send()
-        
+        try:
+            self.email.send()
+        except Exception as e:
+            print(e)
+        else:
+            print('ok')
+
 class check_ping(threading.Thread):
     def __init__(self, host):
         threading.Thread.__init__(self)
@@ -205,9 +211,29 @@ def instances(request):
                                 volume_id = connect.find_volume(name=svname).id
                         user.money = str(float(user.money) - float(price))
                         user.save()
-                        connect.createVM(svname=svname, flavor=fl, image=im, network_id=net, volume_id=volume_id, key_name=sshkey, admin_pass=rootpass, max_count=count)
+                        serverVM = connect.createVM(svname=svname, flavor=fl, image=im, network_id=net, volume_id=volume_id, key_name=sshkey, admin_pass=rootpass, max_count=count)
                         Server.objects.create(project=user.username, description='test', name=svname, ram=flavor.split(',')[0], vcpus=flavor.split(',')[1], disk=flavor.split(',')[2], owner=user)
                         Oders.objects.create(service='cloud', price=price, created=timezone.now(), owner=user, server=Server.objects.get(name=svname))
+                        time.sleep(5)
+                        while (1):
+                            if connect.get_server(serverVM.id).status != 'BUILD':
+                                break
+                            else:
+                                time.sleep(2)
+                        mail_subject = 'Thông tin server của bạn là: '
+                        message = render_to_string('client/send_info_server.html', {
+                            'user': user,
+                            'IP': connect.get_server(serverVM.id).networks['provider'][0]
+                            # 'IP': 'fasdfasdfasdfew'
+                        })
+                        to_email = user.email
+                        email = EmailMessage(
+                                    mail_subject, message, to=[to_email]
+                        )
+                        # print(to_email)
+                        # email.send()
+                        thread = EmailThread(email)
+                        thread.start()
                     else:
                         return HttpResponse("Vui long nap them tien vao tai khoan!")
                 else:
@@ -315,7 +341,21 @@ def instances(request):
                                project_domain_id=ops.projectdomain)
                 sshkeyname = request.POST['sshkeyname']
                 # print(request.POST)
-                connect.create_sshkey(sshkeyname=sshkeyname)
+                key = connect.create_sshkey(sshkeyname=sshkeyname)
+
+                mail_subject = 'Thông tin key pair: '+sshkeyname
+                message = render_to_string('client/send_info_key.html', {
+                    'user': user,
+                    'private_key': key.private_key,
+                    'public_key': key.public_key,
+                    'key_name': key.name
+                })
+                to_email = user.email
+                email = EmailMessage(
+                            mail_subject, message, to=[to_email]
+                )
+                thread = EmailThread(email)
+                thread.start()
                 # server = Server.objects.get(name=request.POST['svname'])
                 # server.delete()
         return render(request, 'client/instances.html',{'username': mark_safe(json.dumps(user.username))})
@@ -339,7 +379,7 @@ def home_data(request, ops_ip):
             thread = check_ping(host=ops_ip)
             if thread.run():
                 ops = Ops.objects.get(ip=ops_ip)
-                print(user.check_expired())
+                # print(user.check_expired())
                 if not user.check_expired():
                     user.token_expired = timezone.datetime.now() + timezone.timedelta(hours=1)
                     user.token_id = getToken(ip=ops.ip, username=user.username, password=user.username,
@@ -351,7 +391,7 @@ def home_data(request, ops_ip):
                 # print(connect.find_hypervisor('2'))
                 data = []
                 for item in connect.list_server():
-                    # print(item._info)
+                    # print(item.status)
                     # print(dir(item))
                     try:
                         name = '''<a href="/client/show_instances/'''+item._info['id']+'''"><p>'''+item._info['name']+'''</p></a>'''
@@ -439,18 +479,9 @@ def home_data(request, ops_ip):
                                 </ul>
                             <div>
                             '''
-                    # elif item._info['status'] == 'SHUTOFF':
-                    #     status = '<span class="label label-danger">'+item._info['status']+'</span>'
-                    #     actions = '''
-                    #         <select id='social' style='width: 200px;'>
-                    #             <option value='facebook'>Facebook</option>
-                    #             <option value='twitter'>Twitter</option>
-                    #             <option value='linkedin'>Linkedin</option>
-                    #             <option value='google_plus'>Google Plus</option>
-                    #             <option value='vimeo'>Vimeo</option>
-                    #         </select>
-                    #         '''
-            
+                    else:
+                        status = '<span class="label label-danger">'+item._info['status']+'</span>'
+                        actions = ''
                             
                     created = '<p>'+item._info['created']+'</p>'
                     
