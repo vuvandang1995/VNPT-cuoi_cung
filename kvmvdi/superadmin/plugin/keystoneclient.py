@@ -1,5 +1,6 @@
 from superadmin.plugin import opsutils
 from keystoneclient.v3 import client
+from kvmvdi.settings import RULE_USER, RULE_ADMIN
 
 class keystone(opsutils.Base):
     def __init__ (self, ip, username, password, project_name, user_domain_id, project_domain_id):
@@ -16,8 +17,7 @@ class keystone(opsutils.Base):
     def add_user_to_project(self, user, project):
         self.user = self.keystone.users.find(name=user)
         self.project = self.keystone.projects.find(name=project)
-        # self.role = self.keystone.roles.find(name='_member_')
-        self.role = self.keystone.roles.find(name='user')
+        self.role = self.keystone.roles.find(name=RULE_USER)
         self.keystone.roles.grant(self.role, user=self.user, project=self.project)
 
 

@@ -38,7 +38,7 @@
     <div class="add">
         <img src="{% static 'images/portal/img/arrow.png' %}" alt="">
     </div>
-    <div class="add" data-toggle="modal" data-target="#id02" data-placement="left" title="Create Instances!" data-title="192.168.40.11" data-project="{{user.username}}" data-backdrop="false" id="create_vm">
+    <div class="add" data-toggle="modal" data-target="#id02" data-placement="left" title="Create Instances!" data-title="{{OPS_IP}}" data-project="{{user.username}}" data-backdrop="false" id="create_vm">
         <i class="fa fa-plus"></i>
     </div>
 </div>
@@ -182,8 +182,8 @@
                             Select type disk
                         </h3>
                         <select class="js-example-basic-single" name="state" id="type_disk">
-                            <option value="ceph-ssd">SSD</option>
-                            <option value="ceph-hdd">HDD</option>
+                            <option value="{{DISK_SSD}}">SSD</option>
+                            <option value="{{DISK_HDD}}">HDD</option>
                         </select>
                         
                     </div>
@@ -210,7 +210,7 @@
                             
                         </form>
                         
-                        <span class="create_linkbox control" data-toggle="modal" data-target="#sshkey" name="192.168.40.11_servername" id="sshkey_serverid" type="submit">
+                        <span class="create_linkbox control" data-toggle="modal" data-target="#sshkey" name="{{OPS_IP}}_servername" id="sshkey_serverid" type="submit">
                             <span class="create_checkbox_icon fonticon_add"> <img src="{% static 'images/portal/img/baseline-add_circle_outline-24px.png' %}" alt="">
                             </span>
                             <span class="create_linkbox_line1">

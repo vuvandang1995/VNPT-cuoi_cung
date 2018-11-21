@@ -25,7 +25,7 @@ from superadmin.plugin.keystoneclient import keystone
 from superadmin.plugin.get_tokens import getToken
 
 from django.utils import timezone
-from kvmvdi.settings import OPS_ADMIN, OPS_IP, OPS_PASSWORD, OPS_PROJECT
+from kvmvdi.settings import OPS_ADMIN, OPS_IP, OPS_PASSWORD, OPS_PROJECT, NET_provider, NET_SELF, DISK_HDD, DISK_SSD
 import time
 
                 
@@ -145,7 +145,8 @@ def show_instances(request, serverid):
                                                                 'ram': str(connect.find_flavor(id=sv._info['flavor']['id']).ram),
                                                                 'vcpus': str(connect.find_flavor(id=sv._info['flavor']['id']).vcpus),
                                                                 'disk': str(connect.find_flavor(id=sv._info['flavor']['id']).disk),
-                                                                'status': sv._info['status']
+                                                                'status': sv._info['status'],
+                                                                'OPS_IP': OPS_IP
                                                                 })
     else:
         return HttpResponseRedirect('/')
@@ -202,7 +203,7 @@ def instances(request):
                         fl = connect.find_flavor(ram=int(flavor.split(',')[0]), vcpus=int(flavor.split(',')[1]), disk=int(flavor.split(',')[2]))
                         im = connect.find_image(image)
                         # net = connect.find_network('public')
-                        net = connect.find_network('provider')
+                        net = connect.find_network(NET_provider)
                         connect.create_volume(name=svname, size=flavor.split(',')[2], imageRef=im.id, volume_type=request.POST['type_disk'])
                         check = False
                         while check == False:
@@ -358,7 +359,11 @@ def instances(request):
                 thread.start()
                 # server = Server.objects.get(name=request.POST['svname'])
                 # server.delete()
-        return render(request, 'client/instances.html',{'username': mark_safe(json.dumps(user.username))})
+        return render(request, 'client/instances.html',{'username': mark_safe(json.dumps(user.username)),
+                                'OPS_IP': OPS_IP,
+                                'DISK_SSD': DISK_SSD,
+                                'DISK_HDD': DISK_HDD
+                                })
     else:
         return HttpResponseRedirect('/')
 

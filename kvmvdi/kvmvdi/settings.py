@@ -147,3 +147,12 @@ OPS_IP = '192.168.40.11'
 OPS_ADMIN = 'admin'
 OPS_PASSWORD = 'Welcome123'
 OPS_PROJECT = 'admin'
+
+RULE_USER = 'user'
+RULE_ADMIN = 'admin'
+
+NET_provider = 'provider'
+NET_SELF = ''
+
+DISK_SSD = 'ceph-ssd'
+DISK_HDD = 'ceph-hdd'
